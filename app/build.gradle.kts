@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 
 plugins {
@@ -8,6 +9,8 @@ plugins {
 }
 
 val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
+val isRunningFromTravis = System.getenv("CI") == "true"
+val buildVersion = "bash ./scripts/build_version.sh".runCommand()
 
 android {
     compileSdkVersion(28)
@@ -16,20 +19,24 @@ android {
         applicationId = "kt.school.starlord"
         minSdkVersion(19)
         targetSdkVersion(28)
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = "bash ./scripts/version_code.sh".runCommand().toInt()
+        versionName = buildVersion
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         signingConfigs {
             create("prod") {
-                //todo put key params for release
-                storeFile = file("../keys/play/key.jks")
-                storePassword = "StarLord-Team"
-                keyAlias = "starlord-keystore-alias"
-                keyPassword = "StarLord-Team"
+                storeFile = file("../keys/keystore.jks")
+                storePassword = System.getenv("keystore_store_password")
+                keyPassword = System.getenv("keystore_password")
+                keyAlias = System.getenv("keystore_alias")
             }
         }
+
         buildTypes {
+            getByName("debug") {
+                isMinifyEnabled = false
+                versionNameSuffix = "-debug"
+            }
             getByName("release") {
                 isMinifyEnabled = true
                 signingConfig = signingConfigs.getByName("prod")
@@ -40,13 +47,34 @@ android {
                 )
             }
         }
+
+        applicationVariants.all applicationVariants@{
+            outputs.all outputs@{
+                val buildLabel =
+                    if (this@applicationVariants.name == "debug") "_debug"
+                    else ""
+
+                (this@outputs as BaseVariantOutputImpl).outputFileName =
+                    "starlord_$buildVersion$buildLabel.apk"
+                        .replace(".0.apk", ".apk")
+                        .replace(".0-debug.apk", "-debug.apk")
+            }
+        }
     }
 }
 
 dependencies {
+    val lifecycle_version = "2.0.0"
+    val nav_version = "2.0.0"
+
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation("androidx.appcompat:appcompat:1.0.2")
     implementation("androidx.core:core-ktx:1.0.1")
+    implementation("androidx.lifecycle:lifecycle-extensions:$lifecycle_version")
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+
+    kapt("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
 }
 
 gradle.buildFinished {
@@ -54,3 +82,15 @@ gradle.buildFinished {
     println("VersionCode: ${android.defaultConfig.versionCode}")
     println("BuildUid: $buildUid")
 }
+
+fun String.runCommand(workingDir: File = File(".")) =
+    ProcessBuilder(*split("\\s".toRegex()).toTypedArray())
+        .directory(workingDir)
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .start()
+        .apply { waitFor(5, TimeUnit.SECONDS) }
+        .inputStream
+        .bufferedReader()
+        .readText()
+        .trim()
