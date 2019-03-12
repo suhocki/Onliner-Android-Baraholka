@@ -1,0 +1,2 @@
+# starlord [![Build Status](https://travis-ci.org/suhocki/starlord.svg?branch=master)](https://travis-ci.org/suhocki/starlord)
+school.kt project by ['star-lord' team](https://github.com/suhocki/starlord/graphs/contributors)

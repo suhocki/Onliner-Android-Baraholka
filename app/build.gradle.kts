@@ -8,6 +8,7 @@ plugins {
 }
 
 val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
+val isRunningFromTravis = System.getenv("CI") == "true"
 
 android {
     compileSdkVersion(28)
@@ -22,13 +23,15 @@ android {
 
         signingConfigs {
             create("prod") {
-                //todo put key params for release
-                storeFile = file("../keys/play/key.jks")
-                storePassword = "StarLord-Team"
-                keyAlias = "starlord-keystore-alias"
-                keyPassword = "StarLord-Team"
+                if (isRunningFromTravis) {
+                    storeFile = file("../keys/keystore.jks")
+                    storePassword = System.getenv("keystore_store_password")
+                    keyPassword = System.getenv("keystore_password")
+                    keyAlias = System.getenv("keystore_alias")
+                }
             }
         }
+
         buildTypes {
             getByName("release") {
                 isMinifyEnabled = true

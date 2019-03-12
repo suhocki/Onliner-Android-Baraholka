@@ -1,0 +1,15 @@
+language: android
+
+before_install:
+  - openssl aes-256-cbc -K $encrypted_d9066dcd8080_key -iv $encrypted_d9066dcd8080_iv
+    -in keys/keystore.jks.enc -out keys/keystore.jks -d
+  - yes | sdkmanager "platforms;android-28"
+
+deploy:
+  provider: releases
+  skip_cleanup: true
+  api_key: $github_api_key
+  file_glob: true
+  file: app/build/outputs/apk/release/*
+  on:
+    tags: true
