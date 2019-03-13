@@ -5,10 +5,33 @@ branches:
     - master
     - develop
 
+cache:
+  directories:
+    - $HOME/.gradle
+    - $HOME/.android/build-cache
+
+before_script:
+  - export GRADLE_USER_HOME=$(pwd)/.gradle
+  - export BUILD_NUMBER=$(git rev-list --count ${CI_BUILD_REF})
+  - export BUILD_COMMIT_SHA=${CI_COMMIT_SHA}
+
 before_install:
   - openssl aes-256-cbc -K $encrypted_d9066dcd8080_key -iv $encrypted_d9066dcd8080_iv
     -in keys/keystore.jks.enc -out keys/keystore.jks -d
   - yes | sdkmanager "platforms;android-28"
+
+build:
+  stage: build
+  script:
+    - ./gradlew assembleDebug
+    - ./gradlew assembleRelease
+  artifacts:
+    name: "${CI_PROJECT_NAME}_${CI_COMMIT_REF_NAME}_${CI_COMMIT_SHA}"
+    paths:
+      - app/build/outputs/
+  only:
+    - develop
+    - master
 
 before_deploy:
   - git config --local user.name "travis"
