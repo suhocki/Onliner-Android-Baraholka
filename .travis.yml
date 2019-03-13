@@ -1,5 +1,10 @@
 language: android
 
+branches:
+  only:
+    - master
+    - develop
+
 before_install:
   - openssl aes-256-cbc -K $encrypted_d9066dcd8080_key -iv $encrypted_d9066dcd8080_iv
     -in keys/keystore.jks.enc -out keys/keystore.jks -d
