@@ -17,4 +17,4 @@ deploy:
   file_glob: true
   file: app/build/outputs/apk/release/*
   on:
-    tags: true
+    branch: master
