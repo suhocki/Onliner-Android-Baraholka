@@ -1,15 +1,31 @@
 language: android
 
+branches:
+  only:
+    - master
+    - develop
+
+cache:
+  directories:
+    - $HOME/.gradle
+    - $HOME/.android/build-cache
+
 before_install:
+  - git remote rm origin
+  - git remote add origin https://github.com/suhocki/starlord.git
+  - git fetch origin
   - openssl aes-256-cbc -K $encrypted_d9066dcd8080_key -iv $encrypted_d9066dcd8080_iv
     -in keys/keystore.jks.enc -out keys/keystore.jks -d
   - yes | sdkmanager "platforms;android-28"
+
+before_deploy:
+  - git tag $(./build_version.sh)
 
 deploy:
   provider: releases
   skip_cleanup: true
   api_key: $github_api_key
   file_glob: true
-  file: app/build/outputs/apk/release/*
+  file: app/build/outputs/apk/release/*.apk
   on:
-    tags: true
+    all_branches: true
