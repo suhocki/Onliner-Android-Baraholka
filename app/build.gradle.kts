@@ -88,4 +88,3 @@ fun String.runCommand(workingDir: File = File(".")) =
         .start()
         .apply { waitFor(5, TimeUnit.SECONDS) }
         .inputStream.bufferedReader().readText()
-
