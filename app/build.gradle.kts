@@ -1,3 +1,4 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 
 plugins {
@@ -10,6 +11,12 @@ plugins {
 val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
 val isRunningFromTravis = System.getenv("CI") == "true"
 
+val commitsInMasterBranch = "git rev-list origin/master --count".runCommand().trim().toInt()
+val buildVersion: String by lazy {
+    val developCount = "git rev-list origin/develop --count".runCommand().trim().toInt()
+    "0.$commitsInMasterBranch.${developCount - commitsInMasterBranch}"
+}
+
 android {
     compileSdkVersion(28)
 
@@ -17,22 +24,24 @@ android {
         applicationId = "kt.school.starlord"
         minSdkVersion(19)
         targetSdkVersion(28)
-        versionCode = 1
-        versionName = "1.0"
+        versionCode = commitsInMasterBranch
+        versionName = buildVersion
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
         signingConfigs {
             create("prod") {
-                if (isRunningFromTravis) {
-                    storeFile = file("../keys/keystore.jks")
-                    storePassword = System.getenv("keystore_store_password")
-                    keyPassword = System.getenv("keystore_password")
-                    keyAlias = System.getenv("keystore_alias")
-                }
+                storeFile = file("../keys/keystore.jks")
+                storePassword = System.getenv("keystore_store_password")
+                keyPassword = System.getenv("keystore_password")
+                keyAlias = System.getenv("keystore_alias")
             }
         }
 
         buildTypes {
+            getByName("debug") {
+                isMinifyEnabled = false
+                versionNameSuffix = "-debug"
+            }
             getByName("release") {
                 isMinifyEnabled = true
                 signingConfig = signingConfigs.getByName("prod")
@@ -41,6 +50,19 @@ android {
                     getDefaultProguardFile("proguard-android-optimize.txt"),
                     file("proguard-rules.pro")
                 )
+            }
+        }
+
+        applicationVariants.all applicationVariants@{
+            outputs.all outputs@{
+                val buildLabel =
+                    if (this@applicationVariants.name == "debug") "_debug"
+                    else ""
+
+                (this@outputs as BaseVariantOutputImpl).outputFileName =
+                    "starlord_$buildVersion$buildLabel.apk"
+                        .replace(".0.apk", ".apk")
+                        .replace(".0-debug.apk", "-debug.apk")
             }
         }
     }
@@ -57,3 +79,13 @@ gradle.buildFinished {
     println("VersionCode: ${android.defaultConfig.versionCode}")
     println("BuildUid: $buildUid")
 }
+
+fun String.runCommand(workingDir: File = File(".")) =
+    ProcessBuilder(*split("\\s".toRegex()).toTypedArray())
+        .directory(workingDir)
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .start()
+        .apply { waitFor(5, TimeUnit.SECONDS) }
+        .inputStream.bufferedReader().readText()
+
