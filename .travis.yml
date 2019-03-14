@@ -7,7 +7,7 @@ cache:
 
 branches:
   only:
-    - [[ $TRAVIS_PULL_REQUEST == “false” ]] & [[ $TRAVIS_BRANCH == “master” ]]
+    - [[ $TRAVIS_PULL_REQUEST == “false” ]] && [[ $TRAVIS_BRANCH == “master” ]]
     - develop
 
 before_install:
