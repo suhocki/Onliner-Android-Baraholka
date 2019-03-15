@@ -11,8 +11,9 @@ branches:
     - develop
 
 before_install:
-  - if [ $TRAVIS_BRANCH == "master" ]; then
-    echo "PR in master, skipping";
+  - if [ $TRAVIS_BRANCH == "master" && $TRAVIS_PULL_REQUEST != “false”]; then
+    echo "PR in master, skipping...";
+    sleep 1;
     exit;
     fi
   - git remote rm origin
