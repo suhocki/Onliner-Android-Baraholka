@@ -69,9 +69,17 @@ android {
 }
 
 dependencies {
+    val lifecycle_version = "2.0.0"
+    val nav_version = "2.0.0"
+
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation("androidx.appcompat:appcompat:1.0.2")
     implementation("androidx.core:core-ktx:1.0.1")
+    implementation("androidx.lifecycle:lifecycle-extensions:$lifecycle_version")
+    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
+    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+
+    kapt("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
 }
 
 gradle.buildFinished {
