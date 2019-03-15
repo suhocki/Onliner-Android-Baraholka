@@ -12,7 +12,7 @@ branches:
 
 stages:
   - name: compile
-    if: NOT type IN (pull_request) AND branch = master
+    if: NOT type IN (pull_request) OR NOT branch = master
 
 before_install:
   - git remote rm origin
