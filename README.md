@@ -1,4 +1,5 @@
 # starlord
+[![GitHub release](https://img.shields.io/github/release/suhocki/starlord.svg)](https://github.com/suhocki/starlord/releases)
 [![Build Status](https://travis-ci.org/suhocki/starlord.svg?branch=develop)](https://travis-ci.org/suhocki/starlord)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 
