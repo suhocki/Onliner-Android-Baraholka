@@ -11,10 +11,10 @@ branches:
     - develop
 
 before_install:
-  - if [ $TRAVIS_BRANCH == "master" & $TRAVIS_PULL_REQUEST != “false”]; then
-    echo "PR in master, skipping...";
-    sleep 1;
-    exit;
+  - if [ $TRAVIS_BRANCH == "master" ]; then
+      if [ $TRAVIS_PULL_REQUEST != “false” ]; then
+        exit;
+      fi
     fi
   - git remote rm origin
   - git remote add origin https://github.com/suhocki/starlord.git
