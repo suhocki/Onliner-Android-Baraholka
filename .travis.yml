@@ -10,10 +10,6 @@ branches:
     - master
     - develop
 
-stages:
-  - name: compile
-    if: NOT type IN (pull_request) OR NOT branch = master
-
 before_install:
   - git remote rm origin
   - git remote add origin https://github.com/suhocki/starlord.git
