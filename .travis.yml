@@ -10,12 +10,11 @@ branches:
     - master
     - develop
 
+stages:
+  - name: compile
+    if: NOT type IN (pull_request) AND branch = master
+
 before_install:
-  - if [ $TRAVIS_BRANCH == "master" ]; then
-      if [ $TRAVIS_PULL_REQUEST != “false” ]; then
-        exit;
-      fi
-    fi
   - git remote rm origin
   - git remote add origin https://github.com/suhocki/starlord.git
   - git fetch origin
