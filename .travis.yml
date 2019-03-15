@@ -12,6 +12,8 @@ branches:
 
 before_install:
   - if [ "$TRAVIS_BRANCH" == “master” ]; then echo "PR in master, skipping" && exit; fi
+  - echo "$TRAVIS_BRANCH"
+  - echo [ "$TRAVIS_BRANCH" == “master” ]
   - git remote rm origin
   - git remote add origin https://github.com/suhocki/starlord.git
   - git fetch origin
