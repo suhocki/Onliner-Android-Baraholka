@@ -64,6 +64,7 @@ android {
 dependencies {
     val lifecycleVersion = "2.0.0"
     val navVersion = "2.0.0"
+    val ankoVersion = "0.10.8"
 
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation("androidx.appcompat:appcompat:1.0.2")
@@ -71,6 +72,9 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
     implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
+    implementation("org.jetbrains.anko:anko:$ankoVersion")
+    implementation("org.jetbrains.anko:anko-sdk25-coroutines:$ankoVersion")
+    implementation("org.jetbrains.anko:anko-appcompat-v7-coroutines:$ankoVersion")
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
 }
