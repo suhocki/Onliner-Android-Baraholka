@@ -56,25 +56,23 @@ android {
 
                 (this@outputs as BaseVariantOutputImpl).outputFileName =
                     "starlord_$buildVersion$buildLabel.apk"
-                        .replace(".0.apk", ".apk")
-                        .replace(".0-debug.apk", "-debug.apk")
             }
         }
     }
 }
 
 dependencies {
-    val lifecycle_version = "2.0.0"
-    val nav_version = "2.0.0"
+    val lifecycleVersion = "2.0.0"
+    val navVersion = "2.0.0"
 
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation("androidx.appcompat:appcompat:1.0.2")
     implementation("androidx.core:core-ktx:1.0.1")
-    implementation("androidx.lifecycle:lifecycle-extensions:$lifecycle_version")
-    implementation("androidx.navigation:navigation-fragment-ktx:$nav_version")
-    implementation("androidx.navigation:navigation-ui-ktx:$nav_version")
+    implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
+    implementation("androidx.navigation:navigation-fragment-ktx:$navVersion")
+    implementation("androidx.navigation:navigation-ui-ktx:$navVersion")
 
-    kapt("androidx.lifecycle:lifecycle-compiler:$lifecycle_version")
+    kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
 }
 
 gradle.buildFinished {
