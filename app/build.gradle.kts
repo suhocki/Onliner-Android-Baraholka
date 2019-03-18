@@ -10,7 +10,7 @@ plugins {
 
 val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
 val isRunningFromTravis = System.getenv("CI") == "true"
-val buildVersion = "bash ./scripts/build_version.sh".runCommand()
+val buildVersion = "bash ../scripts/version_name.sh".runCommand()
 
 android {
     compileSdkVersion(28)
@@ -19,7 +19,7 @@ android {
         applicationId = "kt.school.starlord"
         minSdkVersion(19)
         targetSdkVersion(28)
-        versionCode = "bash ./scripts/version_code.sh".runCommand().toInt()
+        versionCode = "bash ../scripts/version_code.sh".runCommand().toInt()
         versionName = buildVersion
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
 
@@ -85,7 +85,7 @@ gradle.buildFinished {
     println("BuildUid: $buildUid")
 }
 
-fun String.runCommand(workingDir: File = File(".")) =
+fun String.runCommand(workingDir: File = file(".")) =
     ProcessBuilder(*split("\\s".toRegex()).toTypedArray())
         .directory(workingDir)
         .redirectOutput(ProcessBuilder.Redirect.PIPE)

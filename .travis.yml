@@ -19,7 +19,7 @@ before_install:
   - yes | sdkmanager "platforms;android-28"
 
 before_deploy:
-  - git tag $(scripts/build_version.sh)
+  - git tag $(scripts/version_name.sh)
 
 deploy:
   provider: releases
