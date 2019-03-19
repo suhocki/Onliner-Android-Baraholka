@@ -1,0 +1,3 @@
+[submodule "versionizer"]
+	path = versionizer
+	url = https://github.com/suhocki/versionizer.git
