@@ -1,11 +1,43 @@
 <resources>
 
-    <!-- Base application theme. -->
-    <style name="AppTheme" parent="Theme.AppCompat.Light.DarkActionBar">
-        <!-- Customize your theme here. -->
+    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
+
+        <item name="android:textColorPrimary">@color/primaryText</item>
+        <item name="android:textColorSecondary">@color/secondaryText</item>
+
+        <item name="popupMenuStyle">@style/PopupMenuTheme</item>
+        <item name="textAppearanceLargePopupMenu">@style/TextTitle</item>
+
+        <item name="android:windowBackground">@color/colorPrimary</item>
+        <item name="fontFamily">@font/roboto_regular</item>
     </style>
 
+    <style name="AppTheme.Splash">
+        <item name="android:windowBackground">@drawable/splash_background</item>
+    </style>
+
+    <style name="PopupMenuTheme" parent="Widget.AppCompat.Light.PopupMenu">
+        <item name="android:popupBackground">@color/colorPrimary</item>
+        <item name="android:dropDownHorizontalOffset">4dp</item>
+        <item name="overlapAnchor">true</item>
+    </style>
+
+    <style name="TextHeadline" parent="TextAppearance.AppCompat.Headline">
+        <item name="android:textColor">@color/primaryText</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+    </style>
+
+    <style name="TextTitle" parent="TextAppearance.AppCompat.Title">
+        <item name="android:textColor">@color/primaryText</item>
+        <item name="android:textSize">16sp</item>
+        <item name="fontFamily">@font/roboto_medium</item>
+    </style>
+
+    <style name="TextBody" parent="TextAppearance.AppCompat.Body1">
+        <item name="android:textColor">@color/secondaryText</item>
+        <item name="android:textSize">14sp</item>
+    </style>
 </resources>
