@@ -72,6 +72,7 @@ dependencies {
     //Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1")
     implementation("androidx.core:core-ktx:1.0.1")
     implementation("androidx.appcompat:appcompat:1.0.2")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-alpha3")
@@ -89,6 +90,12 @@ dependencies {
     implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
     //Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
+
+    //Testing
+    testImplementation("junit:junit:4.12")
+    testImplementation("io.mockk:mockk:1.9.3.kotlin12")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.1.1")
+    testImplementation("androidx.arch.core:core-testing:2.0.1")
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
 }
