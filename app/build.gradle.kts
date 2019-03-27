@@ -9,7 +9,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
 }
 
-val buildUid = System.getenv("BUILD_COMMIT_SHA") ?: "local"
+val buildUid = System.getenv("TRAVIS_BUILD_ID") ?: "local"
 val isRunningFromTravis = System.getenv("CI") == "true"
 val buildVersion = "bash ../versionizer/versionizer.sh name".runCommand()
 

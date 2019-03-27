@@ -1,5 +1,11 @@
 language: android
 
+android:
+  components:
+    - tools
+    - platform-tools
+    - tools
+
 cache:
   directories:
     - $HOME/.gradle
@@ -9,6 +15,9 @@ branches:
   only:
     - master
     - develop
+
+script:
+  - ./gradlew test
 
 before_install:
   - git remote rm origin

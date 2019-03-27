@@ -51,16 +51,18 @@ class CategoriesViewModelTest {
 
     @Test
     fun loadCategories() {
-        // Given that the CategoriesRepository returns an empty list of categories
+        // Given that the CategoriesRepository returns the list of categories
         val categories: List<Category> = mockk()
         every { categoriesRepository.getCategories() }.returns(categories)
+
         val observer = mockk<Observer<List<Category>>>(relaxUnitFun = true)
         viewModel.categories.observeForever(observer)
 
         // When loading categories
         viewModel.loadCategories()
 
-        // The correct data is emitted
+        // The correct list of categories is emitted
         verify(exactly = 1) { observer.onChanged(categories) }
+        verify(atMost = 1) { categoriesRepository.getCategories() }
     }
 }
