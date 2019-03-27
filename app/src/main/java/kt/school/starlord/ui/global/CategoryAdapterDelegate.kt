@@ -39,7 +39,7 @@ class CategoryAdapterDelegate(
         fun bind(item: Category) = with(itemView) {
             this@ViewHolder.item = item
             name.text = item.name
-            count.text = item.count.toString()
+//            count.text = item.count.toString()
         }
     }
 }
