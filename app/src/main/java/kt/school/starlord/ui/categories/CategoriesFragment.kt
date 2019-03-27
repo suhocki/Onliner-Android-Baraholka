@@ -30,7 +30,8 @@ class CategoriesFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        viewModel.getCategories().observe(viewLifecycleOwner, Observer {
+        viewModel.loadCategories()
+        viewModel.categories.observe(viewLifecycleOwner, Observer {
             adapter.setData(it)
         })
     }
