@@ -9,5 +9,19 @@
         android:id="@+id/categoriesFragment"
         android:name="kt.school.starlord.ui.categories.CategoriesFragment"
         android:label="fragment_categories"
-        tools:layout="@layout/fragment_categories" />
+        tools:layout="@layout/fragment_categories" >
+        <action
+            android:id="@+id/to_subcategories"
+            app:destination="@+id/subcategoriesFragment"
+            app:popUpTo="@+id/categoriesFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/subcategoriesFragment"
+        android:name="kt.school.starlord.ui.subcategories.SubcategoriesFragment"
+        android:label="fragment_subcategories"
+        tools:layout="@layout/fragment_subcategories">
+        <argument
+            android:name="categoryName"
+            app:argType="string" />
+    </fragment>
 </navigation>
