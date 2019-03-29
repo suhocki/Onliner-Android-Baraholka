@@ -16,9 +16,6 @@ branches:
     - master
     - develop
 
-script:
-  - ./gradlew test assembleRelease
-
 before_install:
   - git remote rm origin
   - git remote add origin https://github.com/suhocki/starlord.git
@@ -26,6 +23,12 @@ before_install:
   - openssl aes-256-cbc -K $encrypted_d9066dcd8080_key -iv $encrypted_d9066dcd8080_iv
     -in keys/keystore.jks.enc -out keys/keystore.jks -d
   - yes | sdkmanager "platforms;android-28"
+
+script:
+  - ./gradlew test assembleRelease jacocoTestReport
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
 
 before_deploy:
   - git tag $(versionizer/versionizer.sh name)
