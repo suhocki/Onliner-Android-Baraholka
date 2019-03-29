@@ -4,9 +4,10 @@ import org.jetbrains.kotlin.config.KotlinCompilerVersion
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android.extensions")
+    id("jacoco-android")
     kotlin("android")
-    kotlin("kapt")
     id("androidx.navigation.safeargs.kotlin")
+    kotlin("kapt")
 }
 
 val buildUid = System.getenv("TRAVIS_BUILD_ID") ?: "local"

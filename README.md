@@ -1,6 +1,7 @@
 # starlord
 [![GitHub release](https://img.shields.io/github/release/suhocki/starlord.svg)](https://github.com/suhocki/starlord/releases)
 [![Build Status](https://travis-ci.org/suhocki/starlord.svg?branch=develop)](https://travis-ci.org/suhocki/starlord)
+[![codecov.io](https://codecov.io/github/suhocki/starlord/branch/develop/graph/badge.svg)](https://codecov.io/github/suhocki/starlord)
 [![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 
 school.kt project by ['star-lord' team](https://github.com/suhocki/starlord/graphs/contributors)
