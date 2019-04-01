@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    package="kt.school.starlord">
+
+    <application
+        android:name=".AppDebug"
+        tools:ignore="AllowBackup,GoogleAppIndexingWarning"
+        tools:replace="android:name" />
+
+</manifest>

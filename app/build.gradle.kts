@@ -71,6 +71,7 @@ dependencies {
     val navigationVersion = "2.1.0-alpha01"
     val koinVersion = "2.0.0-rc-1"
     val ankoVersion = "0.10.8"
+    val leakCanaryVersion = "1.6.3"
 
     //Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
@@ -93,6 +94,9 @@ dependencies {
     implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
     //Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
+
+    //Find leaks
+    debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
 
     //Testing
     testImplementation("junit:junit:4.12")
