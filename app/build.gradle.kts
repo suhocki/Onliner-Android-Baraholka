@@ -1,6 +1,11 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 
+val buildUid = System.getenv("TRAVIS_BUILD_ID") ?: "local"
+val isRunningFromTravis = System.getenv("CI") == "true"
+val isNotPullRequest = System.getenv("TRAVIS_PULL_REQUEST") == "false"
+val buildVersion = "bash ../versionizer/versionizer.sh name".runCommand()
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android.extensions")
@@ -8,11 +13,8 @@ plugins {
     kotlin("android")
     id("androidx.navigation.safeargs.kotlin")
     kotlin("kapt")
+    id("com.github.triplet.play")
 }
-
-val buildUid = System.getenv("TRAVIS_BUILD_ID") ?: "local"
-val isRunningFromTravis = System.getenv("CI") == "true"
-val buildVersion = "bash ../versionizer/versionizer.sh name".runCommand()
 
 android {
     compileSdkVersion(28)
@@ -95,7 +97,7 @@ dependencies {
     //Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
 
-    //Find leaks
+    //Find memory leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
 
     //Testing
@@ -111,6 +113,15 @@ gradle.buildFinished {
     println("VersionName: ${android.defaultConfig.versionName}")
     println("VersionCode: ${android.defaultConfig.versionCode}")
     println("BuildUid: $buildUid")
+}
+
+play {
+    isEnabled = isNotPullRequest
+    track = "internal"
+    userFraction = 1.0
+    serviceAccountEmail = System.getenv("google_play_email")
+    serviceAccountCredentials = file("../keys/google-play-key.p12")
+    resolutionStrategy = "auto"
 }
 
 fun String.runCommand(workingDir: File = file(".")) =

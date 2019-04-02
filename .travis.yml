@@ -22,10 +22,15 @@ before_install:
   - git fetch origin
   - openssl aes-256-cbc -K $encrypted_d9066dcd8080_key -iv $encrypted_d9066dcd8080_iv
     -in keys/keystore.jks.enc -out keys/keystore.jks -d
+  - openssl aes-256-cbc -K $encrypted_07dbd01e85b3_key -iv $encrypted_07dbd01e85b3_iv
+    -in keys/google-play-key.p12.enc -out keys/google-play-key.p12 -d
   - yes | sdkmanager "platforms;android-28"
 
 script:
   - ./gradlew test assembleRelease jacocoTestReport
+  - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_BRANCH" == "develop" ]; then
+      ./gradlew publishReleaseApk;
+    fi
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
