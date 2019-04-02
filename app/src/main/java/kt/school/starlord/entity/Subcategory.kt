@@ -1,6 +1,6 @@
 package kt.school.starlord.entity
 
-data class SubCategory(
+data class Subcategory(
     val name: String,
     val count: Int?,
     val link: String

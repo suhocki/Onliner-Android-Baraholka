@@ -10,6 +10,7 @@ import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.R
 import kt.school.starlord.entity.Category
+import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.ui.global.CategoryAdapterDelegate
 import org.jetbrains.anko.support.v4.toast
 
@@ -21,7 +22,8 @@ class SubcategoriesFragment: Fragment() {
         super.onCreate(savedInstanceState)
         arguments?.let {
             val safeArgs = SubcategoriesFragmentArgs.fromBundle(it)
-            adapter.setData(listOf(Category(safeArgs.categoryName, 0)))
+            val subcategories = listOf(Subcategory("name", 15, "link"))
+            adapter.setData(listOf(Category(safeArgs.categoryName, subcategories)))
         }
     }
     override fun onCreateView(
