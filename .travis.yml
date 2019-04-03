@@ -1,4 +1,6 @@
 language: android
+sudo: required
+dist: trusty
 
 android:
   components:
@@ -11,11 +13,6 @@ cache:
     - $HOME/.gradle
     - $HOME/.android/build-cache
 
-branches:
-  only:
-    - master
-    - develop
-
 before_install:
   - git remote rm origin
   - git remote add origin https://github.com/suhocki/starlord.git
@@ -25,25 +22,34 @@ before_install:
   - openssl aes-256-cbc -K $encrypted_07dbd01e85b3_key -iv $encrypted_07dbd01e85b3_iv
     -in keys/google-play-key.p12.enc -out keys/google-play-key.p12 -d
   - yes | sdkmanager "platforms;android-28"
+  # generate release notes for Google Play
+  - sudo apt-get install jq
+  - cp /dev/null app/src/main/play/release-notes/ru-RU/default.txt
+  - curl "https://api.github.com/repos/suhocki/starlord/issues?state=closed&milestone=none&page=1&per_page=1" | jq '.[0]' | jq -r '.title' >> app/src/main/play/release-notes/ru-RU/default.txt
 
 script:
   - ./gradlew test assembleRelease jacocoTestReport
-  - ./gradlew publish;
-#  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
-#      ./gradlew publishApk;
-#    fi
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
+
+branches:
+  only:
+    - master
+    - develop
 
 before_deploy:
   - git tag $(versionizer/versionizer.sh name)
 
 deploy:
-  provider: releases
-  skip_cleanup: true
-  api_key: $github_api_key
-  file_glob: true
-  file: app/build/outputs/apk/release/*.apk
-  on:
-    all_branches: true
+  - provider: releases
+    skip_cleanup: true
+    api_key: $github_api_key
+    file_glob: true
+    file: app/build/outputs/apk/release/*.apk
+    on:
+      all_branches: true
+  - provider: script
+    script: ./gradlew publish
+    on:
+      all_branches: true

@@ -1,20 +1,19 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 
-val buildUid = System.getenv("TRAVIS_BUILD_ID") ?: "local"
-val isRunningFromTravis = System.getenv("CI") == "true"
-val isNotPullRequest = System.getenv("TRAVIS_PULL_REQUEST") == "false"
-val buildVersion = "bash ../versionizer/versionizer.sh name".runCommand()
-
 plugins {
     id("com.android.application")
-    id("org.jetbrains.kotlin.android.extensions")
-    id("jacoco-android")
-    kotlin("android")
+    id("kotlin-android")
+    id("kotlin-android-extensions")
+    id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
-    kotlin("kapt")
+    id("jacoco-android")
     id("com.github.triplet.play")
 }
+
+val isRunningFromTravis = System.getenv("CI") == "true"
+val buildUid = System.getenv("TRAVIS_BUILD_ID") ?: "local"
+val buildVersion = "bash ../versionizer/versionizer.sh name".runCommand()
 
 android {
     compileSdkVersion(28)
@@ -23,8 +22,7 @@ android {
         applicationId = "kt.school.starlord"
         minSdkVersion(19)
         targetSdkVersion(28)
-//        versionCode = "bash ../versionizer/versionizer.sh code".runCommand().toInt()
-        versionCode = 2
+        versionCode = "bash ../versionizer/versionizer.sh code".runCommand().toInt()
         versionName = buildVersion
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -117,7 +115,7 @@ gradle.buildFinished {
 }
 
 play {
-    isEnabled = true
+    isEnabled = isRunningFromTravis
     track = "internal"
     userFraction = 1.0
     serviceAccountEmail = System.getenv("google_play_email")
