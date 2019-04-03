@@ -28,9 +28,10 @@ before_install:
 
 script:
   - ./gradlew test assembleRelease jacocoTestReport
-  - if [ "$TRAVIS_BRANCH" == "master" ] || [ "$TRAVIS_BRANCH" == "develop" ]; then
-      ./gradlew publishReleaseApk;
-    fi
+  - ./gradlew publish;
+#  - if [ "$TRAVIS_PULL_REQUEST" == "false" ]; then
+#      ./gradlew publishApk;
+#    fi
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

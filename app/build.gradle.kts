@@ -23,7 +23,8 @@ android {
         applicationId = "kt.school.starlord"
         minSdkVersion(19)
         targetSdkVersion(28)
-        versionCode = "bash ../versionizer/versionizer.sh code".runCommand().toInt()
+//        versionCode = "bash ../versionizer/versionizer.sh code".runCommand().toInt()
+        versionCode = 2
         versionName = buildVersion
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
@@ -116,7 +117,7 @@ gradle.buildFinished {
 }
 
 play {
-    isEnabled = isNotPullRequest
+    isEnabled = true
     track = "internal"
     userFraction = 1.0
     serviceAccountEmail = System.getenv("google_play_email")
