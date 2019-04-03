@@ -1,4 +1,5 @@
 # starlord
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/eb36fc141cbb4037846dc91ded0f4083)](https://app.codacy.com/app/suhocki/starlord?utm_source=github.com&utm_medium=referral&utm_content=suhocki/starlord&utm_campaign=Badge_Grade_Dashboard)
 [![GitHub release](https://img.shields.io/github/release/suhocki/starlord.svg)](https://github.com/suhocki/starlord/releases)
 [![Build Status](https://travis-ci.org/suhocki/starlord.svg?branch=develop)](https://travis-ci.org/suhocki/starlord)
 [![codecov.io](https://codecov.io/github/suhocki/starlord/branch/develop/graph/badge.svg)](https://codecov.io/github/suhocki/starlord)
