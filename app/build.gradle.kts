@@ -94,6 +94,8 @@ dependencies {
     implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
     //Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
+    //JSOUP
+    implementation("org.jsoup:jsoup:1.11.3")
 
     //Find leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
@@ -105,6 +107,8 @@ dependencies {
     testImplementation("androidx.arch.core:core-testing:2.0.1")
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
+
+
 }
 
 gradle.buildFinished {
