@@ -19,7 +19,7 @@ object JSoupLinksEx {
         var index = 0
         val list = mutableListOf<Subcategory>()
         for (link in links) {
-            list += listOf(Subcategory("http://baraholka.onliner.by" + link.attr("href").substring(1),nums[index].text().toInt() ,link.text()))
+            list += listOf(Subcategory(link = "http://baraholka.onliner.by" + link.attr("href").substring(1), count = nums[index].text().toInt(), name = link.text()))
             index++
         }
     }
