@@ -17,6 +17,8 @@ before_install:
   - git remote rm origin
   - git remote add origin https://github.com/suhocki/starlord.git
   - git fetch origin
+  - openssl aes-256-cbc -K $encrypted_07dbd01e85b3_key -iv $encrypted_07dbd01e85b3_iv
+    -in keys/google-drive-credentials.json.enc -out keys/google-drive-credentials.json -d
   - openssl aes-256-cbc -K $encrypted_d9066dcd8080_key -iv $encrypted_d9066dcd8080_iv
     -in keys/keystore.jks.enc -out keys/keystore.jks -d
   - openssl aes-256-cbc -K $encrypted_07dbd01e85b3_key -iv $encrypted_07dbd01e85b3_iv
