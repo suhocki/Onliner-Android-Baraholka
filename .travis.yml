@@ -39,7 +39,7 @@ branches:
     - develop
 
 before_deploy:
-  - git tag $(versionizer/versionizer.sh name)
+  - git tag $(scripts/versionizer/versionizer.sh name)
   - ./gradlew publish
 
 deploy:

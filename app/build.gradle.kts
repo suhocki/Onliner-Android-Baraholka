@@ -13,7 +13,7 @@ plugins {
 
 val isRunningFromTravis = System.getenv("CI") == "true"
 val buildUid = System.getenv("TRAVIS_BUILD_ID") ?: "local"
-val buildVersion = "bash ../versionizer/versionizer.sh name".runCommand()
+val buildVersion = "bash ../scripts/versionizer/versionizer.sh name".runCommand()
 
 android {
     compileSdkVersion(28)
@@ -22,7 +22,7 @@ android {
         applicationId = "kt.school.starlord"
         minSdkVersion(19)
         targetSdkVersion(28)
-        versionCode = "bash ../versionizer/versionizer.sh code".runCommand().toInt()
+        versionCode = "bash ../scripts/versionizer/versionizer.sh code".runCommand().toInt()
         versionName = buildVersion
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
