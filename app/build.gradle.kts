@@ -9,6 +9,7 @@ plugins {
     id("androidx.navigation.safeargs.kotlin")
     id("jacoco-android")
     id("com.github.triplet.play")
+    id("com.getkeepsafe.dexcount")
 }
 
 val isRunningFromTravis = System.getenv("CI") == "true"
