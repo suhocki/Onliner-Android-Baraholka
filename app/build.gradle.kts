@@ -14,7 +14,12 @@ plugins {
 
 val isRunningFromTravis = System.getenv("CI") == "true"
 val buildUid = System.getenv("TRAVIS_BUILD_ID") ?: "local"
-val buildVersion = "bash ../scripts/versionizer/versionizer.sh name".runCommand()
+val buildVersionName: String =
+    if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh name".runCommand()
+    else "1-local-build"
+val buildVersionCode: Int =
+    if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh code".runCommand().toInt()
+    else 1
 
 android {
     compileSdkVersion(28)
@@ -23,8 +28,8 @@ android {
         applicationId = "kt.school.starlord"
         minSdkVersion(19)
         targetSdkVersion(28)
-        versionCode = "bash ../scripts/versionizer/versionizer.sh code".runCommand().toInt()
-        versionName = buildVersion
+        versionCode = buildVersionCode
+        versionName = buildVersionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
@@ -62,7 +67,7 @@ android {
                     else ""
 
                 (this@outputs as BaseVariantOutputImpl).outputFileName =
-                    "starlord_$buildVersion$buildLabel.apk"
+                    "starlord_$buildVersionName$buildLabel.apk"
             }
         }
     }
