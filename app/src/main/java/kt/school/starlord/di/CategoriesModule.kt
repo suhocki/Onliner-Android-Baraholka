@@ -9,9 +9,9 @@ import org.koin.dsl.module
 
 val categoriesModule = module {
 
-    factory<PageLoader> {PageLoader()}
+    factory { PageLoader() }
 
-    single<CategoriesRepository> { NetworkRepository(PageLoader()) }
+    single<CategoriesRepository> { NetworkRepository(get()) }
 
     viewModel { CategoriesViewModel(get()) }
 }

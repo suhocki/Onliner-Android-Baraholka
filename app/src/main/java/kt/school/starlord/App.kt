@@ -9,7 +9,6 @@ import org.koin.core.context.startKoin
 
 @SuppressLint("Registered")
 open class App : Application() {
-//    val pageLoader = PageLoader by inject()
 
     override fun onCreate() {
         super.onCreate()
