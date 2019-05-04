@@ -4,9 +4,9 @@ import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
 
 class PageParser {
-    var allCategories = mutableListOf<Category>()
 
     fun parsePage(loadedPage: String): List<Category> {
+        val allCategories = mutableListOf<Category>()
         /* get from the page all "oneCat" divisions */
         val allData: Sequence<MatchResult> = """<h3>(.|\n)*?</div>""".toRegex().findAll(loadedPage)
 
