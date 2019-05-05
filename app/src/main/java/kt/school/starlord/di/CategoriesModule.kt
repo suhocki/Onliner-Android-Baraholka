@@ -10,7 +10,7 @@ import org.koin.dsl.module
 
 val categoriesModule = module {
 
-    factory { PageLoader() }
+    single { PageLoader() }
 
     single { PageParser() }
 

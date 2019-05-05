@@ -8,10 +8,6 @@ class PageLoader {
     private val urlConnection: HttpURLConnection = url.openConnection() as HttpURLConnection
 
     fun getPage(): String {
-        return try {
-            urlConnection.inputStream.bufferedReader().readText()
-        } finally {
-            urlConnection.disconnect()
-        }
+        return urlConnection.inputStream.bufferedReader().use { it.readText() }
     }
 }
