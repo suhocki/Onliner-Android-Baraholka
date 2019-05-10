@@ -10,6 +10,7 @@ plugins {
     id("jacoco-android")
     id("com.github.triplet.play")
     id("com.getkeepsafe.dexcount")
+    id("org.jmailen.kotlinter")
 }
 
 val isRunningFromTravis = System.getenv("CI") == "true"
@@ -71,6 +72,8 @@ android {
             }
         }
     }
+
+    lintOptions.isWarningsAsErrors = true
 }
 
 dependencies {
@@ -86,7 +89,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1")
     implementation("androidx.core:core-ktx:1.0.1")
     implementation("androidx.appcompat:appcompat:1.0.2")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0-alpha3")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-alpha5")
     //Architecture components
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
