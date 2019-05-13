@@ -18,7 +18,8 @@ class CategoryAdapterDelegate(
     ) = ViewHolder(parent.inflate(R.layout.item_category))
 
     override fun isForViewType(
-        item: Any, items: MutableList<Any>,
+        item: Any,
+        items: MutableList<Any>,
         position: Int
     ) = items[position] is Category
 

@@ -14,7 +14,7 @@ import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.ui.global.CategoryAdapterDelegate
 import org.jetbrains.anko.support.v4.toast
 
-class SubcategoriesFragment: Fragment() {
+class SubcategoriesFragment : Fragment() {
 
     private val adapter by lazy { SubcategoriesAdapter() }
 
@@ -33,7 +33,6 @@ class SubcategoriesFragment: Fragment() {
     ): View? {
         return inflater.inflate(R.layout.fragment_subcategories, container, false)
     }
-
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

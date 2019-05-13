@@ -43,9 +43,12 @@ class CategoriesFragment : Fragment() {
         navigationController = Navigation.findNavController(view)
 
         viewModel.loadCategories()
-        viewModel.categories.observe(viewLifecycleOwner, Observer {
-            adapter.setData(it)
-        })
+        viewModel.categories.observe(
+            viewLifecycleOwner,
+            Observer {
+                adapter.setData(it)
+            }
+        )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
