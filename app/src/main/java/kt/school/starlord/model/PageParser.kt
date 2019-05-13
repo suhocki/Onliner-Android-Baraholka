@@ -20,9 +20,12 @@ class PageParser {
             for (oneSubCat in subCatsDivs) {
                 /* create subCategory and add it to array of subCategories of current category */
                 val subCat = Subcategory(
-                        name = """">((.|\n)*?)</a""".toRegex().find(oneSubCat.value)?.groups?.get(1)?.value.toString(),
-                        count = """<sup>((.|\n)*?)</sup>""".toRegex().find(oneSubCat.value)?.groups?.get(1)?.value.toString().trim().toInt(),//need to be overwriting without trim
-                        link = """<a href="((.|\n)*?)"""".toRegex().find(oneSubCat.value)?.groups?.get(1)?.value.toString()
+                        name = """">((.|\n)*?)</a""".toRegex()
+                                .find(oneSubCat.value)?.groups?.get(1)?.value.toString(),
+                        count = """<sup>((.|\n)*?)</sup>""".toRegex()
+                                .find(oneSubCat.value)?.groups?.get(1)?.value.toString().trim().toInt(),
+                        link = """<a href="((.|\n)*?)"""".toRegex()
+                                .find(oneSubCat.value)?.groups?.get(1)?.value.toString()
                 )
                 subCategories.add(subCat)
             }
@@ -33,7 +36,6 @@ class PageParser {
                     subCategories = subCategories
             )
             allCategories.add(category)
-
         }
         return allCategories
     }
