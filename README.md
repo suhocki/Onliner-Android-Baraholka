@@ -1,9 +1,11 @@
 # starlord
-[![Codacy Badge](https://api.codacy.com/project/badge/Grade/eb36fc141cbb4037846dc91ded0f4083)](https://app.codacy.com/app/suhocki/starlord?utm_source=github.com&utm_medium=referral&utm_content=suhocki/starlord&utm_campaign=Badge_Grade_Dashboard)
-[![GitHub release](https://img.shields.io/github/release/suhocki/starlord.svg)](https://github.com/suhocki/starlord/releases)
+[![Google Play](https://img.shields.io/badge/-internal-gray.svg?style=flat&logo=google-play&logoColor=white&style=flat-square&label=Google%20Play&color=brightgreen)](https://play.google.com/store/apps/details?id=kt.school.starlord)
+
 [![Build Status](https://travis-ci.org/suhocki/starlord.svg?branch=develop)](https://travis-ci.org/suhocki/starlord)
+[![GitHub release](https://img.shields.io/github/release/suhocki/starlord.svg)](https://github.com/suhocki/starlord/releases)
+
+[![Codacy Badge](https://api.codacy.com/project/badge/Grade/eb36fc141cbb4037846dc91ded0f4083)](https://app.codacy.com/app/suhocki/starlord?utm_source=github.com&utm_medium=referral&utm_content=suhocki/starlord&utm_campaign=Badge_Grade_Dashboard)
 [![codecov.io](https://codecov.io/github/suhocki/starlord/branch/develop/graph/badge.svg)](https://codecov.io/github/suhocki/starlord)
-[![license](https://img.shields.io/github/license/mashape/apistatus.svg)](https://opensource.org/licenses/MIT)
 
 school.kt project by ['star-lord' team](https://github.com/suhocki/starlord/graphs/contributors)
 
