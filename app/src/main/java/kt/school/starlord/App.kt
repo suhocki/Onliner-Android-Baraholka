@@ -20,7 +20,7 @@ open class App : Application() {
             androidLogger()
             androidContext(this@App)
             modules(
-                categoriesModule
+                    categoriesModule
             )
         }
     }
