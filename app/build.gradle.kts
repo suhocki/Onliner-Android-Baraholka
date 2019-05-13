@@ -1,5 +1,6 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
     id("com.android.application")
@@ -10,7 +11,7 @@ plugins {
     id("jacoco-android")
     id("com.github.triplet.play")
     id("com.getkeepsafe.dexcount")
-    id("org.jmailen.kotlinter")
+    id("org.jlleitschuh.gradle.ktlint")
 }
 
 val isRunningFromTravis = System.getenv("CI") == "true"
@@ -76,6 +77,15 @@ android {
     lintOptions.isWarningsAsErrors = true
 }
 
+ktlint {
+    version.set("0.32.0")
+    android.set(true)
+    outputToConsole.set(true)
+    reporters.set(setOf(ReporterType.PLAIN, ReporterType.CHECKSTYLE))
+    ignoreFailures.set(false)
+    enableExperimentalRules.set(true)
+}
+
 dependencies {
     val lifecycleVersion = "2.0.0"
     val navigationVersion = "2.1.0-alpha01"
@@ -83,32 +93,32 @@ dependencies {
     val ankoVersion = "0.10.8"
     val leakCanaryVersion = "1.6.3"
 
-    //Core
+    // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1")
     implementation("androidx.core:core-ktx:1.0.1")
     implementation("androidx.appcompat:appcompat:1.0.2")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-alpha5")
-    //Architecture components
+    // Architecture components
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
-    //Anko
+    // Anko
     implementation("org.jetbrains.anko:anko:$ankoVersion")
     implementation("org.jetbrains.anko:anko-sdk25-coroutines:$ankoVersion")
     implementation("org.jetbrains.anko:anko-appcompat-v7-coroutines:$ankoVersion")
-    //Koin
+    // Koin
     implementation("org.koin:koin-core:$koinVersion")
     implementation("org.koin:koin-androidx-scope:$koinVersion")
     implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
-    //Adapter simplify
+    // Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
 
-    //Find memory leaks
+    // Find memory leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
 
-    //Testing
+    // Testing
     testImplementation("junit:junit:4.12")
     testImplementation("io.mockk:mockk:1.9.3.kotlin12")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.1.1")
