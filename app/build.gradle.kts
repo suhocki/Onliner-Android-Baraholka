@@ -83,7 +83,7 @@ ktlint {
     outputToConsole.set(true)
     reporters.set(setOf(ReporterType.PLAIN, ReporterType.CHECKSTYLE))
     ignoreFailures.set(false)
-    enableExperimentalRules.set(true)
+    enableExperimentalRules.set(false)
 }
 
 dependencies {
@@ -97,9 +97,9 @@ dependencies {
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1")
-    implementation("androidx.core:core-ktx:1.0.1")
+    implementation("androidx.core:core-ktx:1.0.2")
     implementation("androidx.appcompat:appcompat:1.0.2")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0-alpha5")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta1")
     // Architecture components
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")

@@ -20,7 +20,6 @@ import org.junit.Rule
 import org.junit.Test
 import java.util.concurrent.Executors
 
-
 @ExperimentalCoroutinesApi
 class CategoriesViewModelTest {
 
