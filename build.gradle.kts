@@ -6,7 +6,7 @@ buildscript {
         maven("https://plugins.gradle.org/m2/")
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.4.0")
+        classpath("com.android.tools.build:gradle:3.5.0-alpha12")
         classpath(kotlin("gradle-plugin", "1.3.21"))
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.1.0-alpha03")
         classpath("com.dicedmelon.gradle:jacoco-android:0.1.4")
