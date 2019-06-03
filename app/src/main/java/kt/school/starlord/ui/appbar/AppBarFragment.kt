@@ -4,12 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import androidx.activity.OnBackPressedCallback
+import androidx.activity.addCallback
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.NavHostFragment
+import androidx.navigation.fragment.findNavController
 import kt.school.starlord.R
 
-class AppBarFragment : Fragment(), OnBackPressedCallback {
+class AppBarFragment : Fragment() {
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -21,15 +21,8 @@ class AppBarFragment : Fragment(), OnBackPressedCallback {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        requireActivity().addOnBackPressedCallback(viewLifecycleOwner, this)
-    }
-
-    override fun onDestroyView() {
-        super.onDestroyView()
-        requireActivity().removeOnBackPressedCallback(this)
-    }
-
-    override fun handleOnBackPressed(): Boolean {
-        return NavHostFragment.findNavController(this).navigateUp()
+        requireActivity().onBackPressedDispatcher.addCallback(viewLifecycleOwner, enabled = false) {
+            findNavController().navigateUp()
+        }
     }
 }
