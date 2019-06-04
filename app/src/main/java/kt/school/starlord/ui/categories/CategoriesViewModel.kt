@@ -13,6 +13,9 @@ class CategoriesViewModel(
 
     private val categoriesDeferred = CompletableDeferred<List<Category>>()
 
+    /**
+     * Load categories from repository
+     */
     suspend fun loadCategories(): List<Category> {
         viewModelScope.launch {
             val note = categoriesRepository.getCategories()

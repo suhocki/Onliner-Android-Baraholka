@@ -10,7 +10,7 @@ import org.junit.rules.TestWatcher
 import org.junit.runner.Description
 
 @Suppress("EXPERIMENTAL_API_USAGE")
-class TestCoroutineRule : TestWatcher() {
+internal class TestCoroutineRule : TestWatcher() {
     private val testDispatcher: TestCoroutineDispatcher = TestCoroutineDispatcher()
     private val testScope: TestCoroutineScope = TestCoroutineScope(testDispatcher)
 

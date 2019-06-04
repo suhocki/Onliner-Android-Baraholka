@@ -7,7 +7,7 @@
 
     <fragment
         android:id="@+id/appBarFragment"
-        android:name="kt.school.starlord.ui.appbar.AppBarFragment"
+        android:name="kt.school.starlord.ui.appbar.BottomAppBarFragment"
         android:label="fragment_appbar"
         tools:layout="@layout/fragment_appbar" />
 </navigation>

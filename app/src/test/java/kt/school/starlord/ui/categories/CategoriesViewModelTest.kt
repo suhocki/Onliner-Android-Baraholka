@@ -10,13 +10,13 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 
-class CategoriesViewModelTest {
+internal class CategoriesViewModelTest {
 
     @get:Rule
-    val testCoroutineRule = TestCoroutineRule()
+    internal val testCoroutineRule = TestCoroutineRule()
 
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
+    internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private var categoriesRepository: CategoriesRepository = mockk()
 
@@ -28,15 +28,15 @@ class CategoriesViewModelTest {
     }
 
     @Test
-    fun loadCategories() = testCoroutineRule.runBlockingTest {
+    fun `load categories successfully`() = testCoroutineRule.runBlockingTest {
         // Given that the CategoriesRepository returns the list of categories
-        val categories: List<Category> = listOf(Category("name", listOf()))
-        coEvery { categoriesRepository.getCategories() }.coAnswers { categories }
+        val testedCategories: List<Category> = mockk()
+        coEvery { categoriesRepository.getCategories() }.coAnswers { testedCategories }
 
         // When loading categories
-        val answer = viewModel.loadCategories()
+        val realCategories = viewModel.loadCategories()
 
         // The correct list of categories is emitted
-        assert(answer == categories)
+        assert(realCategories == testedCategories) { "Emitted data is wrong" }
     }
 }

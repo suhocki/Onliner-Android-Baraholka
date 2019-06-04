@@ -15,6 +15,11 @@ import kt.school.starlord.entity.Category
 import kt.school.starlord.ui.global.CategoryAdapterDelegate
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+/**
+ * Contains recycler that is filled by categories.
+ *
+ * Clicking on element produces navigation to the Subcategories fragment
+ */
 class CategoriesFragment : Fragment() {
 
     private val viewModel: CategoriesViewModel by viewModel()
