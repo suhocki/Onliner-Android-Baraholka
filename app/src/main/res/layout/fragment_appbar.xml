@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.appbar.AppBarFragment">
+    tools:context=".ui.appbar.BottomAppBarFragment">
 
     <fragment
         android:id="@+id/appbar_nav_host_fragment"
@@ -12,7 +12,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/appbar_graph" />
+        app:navGraph="@navigation/bottom_appbar_graph" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bar"

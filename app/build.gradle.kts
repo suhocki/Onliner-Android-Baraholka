@@ -11,7 +11,9 @@ plugins {
     id("jacoco-android")
     id("com.github.triplet.play")
     id("com.getkeepsafe.dexcount")
-    id("org.jlleitschuh.gradle.ktlint")
+    id("org.jlleitschuh.gradle.ktlint") version "8.0.0"
+    id("io.gitlab.arturbosch.detekt") version "1.0.0-RC14"
+    id("com.novoda.static-analysis") version "1.0"
 }
 
 val isRunningFromTravis = System.getenv("CI") == "true"
@@ -77,31 +79,44 @@ android {
     lintOptions.isWarningsAsErrors = true
 }
 
-ktlint {
-    version.set("0.32.0")
-    android.set(true)
-    outputToConsole.set(true)
-    reporters.set(setOf(ReporterType.PLAIN, ReporterType.CHECKSTYLE))
-    ignoreFailures.set(false)
-    enableExperimentalRules.set(false)
+staticAnalysis {
+    penalty {
+        maxErrors = 0
+        maxWarnings = 0
+    }
+    ktlint {
+        version.set("0.32.0")
+        android.set(true)
+        outputToConsole.set(true)
+        reporters.set(setOf(ReporterType.PLAIN, ReporterType.CHECKSTYLE))
+        ignoreFailures.set(false)
+        enableExperimentalRules.set(false)
+    }
+    detekt {
+    }
 }
 
 dependencies {
-    val lifecycleVersion = "2.0.0"
-    val navigationVersion = "2.1.0-alpha01"
+    val kotlinxVersion = "1.2.1"
+    val lifecycleVersion = "2.2.0-alpha01"
+    val navigationVersion = "2.1.0-alpha04"
     val koinVersion = "2.0.0-rc-1"
     val ankoVersion = "0.10.8"
     val leakCanaryVersion = "1.6.3"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.1.1")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.1.1")
-    implementation("androidx.core:core-ktx:1.0.2")
-    implementation("androidx.appcompat:appcompat:1.0.2")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxVersion")
+    implementation("androidx.core:core-ktx:1.2.0-alpha01")
+    implementation("androidx.appcompat:appcompat:1.1.0-alpha05")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta1")
-    // Architecture components
+    // Lifecycle
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
     // Anko
@@ -120,8 +135,8 @@ dependencies {
 
     // Testing
     testImplementation("junit:junit:4.12")
-    testImplementation("io.mockk:mockk:1.9.3.kotlin12")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.1.1")
+    testImplementation("io.mockk:mockk:1.9.3")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxVersion")
     testImplementation("androidx.arch.core:core-testing:2.0.1")
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")

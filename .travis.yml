@@ -27,7 +27,7 @@ before_install:
   - curl "https://api.github.com/repos/suhocki/starlord/issues?state=closed&sort=updated-desc" | jq '[.[]|select(has("pull_request") | not)][0]' | jq -r '.title' 2>&1 | tee app/src/main/play/release-notes/ru-RU/default.txt
 
 script:
-  - ./gradlew ktlintCheck test assembleRelease jacocoTestReport
+  - ./gradlew check test assembleRelease jacocoTestReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)

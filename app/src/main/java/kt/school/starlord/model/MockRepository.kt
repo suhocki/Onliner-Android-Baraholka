@@ -6,7 +6,7 @@ import kt.school.starlord.entity.Subcategory
 
 class MockRepository : CategoriesRepository {
 
-    override fun getCategories(): List<Category> {
+    override suspend fun getCategories(): List<Category> {
         val subcategories = listOf(Subcategory("name", 15, "link"))
         return listOf(
             Category("Телефоны. Смартфоны", subcategories),

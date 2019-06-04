@@ -1,12 +1,22 @@
 package kt.school.starlord.model
 
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import kt.school.starlord.domain.CategoriesRepository
 import kt.school.starlord.entity.Category
 
-/*inject module by constructor*/
-class NetworkRepository(private val pageLoader: PageLoader, private val parser: PageParser) : CategoriesRepository {
-    override fun getCategories(): List<Category> {
-        val page: String = pageLoader.getPage()
-        return parser.parsePage(page)
+/**
+ * Implement methods using Internet connection
+ */
+class NetworkRepository(
+    private val pageLoader: PageLoader,
+    private val parser: PageParser
+) : CategoriesRepository {
+
+    override suspend fun getCategories(): List<Category> {
+        return withContext(Dispatchers.IO) {
+            val page: String = pageLoader.getPage()
+            parser.parsePage(page)
+        }
     }
 }

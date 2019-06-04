@@ -5,9 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.Observer
-import androidx.navigation.NavController
-import androidx.navigation.Navigation
+import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_categories.*
@@ -16,18 +15,29 @@ import kt.school.starlord.entity.Category
 import kt.school.starlord.ui.global.CategoryAdapterDelegate
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+/**
+ * Contains recycler that is filled by categories.
+ *
+ * Clicking on element produces navigation to the Subcategories fragment
+ */
 class CategoriesFragment : Fragment() {
 
     private val viewModel: CategoriesViewModel by viewModel()
-    private lateinit var navigationController: NavController
 
     private val adapter by lazy {
         CategoriesAdapter(
             onCategoryClick = {
                 val direction = CategoriesFragmentDirections.toSubcategories(it.name)
-                navigationController.navigate(direction)
+                findNavController().navigate(direction)
             }
         )
+    }
+
+    init {
+        lifecycleScope.launchWhenStarted {
+            val categories = viewModel.loadCategories()
+            adapter.setData(categories)
+        }
     }
 
     override fun onCreateView(
@@ -36,19 +46,6 @@ class CategoriesFragment : Fragment() {
         savedInstanceState: Bundle?
     ): View? {
         return inflater.inflate(R.layout.fragment_categories, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        navigationController = Navigation.findNavController(view)
-
-        viewModel.loadCategories()
-        viewModel.categories.observe(
-            viewLifecycleOwner,
-            Observer {
-                adapter.setData(it)
-            }
-        )
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
