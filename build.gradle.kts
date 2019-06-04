@@ -12,7 +12,6 @@ buildscript {
         classpath("com.dicedmelon.gradle:jacoco-android:0.1.4")
         classpath("com.github.triplet.gradle:play-publisher:2.2.0-SNAPSHOT")
         classpath("com.getkeepsafe.dexcount:dexcount-gradle-plugin:0.8.6")
-        classpath("org.jlleitschuh.gradle:ktlint-gradle:8.0.0")
     }
 }
 

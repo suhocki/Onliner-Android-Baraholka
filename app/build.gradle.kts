@@ -11,7 +11,9 @@ plugins {
     id("jacoco-android")
     id("com.github.triplet.play")
     id("com.getkeepsafe.dexcount")
-    id("org.jlleitschuh.gradle.ktlint")
+    id("org.jlleitschuh.gradle.ktlint") version "8.0.0"
+    id("io.gitlab.arturbosch.detekt") version "1.0.0-RC14"
+    id("com.novoda.static-analysis") version "1.0"
 }
 
 val isRunningFromTravis = System.getenv("CI") == "true"
@@ -77,13 +79,21 @@ android {
     lintOptions.isWarningsAsErrors = true
 }
 
-ktlint {
-    version.set("0.32.0")
-    android.set(true)
-    outputToConsole.set(true)
-    reporters.set(setOf(ReporterType.PLAIN, ReporterType.CHECKSTYLE))
-    ignoreFailures.set(false)
-    enableExperimentalRules.set(false)
+staticAnalysis {
+    penalty {
+        maxErrors = 0
+        maxWarnings = 0
+    }
+    ktlint {
+        version.set("0.32.0")
+        android.set(true)
+        outputToConsole.set(true)
+        reporters.set(setOf(ReporterType.PLAIN, ReporterType.CHECKSTYLE))
+        ignoreFailures.set(false)
+        enableExperimentalRules.set(false)
+    }
+    detekt {
+    }
 }
 
 dependencies {

@@ -1,7 +1,9 @@
 package kt.school.starlord.ui.categories
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import io.mockk.*
+import io.mockk.MockKAnnotations
+import io.mockk.coEvery
+import io.mockk.mockk
 import kt.school.starlord.domain.CategoriesRepository
 import kt.school.starlord.entity.Category
 import org.junit.Before
