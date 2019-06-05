@@ -32,6 +32,7 @@ script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - ./scripts/comment_pull_request.sh
+  - ./scripts/telegram_notification.sh
 
 branches:
   only:
