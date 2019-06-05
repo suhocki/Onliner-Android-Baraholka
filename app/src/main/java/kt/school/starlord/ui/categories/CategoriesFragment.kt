@@ -5,7 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.lifecycleScope
+import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
@@ -16,9 +16,9 @@ import kt.school.starlord.ui.global.CategoryAdapterDelegate
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
- * Contains recycler that is filled by categories.
+ * Contains a recycler that is filled by categories.
  *
- * Clicking on element produces navigation to the Subcategories fragment
+ * Clicking on an item takes you to a sub-category fragment.
  */
 class CategoriesFragment : Fragment() {
 
@@ -33,10 +33,10 @@ class CategoriesFragment : Fragment() {
         )
     }
 
-    init {
-        lifecycleScope.launchWhenStarted {
-            val categories = viewModel.loadCategories()
-            adapter.setData(categories)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            viewModel.loadCategories()
         }
     }
 
@@ -55,6 +55,9 @@ class CategoriesFragment : Fragment() {
             setHasFixedSize(true)
             adapter = this@CategoriesFragment.adapter
         }
+        viewModel.categoriesLiveData.observe(viewLifecycleOwner, Observer {
+            adapter.setData(it)
+        })
     }
 
     private inner class CategoriesAdapter(

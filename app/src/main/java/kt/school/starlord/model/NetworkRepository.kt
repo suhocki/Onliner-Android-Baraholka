@@ -16,7 +16,9 @@ class NetworkRepository(
     override suspend fun getCategories(): List<Category> {
         return withContext(Dispatchers.IO) {
             val page: String = pageLoader.getPage()
-            parser.parsePage(page)
+            withContext(Dispatchers.Default) {
+                parser.parsePage(page)
+            }
         }
     }
 }

@@ -30,13 +30,15 @@ internal class CategoriesViewModelTest {
     @Test
     fun `load categories successfully`() = testCoroutineRule.runBlockingTest {
         // Given that the CategoriesRepository returns the list of categories
-        val testedCategories: List<Category> = mockk()
-        coEvery { categoriesRepository.getCategories() }.coAnswers { testedCategories }
+        val testCategories: List<Category> = mockk()
+        coEvery { categoriesRepository.getCategories() }.coAnswers { testCategories }
 
         // When loading categories
-        val realCategories = viewModel.loadCategories()
+        viewModel.loadCategories()
 
         // The correct list of categories is emitted
-        assert(realCategories == testedCategories) { "Emitted data is wrong" }
+        viewModel.categoriesLiveData.observeForTesting {
+            assert(viewModel.categoriesLiveData.value == testCategories) { "Emitted data is wrong" }
+        }
     }
 }
