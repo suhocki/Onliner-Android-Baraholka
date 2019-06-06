@@ -43,9 +43,7 @@ branches:
 
 before_deploy:
   - git tag $(scripts/versionizer/versionizer.sh name)
-  - export GITHUB_ISSUE="$(curl "https://api.github.com/repos/suhocki/starlord/issues?state=closed&sort=updated-desc" | jq '[.[]|select(has("pull_request") | not)][0]' | jq -r '.title')"
-  - cp /dev/null app/src/main/play/release-notes/ru-RU/default.txt
-  - echo "$GITHUB_ISSUE" 2>&1 | tee app/src/main/play/release-notes/ru-RU/default.txt
+  - ./scripts/get_whats_new.sh
   - ./gradlew publish
   - ./scripts/telegram_notify_on_google_play_publish.sh
 
