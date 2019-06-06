@@ -109,7 +109,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxVersion")
     implementation("androidx.core:core-ktx:1.2.0-alpha01")
-    implementation("androidx.appcompat:appcompat:1.1.0-alpha05")
+    implementation("androidx.appcompat:appcompat:1.1.0-beta01")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta1")
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
