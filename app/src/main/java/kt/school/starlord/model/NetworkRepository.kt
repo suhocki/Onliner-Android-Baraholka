@@ -14,11 +14,7 @@ class NetworkRepository(
 ) : CategoriesRepository {
 
     override suspend fun getCategories(): List<Category> {
-        return withContext(Dispatchers.IO) {
-            val page: String = pageLoader.getPage()
-            withContext(Dispatchers.Default) {
-                parser.parsePage(page)
-            }
-        }
+        val page = withContext(Dispatchers.IO) { pageLoader.getPage() }
+        return withContext(Dispatchers.Default) { parser.parsePage(page) }
     }
 }
