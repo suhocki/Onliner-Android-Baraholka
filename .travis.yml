@@ -21,10 +21,12 @@ before_install:
     -in keys/secrets.tar.enc -out keys/secrets.tar -d
   - tar xvf keys/secrets.tar -C keys
   - yes | sdkmanager "platforms;android-28"
-  # generate release notes for Google Play
   - sudo apt-get install jq
-  - cp /dev/null app/src/main/play/release-notes/ru-RU/default.txt
-  - curl "https://api.github.com/repos/suhocki/starlord/issues?state=closed&sort=updated-desc" | jq '[.[]|select(has("pull_request") | not)][0]' | jq -r '.title' 2>&1 | tee app/src/main/play/release-notes/ru-RU/default.txt
+
+before_script:
+  - sudo chmod 755 -R scripts
+  - export COMMITTER_EMAIL="$(git log -1 $TRAVIS_COMMIT --pretty="%cE")"
+  - export AUTHOR_NAME="$(git log -1 $TRAVIS_COMMIT --pretty="%aN")"
 
 script:
   - ./gradlew check test assembleRelease jacocoTestReport
@@ -32,6 +34,7 @@ script:
 after_success:
   - bash <(curl -s https://codecov.io/bash)
   - ./scripts/comment_pull_request.sh
+  - ./scripts/telegram_notify_on_pull_request.sh
 
 branches:
   only:
@@ -40,7 +43,11 @@ branches:
 
 before_deploy:
   - git tag $(scripts/versionizer/versionizer.sh name)
+  - export GITHUB_ISSUE="$(curl "https://api.github.com/repos/suhocki/starlord/issues?state=closed&sort=updated-desc" | jq '[.[]|select(has("pull_request") | not)][0]' | jq -r '.title')"
+  - cp /dev/null app/src/main/play/release-notes/ru-RU/default.txt
+  - echo "$GITHUB_ISSUE" 2>&1 | tee app/src/main/play/release-notes/ru-RU/default.txt
   - ./gradlew publish
+  - ./scripts/telegram_notify_on_google_play_publish.sh
 
 deploy:
   provider: releases
