@@ -50,6 +50,7 @@ android {
             getByName("debug") {
                 isMinifyEnabled = false
                 versionNameSuffix = "-debug"
+                applicationIdSuffix = ".debug"
             }
             getByName("release") {
                 isMinifyEnabled = true
