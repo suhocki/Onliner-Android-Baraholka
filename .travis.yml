@@ -29,7 +29,7 @@ before_script:
   - export AUTHOR_NAME="$(git log -1 $TRAVIS_COMMIT --pretty="%aN")"
 
 script:
-  - ./gradlew check test assembleRelease jacocoTestReport
+  - ./gradlew check test assemble jacocoTestReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
