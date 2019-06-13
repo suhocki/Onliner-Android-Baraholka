@@ -23,7 +23,6 @@ class PageParser(private val mapper: Mapper) {
                     }
                     .toList()
 
-
                 category to subcategories
             }
             .toMap()

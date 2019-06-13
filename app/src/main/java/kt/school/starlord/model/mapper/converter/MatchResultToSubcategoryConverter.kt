@@ -19,4 +19,3 @@ class MatchResultToSubcategoryConverter : BaseConverter<MatchResult, Subcategory
         )
     }
 }
-

@@ -30,7 +30,7 @@ val databaseModule = module {
 
     factory { DaoManager(get(), get()) }
 
-    single { RoomRepository(get(), get())  }
+    single { RoomRepository(get(), get()) }
 
     single<CategoriesRepository>(named(Qualifier.LOCAL)) { get<RoomRepository>() }
 

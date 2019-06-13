@@ -13,4 +13,3 @@ class MatchResultToCategoryConverter : BaseConverter<MatchResult, Category>(
         return Category(regex.find(value.value)?.groups?.get(1)?.value.toString())
     }
 }
-

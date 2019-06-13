@@ -13,4 +13,3 @@ class CategoryToRoomCategoryConverter : BaseConverter<Category, RoomCategory>(
         return RoomCategory(name = value.name)
     }
 }
-

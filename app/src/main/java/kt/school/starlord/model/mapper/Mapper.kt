@@ -1,6 +1,5 @@
 package kt.school.starlord.model.mapper
 
-
 class Mapper constructor(
     inline val converters: Set<Converter<*, *>>
 ) {

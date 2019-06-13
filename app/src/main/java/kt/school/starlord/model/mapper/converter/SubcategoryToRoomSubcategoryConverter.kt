@@ -18,4 +18,3 @@ class SubcategoryToRoomSubcategoryConverter : BaseConverter<Subcategory, RoomSub
         )
     }
 }
-

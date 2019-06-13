@@ -13,4 +13,3 @@ class RoomSubcategoryToSubcategoryConverter : BaseConverter<RoomSubcategory, Sub
         return Subcategory(value.name, count = value.count, link = value.link)
     }
 }
-
