@@ -37,6 +37,8 @@ android {
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
 
+        buildConfigField("String", "BARAHOLKA_ONLINER_URL", "${properties["baraholkaOnlinerUrl"]}")
+
         signingConfigs {
             create("prod") {
                 storeFile = file("../keys/keystore.jks")
