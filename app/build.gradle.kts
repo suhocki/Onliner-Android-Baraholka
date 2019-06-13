@@ -130,6 +130,8 @@ dependencies {
     implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
     // Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
+    // Log
+    implementation("com.jakewharton.timber:timber:4.7.1")
 
     // Find memory leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
