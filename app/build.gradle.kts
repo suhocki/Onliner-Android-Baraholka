@@ -1,3 +1,7 @@
+import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
+
 plugins {
     id("com.android.application")
     id("kotlin-android")
