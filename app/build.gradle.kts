@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import io.gitlab.arturbosch.detekt.detekt
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
@@ -77,6 +78,10 @@ android {
                     "starlord_$buildVersionName$buildLabel.apk"
             }
         }
+
+        kapt.arguments {
+            arg("room.schemaLocation", "$projectDir/sqlite/schemas")
+        }
     }
 
     lintOptions.isWarningsAsErrors = true
@@ -106,6 +111,7 @@ dependencies {
     val koinVersion = "2.0.0-rc-1"
     val ankoVersion = "0.10.8"
     val leakCanaryVersion = "1.6.3"
+    val roomVersion = "2.1.0-rc01"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
@@ -114,6 +120,8 @@ dependencies {
     implementation("androidx.core:core-ktx:1.2.0-alpha01")
     implementation("androidx.appcompat:appcompat:1.1.0-beta01")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta1")
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
@@ -143,8 +151,10 @@ dependencies {
     testImplementation("io.mockk:mockk:1.9.3")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxVersion")
     testImplementation("androidx.arch.core:core-testing:2.0.1")
+    testImplementation("androidx.room:room-testing:$roomVersion")
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
 }
 
 gradle.buildFinished {

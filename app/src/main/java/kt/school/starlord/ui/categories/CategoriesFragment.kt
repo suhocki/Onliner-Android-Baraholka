@@ -36,7 +36,8 @@ class CategoriesFragment : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         if (savedInstanceState == null) {
-            viewModel.loadCategories()
+            viewModel.loadLocalCategories()
+            viewModel.loadRemoteCategories()
         }
     }
 
@@ -55,6 +56,7 @@ class CategoriesFragment : Fragment() {
             setHasFixedSize(true)
             adapter = this@CategoriesFragment.adapter
         }
+
         viewModel.categoriesLiveData.observe(viewLifecycleOwner, Observer {
             adapter.setData(it)
         })
