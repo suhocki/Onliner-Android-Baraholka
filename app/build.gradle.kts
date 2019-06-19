@@ -117,9 +117,9 @@ dependencies {
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxVersion")
-    implementation("androidx.core:core-ktx:1.2.0-alpha01")
+    implementation("androidx.core:core-ktx:1.2.0-alpha02")
     implementation("androidx.appcompat:appcompat:1.1.0-beta01")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta1")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta2")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     // Lifecycle
