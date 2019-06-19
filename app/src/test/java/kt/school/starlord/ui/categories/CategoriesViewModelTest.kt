@@ -41,7 +41,7 @@ internal class CategoriesViewModelTest {
         // When: loading categories by network
         viewModel.loadRemoteCategories()
 
-        //Then
+        // Then
         val categories = categoriesWithSubcategories.keys.toList()
         coVerify(exactly = 1) { roomRepository.updateCategories(categories) }
         coVerify(exactly = 1) { roomRepository.updateSubcategories(categoriesWithSubcategories.values.flatten()) }
@@ -59,7 +59,7 @@ internal class CategoriesViewModelTest {
         // When: loading categories from database
         viewModel.loadLocalCategories()
 
-        //Then
+        // Then
         viewModel.categoriesLiveData.observeForTesting {
             assert(viewModel.categoriesLiveData.value == categories)
         }

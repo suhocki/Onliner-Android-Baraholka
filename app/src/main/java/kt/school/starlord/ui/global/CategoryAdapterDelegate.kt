@@ -27,7 +27,6 @@ class CategoryAdapterDelegate(
         position: Int
     ) = items[position] is Category
 
-
     override fun onBindViewHolder(
         item: Category,
         holder: ViewHolder,
