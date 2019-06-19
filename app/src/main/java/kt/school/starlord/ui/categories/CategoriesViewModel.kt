@@ -33,11 +33,11 @@ class CategoriesViewModel(
      */
     fun loadRemoteCategories() {
         viewModelScope.launch {
-            val map = networkRepository.getCategoriesWithSubcategories()
-            val categories = map.keys.toList()
+            val categoriesWithSubcategories = networkRepository.getCategoriesWithSubcategories()
+            val categories = categoriesWithSubcategories.keys.toList()
 
             roomRepository.updateCategories(categories)
-            roomRepository.updateSubcategories(map.values.flatten())
+            roomRepository.updateSubcategories(categoriesWithSubcategories.values.flatten())
 
             categoriesLiveData.postValue(categories)
         }

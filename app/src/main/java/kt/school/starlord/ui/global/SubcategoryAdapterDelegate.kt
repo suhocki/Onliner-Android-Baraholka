@@ -9,6 +9,10 @@ import kt.school.starlord.R
 import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.extension.inflate
 
+/**
+ * Delegate for subcategories in recycler view
+ * @param clickListener listener for clicks on subcategory
+ */
 class SubcategoryAdapterDelegate(
     private val clickListener: (Subcategory) -> Unit
 ) : AbsListItemAdapterDelegate<Subcategory, Any, SubcategoryAdapterDelegate.ViewHolder>() {
@@ -29,16 +33,22 @@ class SubcategoryAdapterDelegate(
         payloads: MutableList<Any>
     ) = holder.bind(item)
 
+    /**
+     * ViewHolder for subcategory
+     */
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
-        private lateinit var item: Subcategory
+        private lateinit var subcategory: Subcategory
 
         init {
-            view.setOnClickListener { clickListener(item) }
+            view.setOnClickListener { clickListener(subcategory) }
         }
 
+        /**
+         * Binds data with view
+         */
         fun bind(item: Subcategory) = with(itemView) {
-            this@ViewHolder.item = item
+            subcategory = item
             name.text = item.name
             count.text = item.count.toString()
         }

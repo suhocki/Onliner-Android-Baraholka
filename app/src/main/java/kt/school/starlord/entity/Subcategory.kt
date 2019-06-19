@@ -15,6 +15,6 @@ data class Subcategory(
         if (categoryName == null) {
             throw IllegalStateException("Subcategory $this not exists in database.")
         }
-        return categoryName as String
+        return categoryName.toString()
     }
 }

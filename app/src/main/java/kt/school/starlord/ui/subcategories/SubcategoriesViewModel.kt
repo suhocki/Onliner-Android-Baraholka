@@ -5,12 +5,15 @@ import androidx.lifecycle.ViewModel
 import kt.school.starlord.domain.SubcategoriesRepository
 import kt.school.starlord.entity.Subcategory
 
+/**
+ * Contains logic with fetching data asynchronously
+ */
 class SubcategoriesViewModel(
     private val subcategoriesRepository: SubcategoriesRepository
 ) : ViewModel() {
 
     /**
-     * Loads subcategories for selected categoryName from the database
+     * Loads LiveData with subcategories for selected categoryName from the database
      *
      * @return LiveData with subcategories
      */

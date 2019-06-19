@@ -9,6 +9,9 @@ import kt.school.starlord.model.mapper.Mapper
 import kt.school.starlord.model.room.entity.RoomCategory
 import kt.school.starlord.model.room.entity.RoomSubcategory
 
+/**
+ * Controls Room database
+ */
 class RoomRepository(
     private val daoManager: DaoManager,
     private val mapper: Mapper

@@ -9,6 +9,10 @@ import kt.school.starlord.R
 import kt.school.starlord.entity.Category
 import kt.school.starlord.extension.inflate
 
+/**
+ * Delegate for categories in recycler view
+ * @param clickListener listener for clicks on category
+ */
 class CategoryAdapterDelegate(
     private val clickListener: (Category) -> Unit
 ) : AbsListItemAdapterDelegate<Category, Any, CategoryAdapterDelegate.ViewHolder>() {
@@ -23,12 +27,16 @@ class CategoryAdapterDelegate(
         position: Int
     ) = items[position] is Category
 
+
     override fun onBindViewHolder(
         item: Category,
         holder: ViewHolder,
         payloads: MutableList<Any>
     ) = holder.bind(item)
 
+    /**
+     * ViewHolder for subcategory
+     */
     inner class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
 
         private lateinit var item: Category
@@ -37,6 +45,9 @@ class CategoryAdapterDelegate(
             view.setOnClickListener { clickListener(item) }
         }
 
+        /**
+         * Binds data with view
+         */
         fun bind(item: Category) = with(itemView) {
             this@ViewHolder.item = item
             name.text = item.name
