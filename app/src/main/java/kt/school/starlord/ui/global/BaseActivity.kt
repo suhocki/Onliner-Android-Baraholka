@@ -5,40 +5,39 @@ import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 
+/**
+ * Class with method for exclude "won't fix" memory leak
+ * (INPUT_METHOD_MANAGER__SERVED_VIEW,
+ * https://code.google.com/p/android/issues/detail?id=171190)
+ */
 abstract class BaseActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        fixInputMethod(this)
+        fixMemoryLeak(this)
     }
 
-    private fun fixInputMethod(context: Context) {
-        var inputMethodManager: InputMethodManager? = null
-        try {
-            inputMethodManager = context.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
-        } catch (th: Throwable) {
-            th.printStackTrace()
-        }
-        if (inputMethodManager == null) {
-            return
-        }
+    private fun fixMemoryLeak(context: Context) {
+        val inputMethodManager =
+                try {
+                    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
+                } catch (th: KotlinNullPointerException) {
+                    th.printStackTrace()
+                } ?: return
+
         val declaredFields = inputMethodManager.javaClass.declaredFields
         for (declaredField in declaredFields) {
             try {
                 if (!declaredField.isAccessible) {
                     declaredField.isAccessible = true
                 }
-                val obj = declaredField.get(inputMethodManager)
-                if (obj == null || obj !is View) {
-                    continue
-                }
-                val view: View = obj
+                val view = (declaredField.get(inputMethodManager) ?: continue) as? View ?: continue
                 if (view.context === context) {
                     declaredField.set(inputMethodManager, null)
                 } else {
                     return
                 }
-            } catch (th: Throwable) {
+            } catch (th: KotlinNullPointerException) {
                 th.printStackTrace()
             }
         }
