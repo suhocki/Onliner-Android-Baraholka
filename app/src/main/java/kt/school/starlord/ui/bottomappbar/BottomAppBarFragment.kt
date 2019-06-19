@@ -1,4 +1,4 @@
-package kt.school.starlord.ui.appbar
+package kt.school.starlord.ui.bottomappbar
 
 import android.os.Bundle
 import android.view.LayoutInflater

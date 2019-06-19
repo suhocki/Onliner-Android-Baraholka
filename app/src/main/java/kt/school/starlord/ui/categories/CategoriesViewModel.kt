@@ -4,14 +4,13 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import kt.school.starlord.domain.CategoriesRepository
-import kt.school.starlord.domain.SubcategoriesRepository
 import kt.school.starlord.entity.Category
+import kt.school.starlord.model.network.NetworkRepository
+import kt.school.starlord.model.room.RoomRepository
 
 class CategoriesViewModel(
-    private val remoteCategoriesRepository: CategoriesRepository,
-    private val localCategoriesRepository: CategoriesRepository,
-    private val localSubcategoriesRepository: SubcategoriesRepository
+    private val networkRepository: NetworkRepository,
+    private val roomRepository: RoomRepository
 ) : ViewModel() {
 
     /**
@@ -24,7 +23,7 @@ class CategoriesViewModel(
      */
     fun loadLocalCategories() {
         viewModelScope.launch {
-            val data = localCategoriesRepository.getCategories()
+            val data = roomRepository.getCategories()
             categoriesLiveData.postValue(data)
         }
     }
@@ -34,11 +33,11 @@ class CategoriesViewModel(
      */
     fun loadRemoteCategories() {
         viewModelScope.launch {
-            val map = remoteCategoriesRepository.getCategoriesWithSubcategories()
+            val map = networkRepository.getCategoriesWithSubcategories()
             val categories = map.keys.toList()
 
-            localCategoriesRepository.updateCategories(categories)
-            localSubcategoriesRepository.updateSubcategories(map.values.flatten())
+            roomRepository.updateCategories(categories)
+            roomRepository.updateSubcategories(map.values.flatten())
 
             categoriesLiveData.postValue(categories)
         }

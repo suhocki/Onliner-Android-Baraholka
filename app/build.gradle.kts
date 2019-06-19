@@ -111,7 +111,7 @@ dependencies {
     val koinVersion = "2.0.0-rc-1"
     val ankoVersion = "0.10.8"
     val leakCanaryVersion = "1.6.3"
-    val roomVersion = "2.1.0-rc01"
+    val roomVersion = "2.1.0"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))

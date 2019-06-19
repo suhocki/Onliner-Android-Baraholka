@@ -1,14 +1,12 @@
 package kt.school.starlord.di.module
 
 import androidx.room.Room
-import kt.school.starlord.di.Qualifier
-import kt.school.starlord.domain.CategoriesRepository
 import kt.school.starlord.domain.SubcategoriesRepository
 import kt.school.starlord.model.room.AppDatabase
 import kt.school.starlord.model.room.DaoManager
 import kt.school.starlord.model.room.RoomRepository
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.qualifier.named
+import org.koin.dsl.bind
 import org.koin.dsl.module
 
 private const val DATABASE_FILE_NAME = "app_database.sqlite"
@@ -30,9 +28,5 @@ val databaseModule = module {
 
     factory { DaoManager(get(), get()) }
 
-    single { RoomRepository(get(), get()) }
-
-    single<CategoriesRepository>(named(Qualifier.LOCAL)) { get<RoomRepository>() }
-
-    single<SubcategoriesRepository> { get<RoomRepository>() }
+    single { RoomRepository(get(), get()) } bind SubcategoriesRepository::class
 }
