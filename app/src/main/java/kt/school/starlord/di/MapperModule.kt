@@ -1,4 +1,4 @@
-package kt.school.starlord.di.module
+package kt.school.starlord.di
 
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
@@ -9,7 +9,7 @@ import kt.school.starlord.model.room.entity.RoomSubcategory
 import org.koin.dsl.module
 
 /**
- * Contains instructions of how to instantiate Mapper
+ * Contains instructions of how to instantiate Mapper.
  */
 val mapperModule = module {
     single { Mapper(converters) }
@@ -22,25 +22,13 @@ private val converters = setOf(
     object : BaseConverter<Category, RoomCategory>(Category::class.java, RoomCategory::class.java) {
         override fun convert(value: Category) = RoomCategory(name = value.name)
     },
-    object : BaseConverter<RoomSubcategory, Subcategory>(
-        RoomSubcategory::class.java,
-        Subcategory::class.java
-    ) {
+    object : BaseConverter<RoomSubcategory, Subcategory>(RoomSubcategory::class.java, Subcategory::class.java) {
         override fun convert(value: RoomSubcategory) =
-            Subcategory(value.name, count = value.count, link = value.link)
+            Subcategory(value.name, value.categoryName, value.count, value.link)
     },
-    object : BaseConverter<Subcategory, RoomSubcategory>(
-        Subcategory::class.java,
-        RoomSubcategory::class.java
-    ) {
-        override fun convert(value: Subcategory): RoomSubcategory {
-            return RoomSubcategory(
-                categoryName = value.requireCategoryName(),
-                name = value.name,
-                count = value.count,
-                link = value.link
-            )
-        }
+    object : BaseConverter<Subcategory, RoomSubcategory>(Subcategory::class.java, RoomSubcategory::class.java) {
+        override fun convert(value: Subcategory) =
+            RoomSubcategory(value.name, value.categoryName, value.count, value.link)
     },
     object : BaseConverter<MatchResult, Category>(MatchResult::class.java, Category::class.java) {
         override fun convert(value: MatchResult): Category {
@@ -53,6 +41,7 @@ private val converters = setOf(
             return Subcategory(
                 name = """">((.|\n)*?)</a""".toRegex()
                     .find(value.value)?.groups?.get(1)?.value.toString(),
+                categoryName = "undefined",
                 count = """<sup>((.|\n)*?)</sup>""".toRegex()
                     .find(value.value)?.groups?.get(1)?.value.toString().trim().toInt(),
                 link = """<a href="((.|\n)*?)"""".toRegex()

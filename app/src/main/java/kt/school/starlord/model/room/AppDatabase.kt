@@ -8,7 +8,7 @@ import kt.school.starlord.model.room.entity.RoomCategory
 import kt.school.starlord.model.room.entity.RoomSubcategory
 
 /**
- * Defines access methods to data access objects (Dao`s) that will be implemented automatically by Room library
+ * Defines access methods to data access objects (Dao`s) that will be implemented automatically by Room library.
  */
 @Database(
     version = AppDatabase.DATABASE_VERSION,
@@ -19,12 +19,12 @@ import kt.school.starlord.model.room.entity.RoomSubcategory
 )
 abstract class AppDatabase : RoomDatabase() {
     /**
-     * Provides access to CategoryDao
+     * Provides access to CategoryDao.
      */
     abstract fun categoryDao(): CategoryDao
 
     /**
-     * Provides access to SubcategoryDao
+     * Provides access to SubcategoryDao.
      */
     abstract fun subcategoryDao(): SubcategoryDao
 
@@ -33,7 +33,7 @@ abstract class AppDatabase : RoomDatabase() {
     }
 
     /**
-     * Contains constants for database table naming
+     * Contains constants for database table naming.
      */
     object Table {
         const val CATEGORIES = "Categories"

@@ -7,13 +7,13 @@ import androidx.room.PrimaryKey
 import kt.school.starlord.model.room.AppDatabase
 
 /**
- * Database entity that keeps info about Subcategory
+ * Database entity that keeps info about Subcategory.
  * @param name primary key in Subcategories table
  * @param categoryName foreign key from Categories table
  */
 @Entity(
     tableName = AppDatabase.Table.SUBCATEGORIES,
-    indices = [(Index(RoomSubcategory.CATEGORY_NAME))]
+    indices = [Index(RoomSubcategory.CATEGORY_NAME)]
 )
 data class RoomSubcategory(
     @PrimaryKey val name: String,

@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 import kt.school.starlord.model.room.AppDatabase
 
 /**
- * Keeps information about name of category
+ * Keeps information about name of category.
  * @param name primary key in database table
  */
 @Entity(tableName = AppDatabase.Table.CATEGORIES)

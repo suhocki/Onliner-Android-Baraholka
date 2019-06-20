@@ -1,7 +1,7 @@
 package kt.school.starlord.model.mapper
 
 /**
- * Designed for mapping objects to different types using converters
+ * Designed for mapping objects to different types using converters.
  */
 class Mapper constructor(
     inline val converters: Set<Converter<*, *>>

@@ -8,6 +8,8 @@ import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.model.network.NetworkRepository
 import kt.school.starlord.model.room.RoomRepository
+import kt.school.starlord.ui.TestCoroutineRule
+import kt.school.starlord.ui.observeForTesting
 import org.junit.Rule
 import org.junit.Test
 
@@ -27,6 +29,7 @@ internal class CategoriesViewModelTest {
     @Test
     fun `load categories with subcategories by network`() = testCoroutineRule.runBlockingTest {
         // Given: NetworkRepository returns mocked map of categories with subcategories
+        val endpoint = "url"
         val categoriesWithSubcategories = mapOf(
             Category("Телефоны. Смартфоны") to listOf(
                 Subcategory("Мобильные телефоны", "Телефоны. Смартфоны", 7572, "link1"),
@@ -36,7 +39,7 @@ internal class CategoriesViewModelTest {
                 Subcategory("Ноутбуки", "Apple", 7572, "link1")
             )
         )
-        coEvery { networkRepository.getCategoriesWithSubcategories() }.coAnswers { categoriesWithSubcategories }
+        coEvery { networkRepository.getCategoriesWithSubcategories(endpoint) }.coAnswers { categoriesWithSubcategories }
 
         // When: loading categories by network
         viewModel.loadRemoteCategories()
@@ -45,8 +48,8 @@ internal class CategoriesViewModelTest {
         val categories = categoriesWithSubcategories.keys.toList()
         coVerify(exactly = 1) { roomRepository.updateCategories(categories) }
         coVerify(exactly = 1) { roomRepository.updateSubcategories(categoriesWithSubcategories.values.flatten()) }
-        viewModel.categoriesLiveData.observeForTesting {
-            assert(viewModel.categoriesLiveData.value == categories)
+        viewModel.categories.observeForTesting {
+            assert(viewModel.categories.value == categories)
         }
     }
 
@@ -60,8 +63,8 @@ internal class CategoriesViewModelTest {
         viewModel.loadLocalCategories()
 
         // Then
-        viewModel.categoriesLiveData.observeForTesting {
-            assert(viewModel.categoriesLiveData.value == categories)
+        viewModel.categories.observeForTesting {
+            assert(viewModel.categories.value == categories)
         }
     }
 }

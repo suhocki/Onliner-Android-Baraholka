@@ -7,24 +7,24 @@ import androidx.room.Query
 import kt.school.starlord.model.room.entity.RoomCategory
 
 /**
- * Defines queries for working with categories in database
+ * Defines queries for working with categories in database.
  */
 @Dao
 interface CategoryDao {
     /**
-     * @return all categories
+     * @return all categories.
      */
     @Query("SELECT * FROM Categories")
     suspend fun getCategories(): List<RoomCategory>
 
     /**
-     * @param categories categories that will be saved in database
+     * @param categories categories that will be saved in database.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     suspend fun putCategories(categories: List<RoomCategory>)
 
     /**
-     * Deletes all categories from database
+     * Deletes all categories from database.
      */
     @Query("DELETE FROM Categories")
     suspend fun deleteAll()

@@ -10,23 +10,30 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.R
-import kt.school.starlord.ui.global.SubcategoryAdapterDelegate
+import kt.school.starlord.extension.systemNotifier
 import org.jetbrains.anko.support.v4.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
+/**
+ * Contains a recycler that is filled by subcategories.
+ * Clicking on subcategory takes you to a products fragment.
+ */
 class SubcategoriesFragment : Fragment() {
 
     private val viewModel: SubcategoriesViewModel by viewModel()
-
     private val adapter by lazy { SubcategoriesAdapter() }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_subcategories, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        if (savedInstanceState == null) {
+            val safeArgs = SubcategoriesFragmentArgs.fromBundle(requireArguments())
+            val categoryName = safeArgs.categoryName
+            viewModel.loadSubcategories(categoryName)
+        }
     }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        inflater.inflate(R.layout.fragment_subcategories, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -36,11 +43,9 @@ class SubcategoriesFragment : Fragment() {
             adapter = this@SubcategoriesFragment.adapter
         }
 
-        val safeArgs = SubcategoriesFragmentArgs.fromBundle(requireArguments())
-        val categoryName = safeArgs.categoryName
-        viewModel.getSubcategoriesLiveData(categoryName).observe(viewLifecycleOwner, Observer {
-            adapter.setData(it)
-        })
+        viewModel.subcategories.observe(viewLifecycleOwner, Observer(adapter::setData))
+        viewModel.progress.observe(viewLifecycleOwner, Observer(systemNotifier::showProgress))
+        viewModel.error.observe(viewLifecycleOwner, Observer(systemNotifier::showError))
     }
 
     private inner class SubcategoriesAdapter : ListDelegationAdapter<MutableList<Any>>() {

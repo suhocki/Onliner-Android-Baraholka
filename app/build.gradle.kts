@@ -17,22 +17,27 @@ plugins {
     id("com.novoda.static-analysis") version "1.0"
 }
 
+object AndroidVersion {
+    const val KITKAT = 19
+    const val P = 28
+}
+
 val isRunningFromTravis = System.getenv("CI") == "true"
 val buildUid = System.getenv("TRAVIS_BUILD_ID") ?: "local"
-val buildVersionName: String =
-    if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh name".runCommand()
-    else "1-local-build"
-val buildVersionCode: Int =
-    if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh code".runCommand().toInt()
-    else 1
+val buildVersionName by lazy {
+    if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh name".runCommand() else "local-build"
+}
+val buildVersionCode by lazy {
+    if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh code".runCommand().toInt() else 1
+}
 
 android {
-    compileSdkVersion(28)
+    compileSdkVersion(AndroidVersion.P)
 
     defaultConfig {
         applicationId = "kt.school.starlord"
-        minSdkVersion(19)
-        targetSdkVersion(28)
+        minSdkVersion(AndroidVersion.KITKAT)
+        targetSdkVersion(AndroidVersion.P)
         versionCode = buildVersionCode
         versionName = buildVersionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -43,6 +48,7 @@ android {
             targetCompatibility = JavaVersion.VERSION_1_8
         }
 
+        buildConfigField("String", "DATABASE_FILE_NAME", "${properties["databaseFileName"]}")
         buildConfigField("String", "BARAHOLKA_ONLINER_URL", "${properties["baraholkaOnlinerUrl"]}")
 
         signingConfigs {
@@ -75,9 +81,7 @@ android {
 
         applicationVariants.all applicationVariants@{
             outputs.all outputs@{
-                val buildLabel =
-                    if (this@applicationVariants.name == "debug") "_debug"
-                    else ""
+                val buildLabel = if (this@applicationVariants.name == "debug") "_debug" else ""
 
                 (this@outputs as BaseVariantOutputImpl).outputFileName =
                     "starlord_$buildVersionName$buildLabel.apk"
@@ -106,6 +110,10 @@ staticAnalysis {
         enableExperimentalRules.set(false)
     }
     detekt {
+        toolVersion = "1.0.0-RC14"
+        failFast = false
+        config = files(rootProject.file(".detekt.yml"))
+        filters = ".*/resources/.*,.*/build/.*"
     }
 }
 
@@ -177,13 +185,15 @@ play {
     resolutionStrategy = "auto"
 }
 
+val scriptExecutionTime = 5L
+
 fun String.runCommand(workingDir: File = file(".")) =
     ProcessBuilder(*split("\\s".toRegex()).toTypedArray())
         .directory(workingDir)
         .redirectOutput(ProcessBuilder.Redirect.PIPE)
         .redirectError(ProcessBuilder.Redirect.PIPE)
         .start()
-        .apply { waitFor(5, TimeUnit.SECONDS) }
+        .apply { waitFor(scriptExecutionTime, TimeUnit.SECONDS) }
         .inputStream
         .bufferedReader()
         .readText()

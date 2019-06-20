@@ -12,13 +12,12 @@ import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.R
 import kt.school.starlord.entity.Category
-import kt.school.starlord.ui.global.CategoryAdapterDelegate
+import kt.school.starlord.extension.systemNotifier
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
  * Contains a recycler that is filled by categories.
- *
- * Clicking on an item takes you to a sub-category fragment.
+ * Clicking on category takes you to the subcategories fragment.
  */
 class CategoriesFragment : Fragment() {
 
@@ -41,13 +40,8 @@ class CategoriesFragment : Fragment() {
         }
     }
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_categories, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        inflater.inflate(R.layout.fragment_categories, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
@@ -57,9 +51,9 @@ class CategoriesFragment : Fragment() {
             adapter = this@CategoriesFragment.adapter
         }
 
-        viewModel.categoriesLiveData.observe(viewLifecycleOwner, Observer {
-            adapter.setData(it)
-        })
+        viewModel.categories.observe(viewLifecycleOwner, Observer(adapter::setData))
+        viewModel.progress.observe(viewLifecycleOwner, Observer(systemNotifier::showProgress))
+        viewModel.error.observe(viewLifecycleOwner, Observer(systemNotifier::showError))
     }
 
     private inner class CategoriesAdapter(

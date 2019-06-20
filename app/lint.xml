@@ -3,6 +3,6 @@
     <!-- Disable the given check in this project -->
     <issue id="IconMissingDensityFolder" severity="ignore" />
 
-    <!-- Change the severity of hardcoded strings to "error" -->
+    <!-- Change the severity of hardcoded strings to "showError" -->
     <issue id="HardcodedText" severity="error" />
 </lint>

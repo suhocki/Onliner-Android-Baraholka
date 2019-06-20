@@ -1,45 +1,51 @@
 package kt.school.starlord.ui.categories
 
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kt.school.starlord.entity.Category
 import kt.school.starlord.model.network.NetworkRepository
 import kt.school.starlord.model.room.RoomRepository
+import kt.school.starlord.ui.global.BaseViewModel
 
+/**
+ * Contains logic with fetching categories asynchronously.
+ */
 class CategoriesViewModel(
     private val networkRepository: NetworkRepository,
     private val roomRepository: RoomRepository
-) : ViewModel() {
+) : BaseViewModel() {
 
     /**
-     * Use for observing categories
+     * Use for observing categories.
      */
-    val categoriesLiveData = MutableLiveData<List<Category>>()
+    val categories = MutableLiveData<List<Category>>()
 
     /**
-     * Loads categories from the database
+     * Loads categories from the database.
      */
     fun loadLocalCategories() {
         viewModelScope.launch {
-            val data = roomRepository.getCategories()
-            categoriesLiveData.postValue(data)
+            runCatching { roomRepository.getCategories() }.fold(categories::setValue, error::setValue)
         }
     }
 
     /**
-     * Loads categories (and subcategories) from the Internet and puts them in a database
+     * Loads categories (and subcategories) from the Internet and puts them in a database.
      */
     fun loadRemoteCategories() {
         viewModelScope.launch {
-            val categoriesWithSubcategories = networkRepository.getCategoriesWithSubcategories()
-            val categories = categoriesWithSubcategories.keys.toList()
+            progress.value = true
 
-            roomRepository.updateCategories(categories)
-            roomRepository.updateSubcategories(categoriesWithSubcategories.values.flatten())
+            runCatching {
+                val categoriesWithSubcategories = networkRepository.getCategoriesWithSubcategories()
+                val categories = categoriesWithSubcategories.keys.toList()
+                roomRepository.updateCategories(categories)
+                roomRepository.updateSubcategories(categoriesWithSubcategories.values.flatten())
+                categories
+            }.fold(categories::setValue, error::setValue)
 
-            categoriesLiveData.postValue(categories)
+            progress.value = false
         }
     }
 }

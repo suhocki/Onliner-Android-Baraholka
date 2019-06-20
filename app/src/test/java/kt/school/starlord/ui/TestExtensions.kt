@@ -1,4 +1,4 @@
-package kt.school.starlord.ui.categories
+package kt.school.starlord.ui
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer

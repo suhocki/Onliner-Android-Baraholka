@@ -1,7 +1,7 @@
 package kt.school.starlord.model.mapper
 
 /**
- * Base abstract converter for TypeMapper. Was made to keep fromClass and toClass fields inside constructor
+ * Base abstract converter for TypeMapper. Was made to keep fromClass and toClass fields inside constructor.
  */
 abstract class BaseConverter<FROM, TO>(
     override val fromClass: Class<FROM>,

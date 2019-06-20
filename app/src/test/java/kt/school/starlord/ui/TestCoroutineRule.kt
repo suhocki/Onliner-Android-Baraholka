@@ -1,4 +1,4 @@
-package kt.school.starlord.ui.categories
+package kt.school.starlord.ui
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.test.TestCoroutineDispatcher
