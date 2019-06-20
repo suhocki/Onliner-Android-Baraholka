@@ -1,4 +1,4 @@
-package kt.school.starlord.ui.subcategories
+package kt.school.starlord.ui.products
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -16,31 +16,16 @@ import kt.school.starlord.ui.categories.CategoriesFragmentDirections
 import kt.school.starlord.ui.global.CategoryAdapterDelegate
 import org.jetbrains.anko.support.v4.toast
 
-class SubcategoriesFragment : Fragment() {
+class ProductsFragment : Fragment() {
 
-    private val adapter by lazy {
-        SubcategoriesAdapter(
-            onSubCategoryClick = {
-                val direction = SubcategoriesFragmentDirections.toProducts(it.name)
-                findNavController().navigate(direction)
-            }
-        )
-    }
+    private val adapter by lazy { ProductsAdapter() }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        arguments?.let {
-            val safeArgs = SubcategoriesFragmentArgs.fromBundle(it)
-            val subcategories = listOf(Subcategory("name", 15, "link"))
-            adapter.setData(listOf(Category(safeArgs.categoryName, subcategories)))
-        }
-    }
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        return inflater.inflate(R.layout.fragment_subcategories, container, false)
+        return inflater.inflate(R.layout.fragment_products, container, false)
     }
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
@@ -48,16 +33,14 @@ class SubcategoriesFragment : Fragment() {
         with(recyclerView) {
             layoutManager = LinearLayoutManager(context)
             setHasFixedSize(true)
-            adapter = this@SubcategoriesFragment.adapter
+            adapter = this@ProductsFragment.adapter
         }
     }
 
-    private inner class SubcategoriesAdapter (
-        onSubCategoryClick: (Category) -> Unit
-    ) : ListDelegationAdapter<MutableList<Any>>() {
+    private inner class ProductsAdapter : ListDelegationAdapter<MutableList<Any>>() {
         init {
             items = mutableListOf()
-            delegatesManager.addDelegate(CategoryAdapterDelegate(onSubCategoryClick))
+            delegatesManager.addDelegate(CategoryAdapterDelegate { toast("$it") })
         }
 
         fun setData(data: List<Any>) {
