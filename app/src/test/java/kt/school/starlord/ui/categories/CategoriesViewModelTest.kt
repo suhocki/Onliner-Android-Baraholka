@@ -29,17 +29,16 @@ internal class CategoriesViewModelTest {
     @Test
     fun `load categories with subcategories by network`() = testCoroutineRule.runBlockingTest {
         // Given: NetworkRepository returns mocked map of categories with subcategories
-        val endpoint = "url"
         val categoriesWithSubcategories = mapOf(
-            Category("Телефоны. Смартфоны") to listOf(
-                Subcategory("Мобильные телефоны", "Телефоны. Смартфоны", 7572, "link1"),
-                Subcategory("Мобильные телефоны: аксессуары и запчасти", "Телефоны. Смартфоны", 7832, "link2")
+            Category("categoryName1") to listOf(
+                Subcategory("subcategoryName1", "categoryName1", 5, "link1"),
+                Subcategory("subcategoryName2", "categoryName1", 2, "link2")
             ),
-            Category("Apple") to listOf(
-                Subcategory("Ноутбуки", "Apple", 7572, "link1")
+            Category("categoryName2") to listOf(
+                Subcategory("subcategoryName3", "categoryName2", 3, "link3")
             )
         )
-        coEvery { networkRepository.getCategoriesWithSubcategories(endpoint) }.coAnswers { categoriesWithSubcategories }
+        coEvery { networkRepository.getCategoriesWithSubcategories() }.coAnswers { categoriesWithSubcategories }
 
         // When: loading categories by network
         viewModel.loadRemoteCategories()

@@ -7,6 +7,7 @@ import io.mockk.mockk
 import kt.school.starlord.domain.SubcategoriesRepository
 import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.ui.TestCoroutineRule
+import kt.school.starlord.ui.observeForTesting
 import org.junit.Rule
 import org.junit.Test
 
@@ -25,14 +26,16 @@ class SubcategoriesViewModelTest {
     fun `load categories with subcategories by network`() = testCoroutineRule.runBlockingTest {
         // Given
         val categoryName = "Apple"
-        val mockedSubcategories: List<Subcategory> = mockk()
-        coEvery { subcategoriesRepository.getSubcategories(categoryName) } coAnswers { mockedSubcategories }
+        val subcategories: List<Subcategory> = mockk()
+        coEvery { subcategoriesRepository.getSubcategories(categoryName) } coAnswers { subcategories }
 
         // When
-        val actualSubcategories = viewModel.getSubcategoriesLiveData(categoryName)
+        viewModel.loadSubcategories(categoryName)
 
         // Then
         coVerify(exactly = 1) { subcategoriesRepository.getSubcategories(categoryName) }
-        assert(actualSubcategories == mockedSubcategories)
+        viewModel.subcategories.observeForTesting {
+            assert(viewModel.subcategories.value == subcategories)
+        }
     }
 }
