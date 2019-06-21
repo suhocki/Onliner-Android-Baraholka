@@ -112,7 +112,7 @@ staticAnalysis {
     detekt {
         toolVersion = "1.0.0-RC14"
         failFast = false
-        config = files(rootProject.file(".detekt.yml"))
+        config = files(rootProject.file(".codacy.yml"))
         filters = ".*/resources/.*,.*/build/.*"
     }
 }
