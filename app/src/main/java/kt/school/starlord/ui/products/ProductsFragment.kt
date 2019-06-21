@@ -13,9 +13,9 @@ import kt.school.starlord.ui.global.CategoryAdapterDelegate
 import org.jetbrains.anko.support.v4.toast
 
 /**
- * Contains a recycler that is filled by subcategories.
+ * Contains a recycler that is filled by products.
  *
- * Clicking on an item takes you to a products fragment.
+ * Clicking on an item takes you to a product fragment.
  */
 
 class ProductsFragment : Fragment() {
