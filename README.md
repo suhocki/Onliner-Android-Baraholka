@@ -9,6 +9,12 @@
 
 school.kt project by ['star-lord' team](https://github.com/suhocki/starlord/graphs/contributors)
 
+## Roadmap
+The application is under active development. 
+
+Future improvements can be found on the repository's
+[issue tracker](https://github.com/suhocki/starlord/issues?q=is%3Aopen+is%3Aissue+label%3Afeature).
+
 ### License
 ```text
 The MIT License (MIT)

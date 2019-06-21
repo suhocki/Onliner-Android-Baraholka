@@ -1,4 +1,5 @@
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import io.gitlab.arturbosch.detekt.detekt
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
@@ -16,26 +17,39 @@ plugins {
     id("com.novoda.static-analysis") version "1.0"
 }
 
+object AndroidVersion {
+    const val KITKAT = 19
+    const val P = 28
+}
+
 val isRunningFromTravis = System.getenv("CI") == "true"
 val buildUid = System.getenv("TRAVIS_BUILD_ID") ?: "local"
-val buildVersionName: String =
-    if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh name".runCommand()
-    else "1-local-build"
-val buildVersionCode: Int =
-    if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh code".runCommand().toInt()
-    else 1
+val buildVersionName by lazy {
+    if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh name".runCommand() else "local-build"
+}
+val buildVersionCode by lazy {
+    if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh code".runCommand().toInt() else 1
+}
 
 android {
-    compileSdkVersion(28)
+    compileSdkVersion(AndroidVersion.P)
 
     defaultConfig {
         applicationId = "kt.school.starlord"
-        minSdkVersion(19)
-        targetSdkVersion(28)
+        minSdkVersion(AndroidVersion.KITKAT)
+        targetSdkVersion(AndroidVersion.P)
         versionCode = buildVersionCode
         versionName = buildVersionName
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables.useSupportLibrary = true
+
+        compileOptions {
+            sourceCompatibility = JavaVersion.VERSION_1_8
+            targetCompatibility = JavaVersion.VERSION_1_8
+        }
+
+        buildConfigField("String", "DATABASE_FILE_NAME", "${properties["databaseFileName"]}")
+        buildConfigField("String", "BARAHOLKA_ONLINER_URL", "${properties["baraholkaOnlinerUrl"]}")
 
         signingConfigs {
             create("prod") {
@@ -67,13 +81,15 @@ android {
 
         applicationVariants.all applicationVariants@{
             outputs.all outputs@{
-                val buildLabel =
-                    if (this@applicationVariants.name == "debug") "_debug"
-                    else ""
+                val buildLabel = if (this@applicationVariants.name == "debug") "_debug" else ""
 
                 (this@outputs as BaseVariantOutputImpl).outputFileName =
                     "starlord_$buildVersionName$buildLabel.apk"
             }
+        }
+
+        kapt.arguments {
+            arg("room.schemaLocation", "$projectDir/sqlite/schemas")
         }
     }
 
@@ -94,6 +110,10 @@ staticAnalysis {
         enableExperimentalRules.set(false)
     }
     detekt {
+        toolVersion = "1.0.0-RC14"
+        failFast = false
+        config = files(rootProject.file(".codacy.yml"))
+        filters = ".*/resources/.*,.*/build/.*"
     }
 }
 
@@ -104,14 +124,17 @@ dependencies {
     val koinVersion = "2.0.0-rc-1"
     val ankoVersion = "0.10.8"
     val leakCanaryVersion = "1.6.3"
+    val roomVersion = "2.1.0"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxVersion")
-    implementation("androidx.core:core-ktx:1.2.0-alpha01")
+    implementation("androidx.core:core-ktx:1.2.0-alpha02")
     implementation("androidx.appcompat:appcompat:1.1.0-beta01")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta1")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta2")
+    implementation("androidx.room:room-runtime:$roomVersion")
+    implementation("androidx.room:room-ktx:$roomVersion")
     // Lifecycle
     implementation("androidx.lifecycle:lifecycle-extensions:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
@@ -130,6 +153,8 @@ dependencies {
     implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
     // Adapter simplify
     implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
+    // Log
+    implementation("com.jakewharton.timber:timber:4.7.1")
 
     // Find memory leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
@@ -139,8 +164,10 @@ dependencies {
     testImplementation("io.mockk:mockk:1.9.3")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxVersion")
     testImplementation("androidx.arch.core:core-testing:2.0.1")
+    testImplementation("androidx.room:room-testing:$roomVersion")
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
+    kapt("androidx.room:room-compiler:$roomVersion")
 }
 
 gradle.buildFinished {
@@ -158,13 +185,15 @@ play {
     resolutionStrategy = "auto"
 }
 
+val scriptExecutionTime = 5L
+
 fun String.runCommand(workingDir: File = file(".")) =
     ProcessBuilder(*split("\\s".toRegex()).toTypedArray())
         .directory(workingDir)
         .redirectOutput(ProcessBuilder.Redirect.PIPE)
         .redirectError(ProcessBuilder.Redirect.PIPE)
         .start()
-        .apply { waitFor(5, TimeUnit.SECONDS) }
+        .apply { waitFor(scriptExecutionTime, TimeUnit.SECONDS) }
         .inputStream
         .bufferedReader()
         .readText()

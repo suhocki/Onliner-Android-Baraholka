@@ -1,4 +1,4 @@
-package kt.school.starlord.ui.appbar
+package kt.school.starlord.ui.bottomappbar
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -22,13 +22,8 @@ import kt.school.starlord.R
  */
 class BottomAppBarFragment : Fragment() {
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_appbar, container, false)
-    }
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
+        inflater.inflate(R.layout.fragment_appbar, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)

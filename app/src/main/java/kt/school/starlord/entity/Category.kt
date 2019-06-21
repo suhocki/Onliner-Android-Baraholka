@@ -1,6 +1,7 @@
 package kt.school.starlord.entity
 
-data class Category(
-    val name: String,
-    val subCategories: List<Subcategory>
-)
+/**
+ * Main entity that appears on CategoryFragment.
+ * @param name name of category
+ */
+data class Category(val name: String)
