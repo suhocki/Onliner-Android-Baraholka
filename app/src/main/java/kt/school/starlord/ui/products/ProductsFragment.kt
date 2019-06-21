@@ -12,6 +12,12 @@ import kt.school.starlord.R
 import kt.school.starlord.ui.global.CategoryAdapterDelegate
 import org.jetbrains.anko.support.v4.toast
 
+/**
+ * Contains a recycler that is filled by subcategories.
+ *
+ * Clicking on an item takes you to a products fragment.
+ */
+
 class ProductsFragment : Fragment() {
 
     private val adapter by lazy { ProductsAdapter() }
