@@ -5,17 +5,14 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.lifecycle.Observer
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.R
-import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
-import kt.school.starlord.ui.global.CategoryAdapterDelegate
 import kt.school.starlord.extension.systemNotifier
-import org.jetbrains.anko.support.v4.toast
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -59,12 +56,12 @@ class SubcategoriesFragment : Fragment() {
         viewModel.error.observe(viewLifecycleOwner, Observer(systemNotifier::showError))
     }
 
-    private inner class SubcategoriesAdapter (
-        onSubCategoryClick: (Category) -> Unit
+    private inner class SubcategoriesAdapter(
+        onSubCategoryClick: (Subcategory) -> Unit
     ) : ListDelegationAdapter<MutableList<Any>>() {
         init {
             items = mutableListOf()
-            delegatesManager.addDelegate(CategoryAdapterDelegate(onSubCategoryClick))
+            delegatesManager.addDelegate(SubcategoryAdapterDelegate { onSubCategoryClick(it) })
         }
 
         fun setData(data: List<Any>) {

@@ -9,7 +9,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.R
-import kt.school.starlord.ui.global.CategoryAdapterDelegate
+import kt.school.starlord.ui.categories.CategoryAdapterDelegate
 import org.jetbrains.anko.support.v4.toast
 
 /**
