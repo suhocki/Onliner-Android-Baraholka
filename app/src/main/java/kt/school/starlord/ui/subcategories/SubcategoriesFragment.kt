@@ -25,7 +25,7 @@ class SubcategoriesFragment : Fragment() {
     private val adapter by lazy {
         SubcategoriesAdapter(
             onSubCategoryClick = {
-                val direction = SubcategoriesFragmentDirections.toProducts(it.name)
+                val direction = SubcategoriesFragmentDirections.toProducts()
                 findNavController().navigate(direction)
             }
         )
@@ -61,7 +61,7 @@ class SubcategoriesFragment : Fragment() {
     ) : ListDelegationAdapter<MutableList<Any>>() {
         init {
             items = mutableListOf()
-            delegatesManager.addDelegate(SubcategoryAdapterDelegate { onSubCategoryClick(it) })
+            delegatesManager.addDelegate(SubcategoryAdapterDelegate(onSubCategoryClick))
         }
 
         fun setData(data: List<Any>) {
