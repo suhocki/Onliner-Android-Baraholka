@@ -12,9 +12,7 @@ import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.R
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
-import kt.school.starlord.ui.categories.CategoriesFragmentDirections
 import kt.school.starlord.ui.global.CategoryAdapterDelegate
-import org.jetbrains.anko.support.v4.toast
 
 class SubcategoriesFragment : Fragment() {
 

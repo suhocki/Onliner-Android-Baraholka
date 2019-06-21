@@ -5,14 +5,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.R
-import kt.school.starlord.entity.Category
-import kt.school.starlord.entity.Subcategory
-import kt.school.starlord.ui.categories.CategoriesFragmentDirections
 import kt.school.starlord.ui.global.CategoryAdapterDelegate
 import org.jetbrains.anko.support.v4.toast
 
