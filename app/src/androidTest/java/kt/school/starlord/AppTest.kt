@@ -2,7 +2,7 @@ package kt.school.starlord
 
 import timber.log.Timber
 
-class AppDebug : App() {
+class AppTest : App() {
 
     override fun onCreate() {
         super.onCreate()
@@ -14,4 +14,3 @@ class AppDebug : App() {
         Timber.plant(debugTree)
     }
 }
-
