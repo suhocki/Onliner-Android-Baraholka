@@ -1,9 +1,9 @@
-package kt.school.starlord.ui.global
+package kt.school.starlord.model.system
 
 /**
  * Interface with basic methods to tell user what is happening now.
  */
-interface SystemNotifier {
+interface SystemMessageReceiver {
     /**
      * Display a toast with message.
      */

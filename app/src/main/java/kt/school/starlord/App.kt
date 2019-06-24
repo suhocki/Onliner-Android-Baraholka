@@ -2,6 +2,7 @@ package kt.school.starlord
 
 import android.annotation.SuppressLint
 import android.app.Application
+import kt.school.starlord.di.appModule
 import kt.school.starlord.di.databaseModule
 import kt.school.starlord.di.mapperModule
 import kt.school.starlord.di.networkModule
@@ -26,10 +27,13 @@ open class App : Application() {
             androidLogger()
             androidContext(this@App)
             modules(
-                mapperModule,
-                networkModule,
-                databaseModule,
-                viewModelModule
+                listOf(
+                    appModule,
+                    mapperModule,
+                    networkModule,
+                    databaseModule,
+                    viewModelModule
+                )
             )
         }
     }

@@ -8,11 +8,11 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
-import com.hannesdorfmann.adapterdelegates4.ListDelegationAdapter
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.R
-import kt.school.starlord.entity.Category
-import kt.school.starlord.extension.systemNotifier
+import kt.school.starlord.model.system.SystemMessageReceiver
+import kt.school.starlord.ui.global.AppRecyclerAdapter
+import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -22,10 +22,11 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class CategoriesFragment : Fragment() {
 
     private val viewModel: CategoriesViewModel by viewModel()
+    private val systemMessageReceiver: SystemMessageReceiver by inject()
 
     private val adapter by lazy {
-        CategoriesAdapter(
-            onCategoryClick = {
+        AppRecyclerAdapter(
+            CategoryAdapterDelegate {
                 val direction = CategoriesFragmentDirections.toSubcategories(it.name)
                 findNavController().navigate(direction)
             }
@@ -52,24 +53,7 @@ class CategoriesFragment : Fragment() {
         }
 
         viewModel.categories.observe(viewLifecycleOwner, Observer(adapter::setData))
-        viewModel.progress.observe(viewLifecycleOwner, Observer(systemNotifier::showProgress))
-        viewModel.error.observe(viewLifecycleOwner, Observer(systemNotifier::showError))
-    }
-
-    private inner class CategoriesAdapter(
-        onCategoryClick: (Category) -> Unit
-    ) : ListDelegationAdapter<MutableList<Any>>() {
-
-        init {
-            items = mutableListOf()
-            delegatesManager.addDelegate(CategoryAdapterDelegate(onCategoryClick))
-        }
-
-        fun setData(data: List<Any>) {
-            items.clear()
-            items.addAll(data)
-
-            notifyDataSetChanged()
-        }
+        viewModel.progress.observe(viewLifecycleOwner, Observer(systemMessageReceiver::showProgress))
+        viewModel.error.observe(viewLifecycleOwner, Observer(systemMessageReceiver::showError))
     }
 }

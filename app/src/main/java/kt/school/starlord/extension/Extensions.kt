@@ -4,8 +4,6 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.annotation.LayoutRes
-import androidx.fragment.app.Fragment
-import kt.school.starlord.ui.global.SystemNotifier
 
 /**
  * Encapsulate logic for creating a view using layoutRes.
@@ -18,12 +16,3 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false):
         attachToRoot
     )
 }
-
-/**
- *  Cast activity to SystemNotifier.
- */
-val Fragment.systemNotifier: SystemNotifier
-    get() {
-        val activity = requireActivity()
-        return if (activity is SystemNotifier) activity else error("$activity is not a SystemNotifier")
-    }
