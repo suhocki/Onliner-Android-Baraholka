@@ -21,10 +21,10 @@ internal class CategoriesViewModelTest {
     @get:Rule
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private var networkRepository: NetworkRepository = mockk()
-    private var roomRepository: RoomRepository = mockk(relaxUnitFun = true)
+    private val networkRepository: NetworkRepository = mockk()
+    private val roomRepository: RoomRepository = mockk(relaxUnitFun = true)
 
-    private var viewModel = CategoriesViewModel(networkRepository, roomRepository)
+    private val viewModel = CategoriesViewModel(networkRepository, roomRepository)
 
     @Test
     fun `load categories with subcategories by network`() = testCoroutineRule.runBlockingTest {

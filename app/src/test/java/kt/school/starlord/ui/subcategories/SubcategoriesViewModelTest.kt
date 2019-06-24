@@ -19,8 +19,8 @@ class SubcategoriesViewModelTest {
     @get:Rule
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private var subcategoriesRepository: SubcategoriesRepository = mockk()
-    private var viewModel = SubcategoriesViewModel(subcategoriesRepository)
+    private val subcategoriesRepository: SubcategoriesRepository = mockk()
+    private val viewModel = SubcategoriesViewModel(subcategoriesRepository)
 
     @Test
     fun `load categories with subcategories by network`() = testCoroutineRule.runBlockingTest {
