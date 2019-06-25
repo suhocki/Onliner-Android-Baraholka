@@ -1,6 +1,7 @@
 package kt.school.starlord
 
 import com.squareup.leakcanary.LeakCanary
+import com.squareup.leakcanary.internal.LeakCanaryInternals
 import timber.log.Timber
 
 class AppDebug : App() {
@@ -17,7 +18,9 @@ class AppDebug : App() {
     }
 
     private fun initLeakCanary() {
-        if (!LeakCanary.isInAnalyzerProcess(this)) {
+        if (!LeakCanary.isInAnalyzerProcess(this) &&
+            LeakCanaryInternals.installedRefWatcher == null
+        ) {
             LeakCanary.install(this)
         }
     }
