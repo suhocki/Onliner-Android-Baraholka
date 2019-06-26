@@ -176,6 +176,7 @@ dependencies {
     // Testing
     testImplementation("junit:junit:4.12")
     testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("io.mockk:mockk-android:$mockkVersion")
     testImplementation("org.koin:koin-test:$koinVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxVersion")
     testImplementation("org.robolectric:robolectric:4.3")
@@ -185,8 +186,8 @@ dependencies {
     testImplementation("androidx.test:rules:$testingVersion")
     testImplementation("androidx.test.ext:junit:1.1.1")
 
-    debugImplementation("androidx.test:core:$testingVersion")
-    debugImplementation("androidx.fragment:fragment-testing:$appcompatVersion")
+    implementation("androidx.test:core:$testingVersion")
+    implementation("androidx.fragment:fragment-testing:$appcompatVersion")
 
     // Android runner and rules support
     testImplementation("com.android.support.test:runner:1.0.2")
@@ -194,6 +195,17 @@ dependencies {
 
     // Espresso support
     testImplementation("com.android.support.test.espresso:espresso-core:3.2.0-alpha04", {
+        exclude(group = "com.android.support", module = "support-annotations")
+    })
+
+    androidTestImplementation("junit:junit:4.12")
+    androidTestImplementation("org.koin:koin-test:$koinVersion")
+    androidTestImplementation("io.mockk:mockk:$mockkVersion")
+    androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
+    androidTestImplementation("androidx.test:runner:$testingVersion")
+    androidTestImplementation("androidx.test:rules:$testingVersion")
+    androidTestImplementation("androidx.test.ext:junit:1.1.1")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0-alpha04", {
         exclude(group = "com.android.support", module = "support-annotations")
     })
 

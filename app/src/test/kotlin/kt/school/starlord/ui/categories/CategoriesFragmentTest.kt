@@ -40,7 +40,7 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun `load categories from database and network`() {
+    fun loadCategoriesFromDatabaseAndNetwork() {
         // When
         val scenario = FragmentScenario.launchInContainer(CategoriesFragment::class.java)
 
@@ -54,23 +54,23 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun `show categories`() {
+    fun showCategories() {
         // Given
         mockkConstructor(AppRecyclerAdapter::class)
-        val categories = MutableLiveData<List<Category>>(MockedData.categories)
-        every { viewModel.getCategories() } returns categories
+        val categories = listOf(Category("categoryName1"), Category("categoryName2"))
+        every { viewModel.getCategories() } returns MutableLiveData<List<Category>>(categories)
 
         // When
         val scenario = FragmentScenario.launchInContainer(CategoriesFragment::class.java)
 
         // Then
         scenario.onFragment {
-            verify { anyConstructed<AppRecyclerAdapter>().setData(MockedData.categories) }
+            verify { anyConstructed<AppRecyclerAdapter>().setData(categories) }
         }
     }
 
     @Test
-    fun `show progress`() {
+    fun showProgress() {
         // Given
         val isProgressVisible = true
         every { viewModel.getProgress() } returns MutableLiveData<Boolean>(isProgressVisible)
@@ -85,7 +85,7 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun `show error`() {
+    fun showError() {
         // Given
         val exception = IllegalStateException("error")
         val error = MutableLiveData<Throwable>(exception)
@@ -101,7 +101,7 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun `navigate to subcategories`() {
+    fun navigateToSubcategories() {
         // Given
         val categoryName = "test category name"
         val categories = MutableLiveData<List<Category>>(listOf(Category(categoryName)))

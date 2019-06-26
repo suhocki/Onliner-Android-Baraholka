@@ -27,9 +27,9 @@ class CategoriesFragment : Fragment() {
     private val adapter by lazy {
         AppRecyclerAdapter(
             CategoryAdapterDelegate {
-        val direction = CategoriesFragmentDirections.toSubcategories(it.name)
-        findNavController().navigate(direction)
-    }
+                val direction = CategoriesFragmentDirections.toSubcategories(it.name)
+                findNavController().navigate(direction)
+            }
         )
     }
 
