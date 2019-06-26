@@ -94,10 +94,12 @@ android {
     }
 
     sourceSets {
-        val androidTest by getting
-        androidTest.java.srcDirs("src/sharedTest/java")
+        val main by getting
+        val debug by getting
         val test by getting
-        test.java.srcDirs("src/sharedTest/java")
+        main.java.srcDirs("src/main/kotlin")
+        test.java.srcDirs("src/test/kotlin")
+        debug.java.srcDirs("src/debug/kotlin")
     }
 
     testOptions.unitTests.isIncludeAndroidResources = true
