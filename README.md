@@ -10,7 +10,7 @@
 school.kt project by ['star-lord' team](https://github.com/suhocki/starlord/graphs/contributors)
 
 ## For contributors
-Before pushing pull request do not forget to execute both ```ktlintFormat``` and ```detect``` gradle tasks to find any errors.  
+Before pushing pull request do not forget to execute both ```ktlintFormat``` and ```detekt``` gradle tasks to find any errors.  
 
 ## Roadmap
 The application is under active development. 

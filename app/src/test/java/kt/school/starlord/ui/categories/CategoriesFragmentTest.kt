@@ -25,7 +25,6 @@ import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.test.AutoCloseKoinTest
 import org.koin.test.mock.declare
 
-
 @RunWith(AndroidJUnit4::class)
 class CategoriesFragmentTest : AutoCloseKoinTest() {
 
@@ -120,7 +119,7 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
             onView(withText(categoryName)).perform(ViewActions.click())
             val direction = slot<NavDirections>()
 
-            verify { navController.navigate(capture(direction))}
+            verify { navController.navigate(capture(direction)) }
 
             val arguments = direction.captured.arguments
             val keys = arguments.keySet()

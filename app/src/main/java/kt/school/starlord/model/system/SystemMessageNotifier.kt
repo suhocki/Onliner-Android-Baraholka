@@ -1,6 +1,9 @@
 package kt.school.starlord.model.system
 
-class SystemMessageNotifier: SystemMessageReceiver {
+/**
+ * Class that has a link on message receiver for sending messages.
+ */
+class SystemMessageNotifier : SystemMessageReceiver {
     var systemMessageReceiver: SystemMessageReceiver? = null
 
     override fun showMessage(message: String) {
