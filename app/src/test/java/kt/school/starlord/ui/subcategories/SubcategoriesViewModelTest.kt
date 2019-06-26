@@ -23,7 +23,7 @@ class SubcategoriesViewModelTest {
     private val viewModel = SubcategoriesViewModel(subcategoriesRepository)
 
     @Test
-    fun `load categories with subcategories by network`() = testCoroutineRule.runBlockingTest {
+    fun `load subcategories from database`() = testCoroutineRule.runBlockingTest {
         // Given
         val categoryName = "Apple"
         val subcategories: List<Subcategory> = mockk()
@@ -34,8 +34,8 @@ class SubcategoriesViewModelTest {
 
         // Then
         coVerify(exactly = 1) { subcategoriesRepository.getSubcategories(categoryName) }
-        viewModel.subcategories.observeForTesting {
-            assert(viewModel.subcategories.value == subcategories)
+        viewModel.getSubcategories().observeForTesting {
+            assert(viewModel.getSubcategories().value == subcategories)
         }
     }
 }

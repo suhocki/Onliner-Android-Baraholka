@@ -18,8 +18,7 @@ plugins {
 }
 
 object AndroidVersion {
-    const val KITKAT = 23
-    const val M = 23
+    const val KITKAT = 19
     const val P = 28
 }
 
@@ -137,6 +136,7 @@ dependencies {
     val roomVersion = "2.1.0"
     val appcompatVersion = "1.1.0-beta01"
     val mockkVersion = "1.9.3"
+    val testingVersion = "1.2.0"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
@@ -172,20 +172,28 @@ dependencies {
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
 
     // Testing
-    debugImplementation("androidx.test:core:1.2.0")
-    debugImplementation("androidx.fragment:fragment-testing:$appcompatVersion")
-    debugImplementation("org.koin:koin-test:$koinVersion")
-
     testImplementation("junit:junit:4.12")
     testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("org.koin:koin-test:$koinVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxVersion")
+    testImplementation("org.robolectric:robolectric:4.3")
     testImplementation("androidx.arch.core:core-testing:2.0.1")
     testImplementation("androidx.room:room-testing:$roomVersion")
-
-    testImplementation("androidx.test:runner:1.2.0")
-    testImplementation("androidx.test:rules:1.2.0")
+    testImplementation("androidx.test:runner:$testingVersion")
+    testImplementation("androidx.test:rules:$testingVersion")
     testImplementation("androidx.test.ext:junit:1.1.1")
-    testImplementation("org.robolectric:robolectric:4.1")
+
+    debugImplementation("androidx.test:core:$testingVersion")
+    debugImplementation("androidx.fragment:fragment-testing:$appcompatVersion")
+
+    // Android runner and rules support
+    testImplementation("com.android.support.test:runner:1.0.2")
+    testImplementation("com.android.support.test:rules:1.0.2")
+
+    // Espresso support
+    testImplementation("com.android.support.test.espresso:espresso-core:3.2.0-alpha04", {
+        exclude(group = "com.android.support", module = "support-annotations")
+    })
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
