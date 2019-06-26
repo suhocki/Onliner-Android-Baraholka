@@ -27,9 +27,9 @@ class CategoriesFragment : Fragment() {
     private val adapter by lazy {
         AppRecyclerAdapter(
             CategoryAdapterDelegate {
-                val direction = CategoriesFragmentDirections.toSubcategories(it.name)
-                findNavController().navigate(direction)
-            }
+        val direction = CategoriesFragmentDirections.toSubcategories(it.name)
+        findNavController().navigate(direction)
+    }
         )
     }
 
@@ -52,8 +52,8 @@ class CategoriesFragment : Fragment() {
             adapter = this@CategoriesFragment.adapter
         }
 
-        viewModel.categories.observe(viewLifecycleOwner, Observer(adapter::setData))
-        viewModel.progress.observe(viewLifecycleOwner, Observer(systemMessageReceiver::showProgress))
-        viewModel.error.observe(viewLifecycleOwner, Observer(systemMessageReceiver::showError))
+        viewModel.getCategories().observe(viewLifecycleOwner, Observer(adapter::setData))
+        viewModel.getProgress().observe(viewLifecycleOwner, Observer(systemMessageReceiver::showProgress))
+        viewModel.getErrors().observe(viewLifecycleOwner, Observer(systemMessageReceiver::showError))
     }
 }

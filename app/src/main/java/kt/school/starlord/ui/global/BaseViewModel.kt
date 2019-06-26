@@ -1,5 +1,6 @@
 package kt.school.starlord.ui.global
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 
@@ -8,12 +9,16 @@ import androidx.lifecycle.ViewModel
  */
 abstract class BaseViewModel : ViewModel() {
 
+    protected val progress = MutableLiveData<Boolean>()
+    protected val error = MutableLiveData<Throwable>()
+
     /**
      * LiveData for observing progress state.
      */
-    val progress = MutableLiveData<Boolean>()
+    fun getProgress(): LiveData<Boolean> = progress
+
     /**
      * LiveData for observing errors.
      */
-    val error = MutableLiveData<Throwable>()
+    fun getErrors(): LiveData<Throwable> = error
 }

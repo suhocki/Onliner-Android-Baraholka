@@ -1,5 +1,6 @@
 package kt.school.starlord.ui.categories
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -15,11 +16,12 @@ class CategoriesViewModel(
     private val networkRepository: NetworkRepository,
     private val roomRepository: RoomRepository
 ) : BaseViewModel() {
+    private val categories = MutableLiveData<List<Category>>()
 
     /**
      * Use for observing categories.
      */
-    val categories = MutableLiveData<List<Category>>()
+    fun getCategories(): LiveData<List<Category>> = categories
 
     /**
      * Loads categories from the database.

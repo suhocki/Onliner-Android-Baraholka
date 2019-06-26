@@ -1,5 +1,6 @@
 package kt.school.starlord.ui.subcategories
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
@@ -13,11 +14,12 @@ import kt.school.starlord.ui.global.BaseViewModel
 class SubcategoriesViewModel(
     private val subcategoriesRepository: SubcategoriesRepository
 ) : BaseViewModel() {
+    private val subcategories = MutableLiveData<List<Subcategory>>()
 
     /**
      * Use for observing subcategories.
      */
-    val subcategories = MutableLiveData<List<Subcategory>>()
+    fun getSubcategories(): LiveData<List<Subcategory>> = subcategories
 
     /**
      * Loads subcategories for selected categoryName from the database.
@@ -26,10 +28,8 @@ class SubcategoriesViewModel(
      */
     fun loadSubcategories(categoryName: String) {
         viewModelScope.launch {
-            progress.value = true
             runCatching { subcategoriesRepository.getSubcategories(categoryName) }
                 .fold(subcategories::setValue, error::setValue)
-            progress.value = false
         }
     }
 }
