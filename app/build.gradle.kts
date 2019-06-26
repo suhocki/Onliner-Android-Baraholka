@@ -98,8 +98,8 @@ android {
         val debug by getting
         val test by getting
         main.java.srcDirs("src/main/kotlin")
-        test.java.srcDirs("src/test/kotlin")
         debug.java.srcDirs("src/debug/kotlin")
+        test.java.srcDirs("src/test/kotlin")
     }
 
     testOptions.unitTests.isIncludeAndroidResources = true
