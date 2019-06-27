@@ -2,12 +2,12 @@ package kt.school.starlord.ui.categories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kt.school.starlord.entity.Category
 import kt.school.starlord.model.network.NetworkRepository
 import kt.school.starlord.model.room.RoomRepository
-import kt.school.starlord.ui.global.BaseViewModel
 
 /**
  * Contains logic with fetching categories asynchronously.
@@ -15,8 +15,20 @@ import kt.school.starlord.ui.global.BaseViewModel
 class CategoriesViewModel(
     private val networkRepository: NetworkRepository,
     private val roomRepository: RoomRepository
-) : BaseViewModel() {
+) : ViewModel() {
     private val categories = MutableLiveData<List<Category>>()
+    private val progress = MutableLiveData<Boolean>()
+    private val error = MutableLiveData<Throwable>()
+
+    /**
+     * LiveData for observing progress state.
+     */
+    fun getProgress(): LiveData<Boolean> = progress
+
+    /**
+     * LiveData for observing errors.
+     */
+    fun getErrors(): LiveData<Throwable> = error
 
     /**
      * Use for observing categories.
