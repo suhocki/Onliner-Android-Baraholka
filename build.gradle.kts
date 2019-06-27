@@ -20,6 +20,11 @@ allprojects {
         google()
         jcenter()
     }
+    configurations.all {
+        resolutionStrategy {
+            force("org.objenesis:objenesis:2.6")
+        }
+    }
 }
 
 val clean by tasks.creating(Delete::class) {

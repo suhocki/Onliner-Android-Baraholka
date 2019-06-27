@@ -82,9 +82,9 @@ android {
         applicationVariants.all applicationVariants@{
             outputs.all outputs@{
                 val buildLabel = if (this@applicationVariants.name == "debug") "_debug" else ""
+                val outputFileName = "starlord_$buildVersionName$buildLabel.apk"
 
-                (this@outputs as BaseVariantOutputImpl).outputFileName =
-                    "starlord_$buildVersionName$buildLabel.apk"
+                (this@outputs as BaseVariantOutputImpl).outputFileName = outputFileName
             }
         }
 
@@ -93,6 +93,17 @@ android {
         }
     }
 
+    sourceSets {
+        val main by getting
+        val debug by getting
+        val test by getting
+        main.java.srcDirs("src/main/kotlin")
+        debug.java.srcDirs("src/debug/kotlin")
+        test.java.srcDirs("src/test/kotlin")
+    }
+
+    testOptions.unitTests.isIncludeAndroidResources = true
+    testOptions.unitTests.isReturnDefaultValues = true
     lintOptions.isWarningsAsErrors = true
 }
 
@@ -121,17 +132,20 @@ dependencies {
     val kotlinxVersion = "1.2.1"
     val lifecycleVersion = "2.2.0-alpha01"
     val navigationVersion = "2.1.0-alpha04"
-    val koinVersion = "2.0.0-rc-1"
+    val koinVersion = "2.0.1"
     val ankoVersion = "0.10.8"
     val leakCanaryVersion = "1.6.3"
     val roomVersion = "2.1.0"
+    val appcompatVersion = "1.1.0-beta01"
+    val mockkVersion = "1.9.3"
+    val testingVersion = "1.2.0"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxVersion")
     implementation("androidx.core:core-ktx:1.2.0-alpha02")
-    implementation("androidx.appcompat:appcompat:1.1.0-beta01")
+    implementation("androidx.appcompat:appcompat:$appcompatVersion")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta2")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
@@ -161,10 +175,28 @@ dependencies {
 
     // Testing
     testImplementation("junit:junit:4.12")
-    testImplementation("io.mockk:mockk:1.9.3")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("io.mockk:mockk-android:$mockkVersion")
+    testImplementation("org.koin:koin-test:$koinVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxVersion")
-    testImplementation("androidx.arch.core:core-testing:2.0.1")
+    testImplementation("org.robolectric:robolectric:4.3")
+    testImplementation("androidx.arch.core:core-testing:2.1.0-beta01")
     testImplementation("androidx.room:room-testing:$roomVersion")
+    testImplementation("androidx.test:runner:$testingVersion")
+    testImplementation("androidx.test:rules:$testingVersion")
+    testImplementation("androidx.test.ext:junit:1.1.2-alpha01")
+
+    implementation("androidx.test:core:$testingVersion")
+    implementation("androidx.fragment:fragment-testing:$appcompatVersion")
+
+    // Android runner and rules support
+    testImplementation("com.android.support.test:runner:1.0.2")
+    testImplementation("com.android.support.test:rules:1.0.2")
+
+    // Espresso support
+    testImplementation("com.android.support.test.espresso:espresso-core:3.2.0-alpha04", {
+        exclude(group = "com.android.support", module = "support-annotations")
+    })
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
