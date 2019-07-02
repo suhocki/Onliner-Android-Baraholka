@@ -186,8 +186,8 @@ dependencies {
     testImplementation("androidx.test:rules:$testingVersion")
     testImplementation("androidx.test.ext:junit:1.1.2-alpha01")
 
-    debugImplementation("androidx.test:core:$testingVersion")
-    debugImplementation("androidx.fragment:fragment-testing:$appcompatVersion")
+    implementation("androidx.test:core:$testingVersion")
+    implementation("androidx.fragment:fragment-testing:$appcompatVersion")
 
     // Android runner and rules support
     testImplementation("com.android.support.test:runner:1.0.2")

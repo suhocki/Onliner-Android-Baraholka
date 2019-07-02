@@ -10,7 +10,6 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.R
-import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.model.system.SystemMessageReceiver
 import kt.school.starlord.ui.global.AppRecyclerAdapter
 import org.koin.android.ext.android.inject
