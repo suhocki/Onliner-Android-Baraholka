@@ -186,17 +186,16 @@ dependencies {
     testImplementation("androidx.test:rules:$testingVersion")
     testImplementation("androidx.test.ext:junit:1.1.2-alpha01")
 
-    implementation("androidx.test:core:$testingVersion")
-    implementation("androidx.fragment:fragment-testing:$appcompatVersion")
+    debugImplementation("androidx.test:core:$testingVersion")
+    debugImplementation("androidx.fragment:fragment-testing:$appcompatVersion")
 
     // Android runner and rules support
     testImplementation("com.android.support.test:runner:1.0.2")
     testImplementation("com.android.support.test:rules:1.0.2")
 
+
     // Espresso support
-    testImplementation("com.android.support.test.espresso:espresso-core:3.2.0-alpha04", {
-        exclude(group = "com.android.support", module = "support-annotations")
-    })
+    testImplementation("androidx.test.espresso:espresso-core:3.3.0-alpha01")
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")

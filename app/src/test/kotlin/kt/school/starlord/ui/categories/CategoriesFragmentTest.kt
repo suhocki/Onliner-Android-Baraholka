@@ -1,6 +1,7 @@
 package kt.school.starlord.ui.categories
 
 import androidx.fragment.app.testing.FragmentScenario
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
@@ -30,6 +31,9 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
 
     private val systemMessageReceiver: SystemMessageReceiver = mockk(relaxUnitFun = true)
     private val viewModel: CategoriesViewModel = mockk(relaxed = true)
+    private val scenario by lazy {
+        FragmentScenario.launchInContainer(CategoriesFragment::class.java)
+    }
 
     @Before
     fun setUp() {
@@ -42,7 +46,7 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     @Test
     fun loadCategoriesFromDatabaseAndNetwork() {
         // When
-        val scenario = FragmentScenario.launchInContainer(CategoriesFragment::class.java)
+        scenario.moveToState(Lifecycle.State.CREATED)
 
         // Then
         scenario.onFragment {
@@ -59,9 +63,10 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
         mockkConstructor(AppRecyclerAdapter::class)
         val categories = listOf(Category("categoryName1"), Category("categoryName2"))
         every { viewModel.getCategories() } returns MutableLiveData<List<Category>>(categories)
+        scenario.moveToState(Lifecycle.State.CREATED)
 
         // When
-        val scenario = FragmentScenario.launchInContainer(CategoriesFragment::class.java)
+        scenario.moveToState(Lifecycle.State.RESUMED)
 
         // Then
         scenario.onFragment {
@@ -74,9 +79,6 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
         // Given
         val isProgressVisible = true
         every { viewModel.getProgress() } returns MutableLiveData<Boolean>(isProgressVisible)
-
-        // When
-        val scenario = FragmentScenario.launchInContainer(CategoriesFragment::class.java)
 
         // Then
         scenario.onFragment {
@@ -91,9 +93,6 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
         val error = MutableLiveData<Throwable>(exception)
         every { viewModel.getErrors() } returns error
 
-        // When
-        val scenario = FragmentScenario.launchInContainer(CategoriesFragment::class.java)
-
         // Then
         scenario.onFragment {
             verify { systemMessageReceiver.showError(exception) }
@@ -107,16 +106,16 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
         val categories = MutableLiveData<List<Category>>(listOf(Category(categoryName)))
         val navController: NavController = mockk(relaxUnitFun = true)
         mockkStatic(NavHostFragment::class)
-
         every { viewModel.getCategories() } returns categories
         every { NavHostFragment.findNavController(any()) } returns navController
 
         // When
-        val scenario = FragmentScenario.launchInContainer(CategoriesFragment::class.java)
+        scenario.onFragment {
+            onView(withText(categoryName)).perform(ViewActions.click())
+        }
 
         // Then
         scenario.onFragment {
-            onView(withText(categoryName)).perform(ViewActions.click())
             val direction = slot<NavDirections>()
 
             verify { navController.navigate(capture(direction)) }
