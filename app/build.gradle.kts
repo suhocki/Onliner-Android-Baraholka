@@ -193,7 +193,6 @@ dependencies {
     testImplementation("com.android.support.test:runner:1.0.2")
     testImplementation("com.android.support.test:rules:1.0.2")
 
-
     // Espresso support
     testImplementation("androidx.test.espresso:espresso-core:3.3.0-alpha01")
 
