@@ -102,8 +102,19 @@ android {
         test.java.srcDirs("src/test/kotlin")
     }
 
-    testOptions.unitTests.isIncludeAndroidResources = true
-    testOptions.unitTests.isReturnDefaultValues = true
+    testOptions {
+        animationsDisabled = true
+        unitTests.apply {
+            isReturnDefaultValues = true
+            isIncludeAndroidResources = true
+            all {
+                extensions
+                    .getByType(JacocoTaskExtension::class.java)
+                    .isIncludeNoLocationClasses = true
+            }
+        }
+    }
+
     lintOptions.isWarningsAsErrors = true
 }
 
@@ -228,3 +239,7 @@ fun String.runCommand(workingDir: File = file(".")) =
         .bufferedReader()
         .readText()
         .trim()
+
+// This is a workaround for https://issuetracker.google.com/issues/78547461
+fun com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions.all(block: Test.() -> Unit) =
+    all(KotlinClosure1<Any, Test>({ (this as Test).apply(block) }, owner = this))
