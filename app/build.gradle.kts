@@ -102,8 +102,19 @@ android {
         test.java.srcDirs("src/test/kotlin")
     }
 
-    testOptions.unitTests.isIncludeAndroidResources = true
-    testOptions.unitTests.isReturnDefaultValues = true
+    testOptions {
+        animationsDisabled = true
+        unitTests.apply {
+            isReturnDefaultValues = true
+            isIncludeAndroidResources = true
+            all {
+                extensions
+                    .getByType(JacocoTaskExtension::class.java)
+                    .isIncludeNoLocationClasses = true
+            }
+        }
+    }
+
     lintOptions.isWarningsAsErrors = true
 }
 
@@ -180,7 +191,7 @@ dependencies {
     testImplementation("org.koin:koin-test:$koinVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxVersion")
     testImplementation("org.robolectric:robolectric:4.3")
-    testImplementation("androidx.arch.core:core-testing:2.1.0-beta01")
+    testImplementation("androidx.arch.core:core-testing:2.1.0-rc01")
     testImplementation("androidx.room:room-testing:$roomVersion")
     testImplementation("androidx.test:runner:$testingVersion")
     testImplementation("androidx.test:rules:$testingVersion")
@@ -194,9 +205,7 @@ dependencies {
     testImplementation("com.android.support.test:rules:1.0.2")
 
     // Espresso support
-    testImplementation("com.android.support.test.espresso:espresso-core:3.2.0-alpha04", {
-        exclude(group = "com.android.support", module = "support-annotations")
-    })
+    testImplementation("androidx.test.espresso:espresso-core:3.3.0-alpha01")
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
@@ -230,3 +239,7 @@ fun String.runCommand(workingDir: File = file(".")) =
         .bufferedReader()
         .readText()
         .trim()
+
+// This is a workaround for https://issuetracker.google.com/issues/78547461
+fun com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions.all(block: Test.() -> Unit) =
+    all(KotlinClosure1<Any, Test>({ (this as Test).apply(block) }, owner = this))
