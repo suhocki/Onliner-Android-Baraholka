@@ -33,14 +33,6 @@ class CategoriesFragment : Fragment() {
         )
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            viewModel.loadLocalCategories()
-            viewModel.loadRemoteCategories()
-        }
-    }
-
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.fragment_categories, container, false)
 
@@ -54,6 +46,6 @@ class CategoriesFragment : Fragment() {
 
         viewModel.getCategories().observe(viewLifecycleOwner, Observer(adapter::setData))
         viewModel.getProgress().observe(viewLifecycleOwner, Observer(systemMessageReceiver::showProgress))
-        viewModel.getErrors().observe(viewLifecycleOwner, Observer(systemMessageReceiver::showError))
+        viewModel.getError().observe(viewLifecycleOwner, Observer(systemMessageReceiver::showError))
     }
 }

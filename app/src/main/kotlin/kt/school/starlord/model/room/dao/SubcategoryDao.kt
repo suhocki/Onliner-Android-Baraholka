@@ -1,5 +1,6 @@
 package kt.school.starlord.model.room.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -15,7 +16,7 @@ interface SubcategoryDao {
      *  @return all subcategories.
      */
     @Query("SELECT * FROM Subcategories WHERE categoryName=:categoryName")
-    suspend fun getSubcategories(categoryName: String): List<RoomSubcategory>
+    fun getSubcategories(categoryName: String): LiveData<List<RoomSubcategory>>
 
     /**
      * @param subcategories subcategories that will be saved in database.
