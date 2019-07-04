@@ -24,7 +24,7 @@ abstract class CategoryDao {
      * @param categories categories that will be saved in database.
      */
     @Transaction
-    open suspend fun replaceAll(categories: List<RoomCategory>)  {
+    open suspend fun replaceAll(categories: List<RoomCategory>) {
         deleteAll()
         putCategories(categories)
     }

@@ -1,8 +1,9 @@
 package kt.school.starlord.ui.subcategories
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import io.mockk.coEvery
+import androidx.lifecycle.MutableLiveData
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kt.school.starlord.domain.SubcategoriesRepository
 import kt.school.starlord.entity.Subcategory
@@ -20,17 +21,17 @@ class SubcategoriesViewModelTest {
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val subcategoriesRepository: SubcategoriesRepository = mockk()
-    private val viewModel = SubcategoriesViewModel(subcategoriesRepository)
 
     @Test
     fun `load subcategories from database`() = testCoroutineRule.runBlockingTest {
         // Given
         val categoryName = "Apple"
         val subcategories: List<Subcategory> = mockk()
-        coEvery { subcategoriesRepository.getSubcategories(categoryName) } coAnswers { subcategories }
+        val subcategoriesLiveData = MutableLiveData(subcategories)
+        every { subcategoriesRepository.getSubcategories(categoryName) } answers { subcategoriesLiveData }
 
         // When
-        viewModel.loadSubcategories(categoryName)
+        val viewModel = SubcategoriesViewModel(subcategoriesRepository, categoryName)
 
         // Then
         coVerify(exactly = 1) { subcategoriesRepository.getSubcategories(categoryName) }
