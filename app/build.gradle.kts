@@ -152,7 +152,6 @@ gradle.buildFinished {
     println("BuildUid: $buildUid")
 }
 
-
 play {
     isEnabled = isRunningFromTravis
     track = "internal"
