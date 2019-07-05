@@ -4,6 +4,7 @@ import android.content.Context
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import timber.log.Timber
 
 /**
  * Class with method for exclude "won't fix" memory leak
@@ -19,11 +20,11 @@ abstract class BaseActivity : AppCompatActivity() {
 
     private fun fixMemoryLeak(context: Context) {
         val inputMethodManager =
-                try {
-                    (context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager)
-                } catch (th: KotlinNullPointerException) {
-                    th.printStackTrace()
-                } ?: return
+            try {
+                context.getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager
+            } catch (th: KotlinNullPointerException) {
+                Timber.e(th)
+            } ?: return
 
         val declaredFields = inputMethodManager.javaClass.declaredFields
         for (declaredField in declaredFields) {
@@ -31,14 +32,17 @@ abstract class BaseActivity : AppCompatActivity() {
                 if (!declaredField.isAccessible) {
                     declaredField.isAccessible = true
                 }
-                val view = (declaredField.get(inputMethodManager) ?: continue) as? View ?: continue
+                // val view = (declaredField.get(inputMethodManager) ?: continue) as? View ?: continue
+                val obj = declaredField.get(inputMethodManager)
+                if (obj == null || obj !is View) {
+                    continue
+                }
+                val view: View = obj
                 if (view.context === context) {
                     declaredField.set(inputMethodManager, null)
-                } else {
-                    return
                 }
             } catch (th: KotlinNullPointerException) {
-                th.printStackTrace()
+                Timber.e(th)
             }
         }
     }
