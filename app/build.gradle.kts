@@ -1,3 +1,4 @@
+
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import io.gitlab.arturbosch.detekt.detekt
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
@@ -9,6 +10,7 @@ plugins {
     id("kotlin-android-extensions")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("jacoco")
     id("jacoco-android")
     id("com.github.triplet.play")
     id("com.getkeepsafe.dexcount")
@@ -22,6 +24,7 @@ object AndroidVersion {
     const val P = 28
 }
 
+val scriptExecutionTime = 5L
 val isRunningFromTravis = System.getenv("CI") == "true"
 val buildUid = System.getenv("TRAVIS_BUILD_ID") ?: "local"
 val buildVersionName by lazy {
@@ -139,6 +142,53 @@ staticAnalysis {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.4"
+}
+
+gradle.buildFinished {
+    println("VersionName: ${android.defaultConfig.versionName}")
+    println("VersionCode: ${android.defaultConfig.versionCode}")
+    println("BuildUid: $buildUid")
+}
+
+play {
+    isEnabled = isRunningFromTravis
+    track = "internal"
+    userFraction = 1.0
+    serviceAccountEmail = System.getenv("google_play_email")
+    serviceAccountCredentials = file("../keys/google-play-key.p12")
+    resolutionStrategy = "auto"
+}
+
+fun String.runCommand(workingDir: File = file(".")) =
+    ProcessBuilder(*split("\\s".toRegex()).toTypedArray())
+        .directory(workingDir)
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .start()
+        .apply { waitFor(scriptExecutionTime, TimeUnit.SECONDS) }
+        .inputStream
+        .bufferedReader()
+        .readText()
+        .trim()
+
+// This is a workaround for https://issuetracker.google.com/issues/78547461
+fun com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions.all(block: Test.() -> Unit) =
+    all(KotlinClosure1<Any, Test>({ (this as Test).apply(block) }, owner = this))
+
+tasks {
+    withType<JacocoCoverageVerification> {
+        violationRules {
+            rule {
+                limit {
+                    minimum = "0.52".toBigDecimal()
+                }
+            }
+        }
+    }
+}
+
 dependencies {
     val kotlinxVersion = "1.2.1"
     val lifecycleVersion = "2.2.0-alpha01"
@@ -165,6 +215,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation("com.github.hadilq.liveevent:liveevent:1.0.1")
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
@@ -210,36 +261,3 @@ dependencies {
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 }
-
-gradle.buildFinished {
-    println("VersionName: ${android.defaultConfig.versionName}")
-    println("VersionCode: ${android.defaultConfig.versionCode}")
-    println("BuildUid: $buildUid")
-}
-
-play {
-    isEnabled = isRunningFromTravis
-    track = "internal"
-    userFraction = 1.0
-    serviceAccountEmail = System.getenv("google_play_email")
-    serviceAccountCredentials = file("../keys/google-play-key.p12")
-    resolutionStrategy = "auto"
-}
-
-val scriptExecutionTime = 5L
-
-fun String.runCommand(workingDir: File = file(".")) =
-    ProcessBuilder(*split("\\s".toRegex()).toTypedArray())
-        .directory(workingDir)
-        .redirectOutput(ProcessBuilder.Redirect.PIPE)
-        .redirectError(ProcessBuilder.Redirect.PIPE)
-        .start()
-        .apply { waitFor(scriptExecutionTime, TimeUnit.SECONDS) }
-        .inputStream
-        .bufferedReader()
-        .readText()
-        .trim()
-
-// This is a workaround for https://issuetracker.google.com/issues/78547461
-fun com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions.all(block: Test.() -> Unit) =
-    all(KotlinClosure1<Any, Test>({ (this as Test).apply(block) }, owner = this))

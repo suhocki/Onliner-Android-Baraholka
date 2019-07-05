@@ -10,10 +10,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.R
-import kt.school.starlord.model.system.SystemMessageReceiver
 import kt.school.starlord.ui.global.AppRecyclerAdapter
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
+import org.koin.core.parameter.parametersOf
 
 /**
  * Contains a recycler that is filled by subcategories.
@@ -21,8 +20,12 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
  */
 class SubcategoriesFragment : Fragment() {
 
-    private val viewModel: SubcategoriesViewModel by viewModel()
-    private val systemMessageReceiver: SystemMessageReceiver by inject()
+    private val viewModel: SubcategoriesViewModel by viewModel(parameters = {
+        val safeArgs = SubcategoriesFragmentArgs.fromBundle(requireArguments())
+        val categoryName = safeArgs.categoryName
+        parametersOf(categoryName)
+    })
+
     private val adapter by lazy {
         AppRecyclerAdapter(
             SubcategoryAdapterDelegate {
@@ -30,15 +33,6 @@ class SubcategoriesFragment : Fragment() {
                 findNavController().navigate(direction)
             }
         )
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        if (savedInstanceState == null) {
-            val safeArgs = SubcategoriesFragmentArgs.fromBundle(requireArguments())
-            val categoryName = safeArgs.categoryName
-            viewModel.loadSubcategories(categoryName)
-        }
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
@@ -53,6 +47,5 @@ class SubcategoriesFragment : Fragment() {
         }
 
         viewModel.getSubcategories().observe(viewLifecycleOwner, Observer(adapter::setData))
-        viewModel.getErrors().observe(viewLifecycleOwner, Observer(systemMessageReceiver::showError))
     }
 }

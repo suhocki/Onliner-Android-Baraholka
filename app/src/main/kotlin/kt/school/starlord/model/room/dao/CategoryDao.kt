@@ -1,31 +1,37 @@
 package kt.school.starlord.model.room.dao
 
+import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
 import kt.school.starlord.model.room.entity.RoomCategory
 
 /**
  * Defines queries for working with categories in database.
  */
 @Dao
-interface CategoryDao {
+abstract class CategoryDao {
     /**
      * @return all categories.
      */
     @Query("SELECT * FROM Categories")
-    suspend fun getCategories(): List<RoomCategory>
+    abstract fun getCategories(): LiveData<List<RoomCategory>>
 
     /**
+     * Replaces all categories from database.
      * @param categories categories that will be saved in database.
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun putCategories(categories: List<RoomCategory>)
+    @Transaction
+    open suspend fun replaceAll(categories: List<RoomCategory>) {
+        deleteAll()
+        putCategories(categories)
+    }
 
-    /**
-     * Deletes all categories from database.
-     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    protected abstract suspend fun putCategories(categories: List<RoomCategory>)
+
     @Query("DELETE FROM Categories")
-    suspend fun deleteAll()
+    protected abstract suspend fun deleteAll()
 }

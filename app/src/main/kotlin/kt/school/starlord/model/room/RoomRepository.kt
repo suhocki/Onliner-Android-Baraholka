@@ -1,5 +1,7 @@
 package kt.school.starlord.model.room
 
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.map
 import kt.school.starlord.domain.SubcategoriesRepository
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
@@ -20,9 +22,10 @@ class RoomRepository(
      *
      * @return categories of products and services
      */
-    suspend fun getCategories(): List<Category> {
-        val roomCategories = daoManager.categoryDao.getCategories()
-        return roomCategories.map { mapper.map<Category>(it) }
+    fun getCategories(): LiveData<List<Category>> {
+        return daoManager.categoryDao.getCategories().map { roomCategories ->
+            roomCategories.map { mapper.map<Category>(it) }
+        }
     }
 
     /**
@@ -30,13 +33,13 @@ class RoomRepository(
      */
     suspend fun updateCategories(categories: List<Category>) {
         val roomCategories = categories.map { mapper.map<RoomCategory>(it) }
-        daoManager.categoryDao.deleteAll()
-        daoManager.categoryDao.putCategories(roomCategories)
+        daoManager.categoryDao.replaceAll(roomCategories)
     }
 
-    override suspend fun getSubcategories(categoryName: String): List<Subcategory> {
-        val roomSubcategories = daoManager.subcategoryDao.getSubcategories(categoryName)
-        return roomSubcategories.map { mapper.map<Subcategory>(it) }
+    override fun getSubcategories(categoryName: String): LiveData<List<Subcategory>> {
+        return daoManager.subcategoryDao.getSubcategories(categoryName).map { roomSubcategories ->
+            roomSubcategories.map { mapper.map<Subcategory>(it) }
+        }
     }
 
     /**

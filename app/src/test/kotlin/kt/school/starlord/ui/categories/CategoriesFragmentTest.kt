@@ -44,20 +44,6 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun loadCategoriesFromDatabaseAndNetwork() {
-        // When
-        scenario.moveToState(Lifecycle.State.CREATED)
-
-        // Then
-        scenario.onFragment {
-            verify {
-                viewModel.loadLocalCategories()
-                viewModel.loadRemoteCategories()
-            }
-        }
-    }
-
-    @Test
     fun showCategories() {
         // Given
         mockkConstructor(AppRecyclerAdapter::class)
@@ -89,9 +75,9 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     @Test
     fun showError() {
         // Given
-        val exception = IllegalStateException("error")
+        val exception = IllegalStateException("failure")
         val error = MutableLiveData<Throwable>(exception)
-        every { viewModel.getErrors() } returns error
+        every { viewModel.getError() } returns error
 
         // Then
         scenario.onFragment {

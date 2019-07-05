@@ -51,14 +51,6 @@ before_script:
 script:
   - ./gradlew test check detekt assemble jacocoTestReport
 
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
-  - ./scripts/comment_pull_request_on_success.sh
-  - ./scripts/telegram_notify_on_pull_request.sh
-
-after_failure:
-  - ./scripts/comment_pull_request_on_failure.sh
-
 branches:
   only:
     - master
@@ -78,3 +70,11 @@ deploy:
   file: app/build/outputs/apk/release/*.apk
   on:
     all_branches: true
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+  - ./scripts/comment_pull_request_on_success.sh
+  - ./scripts/telegram_notify_on_pull_request.sh
+
+after_failure:
+  - ./scripts/comment_pull_request_on_failure.sh

@@ -1,5 +1,6 @@
 package kt.school.starlord.domain
 
+import androidx.lifecycle.LiveData
 import kt.school.starlord.entity.Subcategory
 
 /**
@@ -12,5 +13,5 @@ interface SubcategoriesRepository {
      *
      * @return subcategories
      */
-    suspend fun getSubcategories(categoryName: String): List<Subcategory>
+    fun getSubcategories(categoryName: String): LiveData<List<Subcategory>>
 }

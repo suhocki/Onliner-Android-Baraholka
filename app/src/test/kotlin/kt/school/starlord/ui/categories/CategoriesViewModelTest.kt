@@ -1,8 +1,10 @@
 package kt.school.starlord.ui.categories
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import io.mockk.coEvery
 import io.mockk.coVerify
+import io.mockk.every
 import io.mockk.mockk
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
@@ -13,7 +15,7 @@ import kt.school.starlord.ui.observeForTesting
 import org.junit.Rule
 import org.junit.Test
 
-internal class CategoriesViewModelTest {
+class CategoriesViewModelTest {
 
     @get:Rule
     internal val testCoroutineRule = TestCoroutineRule()
@@ -22,46 +24,37 @@ internal class CategoriesViewModelTest {
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val networkRepository: NetworkRepository = mockk()
-    private val roomRepository: RoomRepository = mockk(relaxUnitFun = true)
-
-    private val viewModel = CategoriesViewModel(networkRepository, roomRepository)
+    private val roomRepository: RoomRepository = mockk(relaxed = true)
 
     @Test
-    fun `load categories with subcategories from network`() = testCoroutineRule.runBlockingTest {
+    fun `refresh data by network`() = testCoroutineRule.runBlockingTest {
         // Given
-        val categoriesWithSubcategories = mapOf(
-            Category("categoryName3") to listOf(
-                Subcategory("subcategoryName1", "categoryName3", 5, "link1"),
-                Subcategory("subcategoryName2", "categoryName3", 2, "link2")
-            ),
-            Category("categoryName4") to listOf(
-                Subcategory("subcategoryName3", "categoryName4", 3, "link3")
-            )
+        val categoriesWithSubcategories = mapOf<Category, List<Subcategory>>(
+            mockk<Category>() to listOf(mockk(), mockk()),
+            mockk<Category>() to listOf(mockk(), mockk()),
+            mockk<Category>() to listOf(mockk(), mockk())
         )
         coEvery { networkRepository.getCategoriesWithSubcategories() }.coAnswers { categoriesWithSubcategories }
 
         // When
-        viewModel.loadRemoteCategories()
+        CategoriesViewModel(networkRepository, roomRepository)
 
         // Then
-        val categories = categoriesWithSubcategories.keys.toList()
         coVerify(exactly = 1) {
             roomRepository.updateSubcategories(categoriesWithSubcategories.values.flatten())
-            roomRepository.updateCategories(categories)
-        }
-        viewModel.getCategories().observeForTesting {
-            assert(viewModel.getCategories().value == categories)
+            roomRepository.updateCategories(categoriesWithSubcategories.keys.toList())
         }
     }
 
     @Test
-    fun `load categories from database`() = testCoroutineRule.runBlockingTest {
+    fun `load data from database`() = testCoroutineRule.runBlockingTest {
         // Given
-        val categories = listOf(Category("categoryName1"), Category("categoryName2"))
-        coEvery { roomRepository.getCategories() }.coAnswers { categories }
+        val categories: List<Category> = mockk()
+        val categoriesLiveData = MutableLiveData(categories)
+        every { roomRepository.getCategories() }.answers { categoriesLiveData }
 
         // When
-        viewModel.loadLocalCategories()
+        val viewModel = CategoriesViewModel(networkRepository, roomRepository)
 
         // Then
         viewModel.getCategories().observeForTesting {
