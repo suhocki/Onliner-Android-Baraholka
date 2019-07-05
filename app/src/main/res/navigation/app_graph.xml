@@ -6,8 +6,8 @@
     app:startDestination="@id/appBarFragment">
 
     <fragment
-            android:id="@+id/appBarFragment"
-            android:name="kt.school.starlord.ui.bottomappbar.BottomAppBarFragment"
-            android:label="fragment_appbar"
-            tools:layout="@layout/fragment_appbar" />
+        android:id="@+id/appBarFragment"
+        android:name="kt.school.starlord.ui.bottomappbar.BottomAppBarFragment"
+        android:label="fragment_appbar"
+        tools:layout="@layout/fragment_appbar" />
 </navigation>
