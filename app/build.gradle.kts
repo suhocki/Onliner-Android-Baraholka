@@ -1,3 +1,4 @@
+
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
 import io.gitlab.arturbosch.detekt.detekt
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
@@ -9,6 +10,7 @@ plugins {
     id("kotlin-android-extensions")
     id("kotlin-kapt")
     id("androidx.navigation.safeargs.kotlin")
+    id("jacoco")
     id("jacoco-android")
     id("com.github.triplet.play")
     id("com.getkeepsafe.dexcount")
@@ -22,6 +24,7 @@ object AndroidVersion {
     const val P = 28
 }
 
+val scriptExecutionTime = 5L
 val isRunningFromTravis = System.getenv("CI") == "true"
 val buildUid = System.getenv("TRAVIS_BUILD_ID") ?: "local"
 val buildVersionName by lazy {
@@ -36,7 +39,6 @@ android {
 
     defaultConfig {
         applicationId = "kt.school.starlord"
-//        testApplicationId = "kt.school.starlord.test"
         minSdkVersion(AndroidVersion.KITKAT)
         targetSdkVersion(AndroidVersion.P)
         versionCode = buildVersionCode
@@ -83,14 +85,36 @@ android {
         applicationVariants.all applicationVariants@{
             outputs.all outputs@{
                 val buildLabel = if (this@applicationVariants.name == "debug") "_debug" else ""
+                val outputFileName = "starlord_$buildVersionName$buildLabel.apk"
 
-                (this@outputs as BaseVariantOutputImpl).outputFileName =
-                    "starlord_$buildVersionName$buildLabel.apk"
+                (this@outputs as BaseVariantOutputImpl).outputFileName = outputFileName
             }
         }
 
         kapt.arguments {
             arg("room.schemaLocation", "$projectDir/sqlite/schemas")
+        }
+    }
+
+    sourceSets {
+        val main by getting
+        val debug by getting
+        val test by getting
+        main.java.srcDirs("src/main/kotlin")
+        debug.java.srcDirs("src/debug/kotlin")
+        test.java.srcDirs("src/test/kotlin")
+    }
+
+    testOptions {
+        animationsDisabled = true
+        unitTests.apply {
+            isReturnDefaultValues = true
+            isIncludeAndroidResources = true
+            all {
+                extensions
+                    .getByType(JacocoTaskExtension::class.java)
+                    .isIncludeNoLocationClasses = true
+            }
         }
     }
 
@@ -118,21 +142,71 @@ staticAnalysis {
     }
 }
 
+jacoco {
+    toolVersion = "0.8.4"
+}
+
+gradle.buildFinished {
+    println("VersionName: ${android.defaultConfig.versionName}")
+    println("VersionCode: ${android.defaultConfig.versionCode}")
+    println("BuildUid: $buildUid")
+}
+
+play {
+    isEnabled = isRunningFromTravis
+    track = "internal"
+    userFraction = 1.0
+    serviceAccountEmail = System.getenv("google_play_email")
+    serviceAccountCredentials = file("../keys/google-play-key.p12")
+    resolutionStrategy = "auto"
+}
+
+fun String.runCommand(workingDir: File = file(".")) =
+    ProcessBuilder(*split("\\s".toRegex()).toTypedArray())
+        .directory(workingDir)
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .start()
+        .apply { waitFor(scriptExecutionTime, TimeUnit.SECONDS) }
+        .inputStream
+        .bufferedReader()
+        .readText()
+        .trim()
+
+// This is a workaround for https://issuetracker.google.com/issues/78547461
+fun com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions.all(block: Test.() -> Unit) =
+    all(KotlinClosure1<Any, Test>({ (this as Test).apply(block) }, owner = this))
+
+tasks {
+    withType<JacocoCoverageVerification> {
+        violationRules {
+            rule {
+                limit {
+                    minimum = "0.52".toBigDecimal()
+                }
+            }
+        }
+    }
+}
+
 dependencies {
     val kotlinxVersion = "1.2.1"
     val lifecycleVersion = "2.2.0-alpha01"
     val navigationVersion = "2.1.0-alpha04"
-    val koinVersion = "2.0.0-rc-1"
+    val koinVersion = "2.0.1"
     val ankoVersion = "0.10.8"
     val leakCanaryVersion = "2.0-alpha-2"
     val roomVersion = "2.1.0"
+    val appcompatVersion = "1.1.0-beta01"
+    val mockkVersion = "1.9.3"
+    val testingVersion = "1.2.0"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxVersion")
     implementation("androidx.core:core-ktx:1.2.0-alpha02")
-    implementation("androidx.appcompat:appcompat:1.1.0-beta01")
+    implementation("androidx.appcompat:appcompat:$appcompatVersion")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta2")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
@@ -141,6 +215,7 @@ dependencies {
     implementation("androidx.lifecycle:lifecycle-runtime-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-livedata-ktx:$lifecycleVersion")
     implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:$lifecycleVersion")
+    implementation("com.github.hadilq.liveevent:liveevent:1.0.1")
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
@@ -162,48 +237,27 @@ dependencies {
 
     // Testing
     testImplementation("junit:junit:4.12")
-    testImplementation("io.mockk:mockk:1.9.3")
+    testImplementation("io.mockk:mockk:$mockkVersion")
+    testImplementation("io.mockk:mockk-android:$mockkVersion")
+    testImplementation("org.koin:koin-test:$koinVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxVersion")
-    testImplementation("androidx.arch.core:core-testing:2.0.1")
+    testImplementation("org.robolectric:robolectric:4.3")
+    testImplementation("androidx.arch.core:core-testing:2.1.0-rc01")
     testImplementation("androidx.room:room-testing:$roomVersion")
-    testImplementation("org.robolectric:robolectric:4.0")
-//    androidTestImplementation("androidx.test:runner:1.1.0")
-//    androidTestImplementation("androidx.test:rules:1.1.0")
-    androidTestImplementation("androidx.test:core-ktx:1.2.0")
-    androidTestImplementation("androidx.test.ext:junit:1.1.1")
-    androidTestImplementation("androidx.test.ext:junit-ktx:1.1.1")
-    androidTestImplementation("androidx.test.espresso:espresso-intents:3.2.0")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.2.0")
+    testImplementation("androidx.test:runner:$testingVersion")
+    testImplementation("androidx.test:rules:$testingVersion")
+    testImplementation("androidx.test.ext:junit:1.1.2-alpha01")
+
+    implementation("androidx.test:core:$testingVersion")
+    implementation("androidx.fragment:fragment-testing:$appcompatVersion")
+
+    // Android runner and rules support
+    testImplementation("com.android.support.test:runner:1.0.2")
+    testImplementation("com.android.support.test:rules:1.0.2")
+
+    // Espresso support
+    testImplementation("androidx.test.espresso:espresso-core:3.3.0-alpha01")
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 }
-
-gradle.buildFinished {
-    println("VersionName: ${android.defaultConfig.versionName}")
-    println("VersionCode: ${android.defaultConfig.versionCode}")
-    println("BuildUid: $buildUid")
-}
-
-play {
-    isEnabled = isRunningFromTravis
-    track = "internal"
-    userFraction = 1.0
-    serviceAccountEmail = System.getenv("google_play_email")
-    serviceAccountCredentials = file("../keys/google-play-key.p12")
-    resolutionStrategy = "auto"
-}
-
-val scriptExecutionTime = 5L
-
-fun String.runCommand(workingDir: File = file(".")) =
-    ProcessBuilder(*split("\\s".toRegex()).toTypedArray())
-        .directory(workingDir)
-        .redirectOutput(ProcessBuilder.Redirect.PIPE)
-        .redirectError(ProcessBuilder.Redirect.PIPE)
-        .start()
-        .apply { waitFor(scriptExecutionTime, TimeUnit.SECONDS) }
-        .inputStream
-        .bufferedReader()
-        .readText()
-        .trim()
