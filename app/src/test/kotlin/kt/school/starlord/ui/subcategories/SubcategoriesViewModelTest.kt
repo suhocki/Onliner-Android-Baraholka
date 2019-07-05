@@ -25,7 +25,7 @@ class SubcategoriesViewModelTest {
     @Test
     fun `load subcategories from database`() = testCoroutineRule.runBlockingTest {
         // Given
-        val categoryName = "Apple"
+        val categoryName = "categoryName"
         val subcategories: List<Subcategory> = mockk()
         val subcategoriesLiveData = MutableLiveData(subcategories)
         every { subcategoriesRepository.getSubcategories(categoryName) } answers { subcategoriesLiveData }

@@ -27,16 +27,12 @@ class CategoriesViewModelTest {
     private val roomRepository: RoomRepository = mockk(relaxed = true)
 
     @Test
-    fun `load categories with subcategories from network`() = testCoroutineRule.runBlockingTest {
+    fun `refresh data by network`() = testCoroutineRule.runBlockingTest {
         // Given
-        val categoriesWithSubcategories = mapOf(
-            Category("categoryName3") to listOf(
-                Subcategory("subcategoryName1", "categoryName3", 5, "link1"),
-                Subcategory("subcategoryName2", "categoryName3", 2, "link2")
-            ),
-            Category("categoryName4") to listOf(
-                Subcategory("subcategoryName3", "categoryName4", 3, "link3")
-            )
+        val categoriesWithSubcategories = mapOf<Category, List<Subcategory>>(
+            mockk<Category>() to listOf(mockk(),mockk()),
+            mockk<Category>() to listOf(mockk(),mockk()),
+            mockk<Category>() to listOf(mockk(),mockk())
         )
         coEvery { networkRepository.getCategoriesWithSubcategories() }.coAnswers { categoriesWithSubcategories }
 
@@ -51,9 +47,9 @@ class CategoriesViewModelTest {
     }
 
     @Test
-    fun `load categories from database`() = testCoroutineRule.runBlockingTest {
+    fun `load data from database`() = testCoroutineRule.runBlockingTest {
         // Given
-        val categories = listOf(Category("categoryName1"), Category("categoryName2"))
+        val categories: List<Category> = mockk()
         val categoriesLiveData = MutableLiveData(categories)
         every { roomRepository.getCategories() }.answers { categoriesLiveData }
 
