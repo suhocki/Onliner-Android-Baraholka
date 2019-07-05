@@ -2,10 +2,10 @@ package kt.school.starlord
 
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
 import kt.school.starlord.model.system.SystemMessageNotifier
 import kt.school.starlord.model.system.SystemMessageReceiver
-import kt.school.starlord.ui.global.BaseActivity
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
 import org.koin.android.ext.android.inject
@@ -15,7 +15,7 @@ import timber.log.Timber
  * The only activity class for this application.
  * Implement system notifier interface.
  */
-class AppActivity : BaseActivity(), SystemMessageReceiver {
+class AppActivity : AppCompatActivity(), SystemMessageReceiver {
 
     private val systemMessageNotifier: SystemMessageNotifier by inject()
 

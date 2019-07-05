@@ -4,8 +4,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
-import kt.school.starlord.model.parser.PageParser
 import kt.school.starlord.model.urlconnection.PageLoader
+import kt.school.starlord.model.parser.PageParser
 
 /**
  * Implement methods using Internet connection.
