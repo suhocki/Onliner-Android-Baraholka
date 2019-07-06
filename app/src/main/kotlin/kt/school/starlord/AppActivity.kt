@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_main.*
+import kt.school.starlord.extension.fixIMMLeak
 import kt.school.starlord.model.system.SystemMessageNotifier
 import kt.school.starlord.model.system.SystemMessageReceiver
 import org.jetbrains.anko.longToast
@@ -33,6 +34,11 @@ class AppActivity : AppCompatActivity(), SystemMessageReceiver {
     override fun onPause() {
         super.onPause()
         systemMessageNotifier.systemMessageReceiver = null
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        fixIMMLeak()
     }
 
     override fun showMessage(message: String) {
