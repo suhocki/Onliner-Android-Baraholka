@@ -195,7 +195,7 @@ dependencies {
     val navigationVersion = "2.1.0-alpha04"
     val koinVersion = "2.0.1"
     val ankoVersion = "0.10.8"
-    val leakCanaryVersion = "1.6.3"
+    val leakCanaryVersion = "2.0-alpha-2"
     val roomVersion = "2.1.0"
     val appcompatVersion = "1.1.0-beta01"
     val mockkVersion = "1.9.3"
