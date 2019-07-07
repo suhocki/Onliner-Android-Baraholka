@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.LayoutRes
 import timber.log.Timber
+import java.lang.reflect.Field
 
 /**
  * Encapsulate logic for creating a view using layoutRes.
@@ -31,7 +32,7 @@ fun Activity.fixIMMLeak() {
             .onFailure(Timber::e)
             .getOrNull() ?: return
 
-    inputMethodManager.javaClass.declaredFields.forEach { field ->
+    inputMethodManager.getClassDeclaredFields().forEach { field ->
         runCatching {
             field.isAccessible = true
             (field.get(inputMethodManager) as? View)?.let { view ->
@@ -42,3 +43,8 @@ fun Activity.fixIMMLeak() {
         }.onFailure(Timber::e)
     }
 }
+
+/**
+ * Encapsulates calls to reflection API for unit-tests.
+ */
+fun Any.getClassDeclaredFields(): Array<Field> = javaClass.declaredFields
