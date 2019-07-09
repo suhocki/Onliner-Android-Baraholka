@@ -44,7 +44,7 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun showCategories() {
+    fun `show categories`() {
         // Given
         mockkConstructor(AppRecyclerAdapter::class)
         val categories = listOf(Category("categoryName1"), Category("categoryName2"))
@@ -61,7 +61,7 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun showProgress() {
+    fun `show progress`() {
         // Given
         val isProgressVisible = true
         every { viewModel.getProgress() } returns MutableLiveData<Boolean>(isProgressVisible)
@@ -73,7 +73,7 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun showError() {
+    fun `show error`() {
         // Given
         val exception = IllegalStateException("failure")
         val error = MutableLiveData<Throwable>(exception)
@@ -86,7 +86,7 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun navigateToSubcategories() {
+    fun `navigate to subcategories`() {
         // Given
         val categoryName = "test category name"
         val categories = MutableLiveData<List<Category>>(listOf(Category(categoryName)))

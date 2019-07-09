@@ -113,7 +113,10 @@ android {
             all {
                 extensions
                     .getByType(JacocoTaskExtension::class.java)
-                    .isIncludeNoLocationClasses = true
+                    .apply {
+                        isIncludeNoLocationClasses = true
+                        excludes?.add("jdk.internal.*")
+                    }
             }
         }
     }
@@ -144,12 +147,6 @@ staticAnalysis {
 
 jacoco {
     toolVersion = "0.8.4"
-}
-
-gradle.buildFinished {
-    println("VersionName: ${android.defaultConfig.versionName}")
-    println("VersionCode: ${android.defaultConfig.versionCode}")
-    println("BuildUid: $buildUid")
 }
 
 play {
@@ -260,4 +257,10 @@ dependencies {
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
+}
+
+gradle.buildFinished {
+    println("VersionName: ${android.defaultConfig.versionName}")
+    println("VersionCode: ${android.defaultConfig.versionCode}")
+    println("BuildUid: $buildUid")
 }

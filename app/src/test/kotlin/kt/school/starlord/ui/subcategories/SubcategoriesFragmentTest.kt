@@ -40,7 +40,7 @@ class SubcategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun navigateToProducts() {
+    fun `navigate to products`() {
         // Given
         val subcategoryName = "subcategoryName"
         val subcategories = MutableLiveData(listOf(Subcategory(subcategoryName, "", 0, "")))

@@ -6,7 +6,7 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
-import kt.school.starlord.extension.fixIMMLeak
+import kt.school.starlord.extension.removeInputMethodManager
 import kt.school.starlord.model.system.SystemMessageNotifier
 import org.junit.Before
 import org.junit.Test
@@ -44,12 +44,12 @@ class AppActivityTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun `fix IMM memory leak`() {
+    fun `remove input method manager`() {
         mockkStatic("kt.school.starlord.extension.ExtensionsKt")
 
         scenario.onActivity {
             scenario.moveToState(Lifecycle.State.DESTROYED)
-            verify { it.fixIMMLeak() }
+            verify { it.removeInputMethodManager() }
         }
     }
 }

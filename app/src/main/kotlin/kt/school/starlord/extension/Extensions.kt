@@ -26,7 +26,7 @@ fun ViewGroup.inflate(@LayoutRes layoutRes: Int, attachToRoot: Boolean = false):
  * Fix InputManager memory leak.
  * https://code.google.com/p/android/issues/detail?id=171190
  */
-fun Activity.fixIMMLeak() {
+fun Activity.removeInputMethodManager() {
     val inputMethodManager =
         runCatching { getSystemService(Context.INPUT_METHOD_SERVICE) as? InputMethodManager }
             .onFailure(Timber::e)
