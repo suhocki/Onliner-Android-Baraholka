@@ -7,7 +7,7 @@ buildscript {
         maven("https://jitpack.io")
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:3.4.1")
+        classpath("com.android.tools.build:gradle:3.4.2")
         classpath(kotlin("gradle-plugin", "1.3.21"))
         classpath("androidx.navigation:navigation-safe-args-gradle-plugin:2.1.0-alpha06")
         classpath("com.dicedmelon.gradle:jacoco-android:0.1.4")
