@@ -1,5 +1,6 @@
-
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.android.build.gradle.internal.dsl.TestOptions
 import io.gitlab.arturbosch.detekt.detekt
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
@@ -14,6 +15,7 @@ plugins {
     id("jacoco-android")
     id("com.github.triplet.play")
     id("com.getkeepsafe.dexcount")
+    id("by.bulba.android.environments")
     id("org.jlleitschuh.gradle.ktlint") version "8.0.0"
     id("io.gitlab.arturbosch.detekt") version "1.0.0-RC14"
     id("com.novoda.static-analysis") version "1.0"
@@ -33,6 +35,11 @@ val buildVersionName by lazy {
 val buildVersionCode by lazy {
     if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh code".runCommand().toInt() else 1
 }
+val configProperties by lazy {
+    gradleLocalProperties(file("$rootDir")).apply {
+        load(file("../config/config.properties").inputStream())
+    }
+}
 
 android {
     compileSdkVersion(AndroidVersion.P)
@@ -50,9 +57,6 @@ android {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
         }
-
-        buildConfigField("String", "DATABASE_FILE_NAME", "${properties["databaseFileName"]}")
-        buildConfigField("String", "BARAHOLKA_ONLINER_URL", "${properties["baraholkaOnlinerUrl"]}")
 
         signingConfigs {
             create("prod") {
@@ -80,6 +84,15 @@ android {
                     file("proguard-rules.pro")
                 )
             }
+        }
+
+        adbOptions {
+            installOptions("-g", "-r")
+        }
+
+        environments {
+            useBuildTypes = true
+            useProductFlavors = true
         }
 
         applicationVariants.all applicationVariants@{
