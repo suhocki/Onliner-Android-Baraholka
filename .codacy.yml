@@ -1,5 +1,6 @@
 exclude_paths:
   - '**/test/**'
+  - '**/androidTest/**'
   - 'README.md'
 
 build:

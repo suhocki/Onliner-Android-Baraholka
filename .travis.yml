@@ -5,9 +5,16 @@ jdk: oraclejdk8
 
 env:
   global:
+    - ADB_INSTALL_TIMEOUT=8
+    - ABI=armeabi-v7a
+    - EMU_FLAVOR=default
     - ANDROID_API_LEVEL=28
     - ANDROID_BUILD_TOOLS_VERSION=28.0.3
-    - ANDROID_ABI=armeabi-v7a
+    - ANDROID_HOME=/usr/local/android-sdk
+    - TOOLS=${ANDROID_HOME}/tools
+    - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
+  matrix:
+    - API=22 ABI=x86_64
 
 android:
   components:
@@ -21,6 +28,7 @@ android:
     - 'google-gdk-license-.+'
 
 before_install:
+  - sudo chmod 755 -R scripts
   - touch $HOME/.android/repositories.cfg
   - yes | sdkmanager "platforms;android-28"
   - yes | sdkmanager "build-tools;28.0.3"
@@ -33,6 +41,9 @@ before_install:
   - yes | sdkmanager "platforms;android-28"
   - sudo apt-get install jq
 
+install:
+  - ./scripts/start_emulator.sh
+
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
   - rm -fr $HOME/.gradle/caches/*/plugin-resolution/
@@ -44,12 +55,19 @@ cache:
     - $HOME/.android/build-cache
 
 before_script:
-  - sudo chmod 755 -R scripts
   - export COMMITTER_EMAIL="$(git log -1 $TRAVIS_COMMIT --pretty="%cE")"
   - export AUTHOR_NAME="$(git log -1 $TRAVIS_COMMIT --pretty="%aN")"
 
 script:
-  - ./gradlew test check detekt assemble jacocoTestReport
+  - ./gradlew check detekt assemble jacocoTestReport
+
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+  - ./scripts/comment_pull_request_on_success.sh
+  - ./scripts/telegram_notify_on_pull_request.sh
+
+after_failure:
+  - ./scripts/comment_pull_request_on_failure.sh
 
 branches:
   only:
@@ -57,10 +75,11 @@ branches:
     - develop
 
 before_deploy:
-  - git tag $(scripts/versionizer/versionizer.sh name)
   - ./scripts/get_whats_new.sh
+  - ./gradlew connectedDebugAndroidTest
   - ./gradlew publish
   - ./scripts/telegram_notify_on_google_play_publish.sh
+  - git tag $(scripts/versionizer/versionizer.sh name)
 
 deploy:
   provider: releases
@@ -70,11 +89,3 @@ deploy:
   file: app/build/outputs/apk/release/*.apk
   on:
     all_branches: true
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
-  - ./scripts/comment_pull_request_on_success.sh
-  - ./scripts/telegram_notify_on_pull_request.sh
-
-after_failure:
-  - ./scripts/comment_pull_request_on_failure.sh

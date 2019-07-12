@@ -6,10 +6,11 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
+import kt.school.starlord.domain.CategoriesRepository
+import kt.school.starlord.domain.CategoriesWithSubcategoriesRepository
+import kt.school.starlord.domain.SubcategoriesRepository
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
-import kt.school.starlord.model.network.NetworkRepository
-import kt.school.starlord.model.room.RoomRepository
 import kt.school.starlord.ui.TestCoroutineRule
 import kt.school.starlord.ui.observeForTesting
 import org.junit.Rule
@@ -23,8 +24,9 @@ class CategoriesViewModelTest {
     @get:Rule
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val networkRepository: NetworkRepository = mockk()
-    private val roomRepository: RoomRepository = mockk(relaxed = true)
+    private val networkRepository: CategoriesWithSubcategoriesRepository = mockk()
+    private val categoriesRepository: CategoriesRepository = mockk(relaxed = true)
+    private val subcategoriesRepository: SubcategoriesRepository = mockk(relaxed = true)
 
     @Test
     fun `refresh data by network`() = testCoroutineRule.runBlockingTest {
@@ -37,12 +39,12 @@ class CategoriesViewModelTest {
         coEvery { networkRepository.getCategoriesWithSubcategories() }.coAnswers { categoriesWithSubcategories }
 
         // When
-        CategoriesViewModel(networkRepository, roomRepository)
+        CategoriesViewModel(networkRepository, categoriesRepository, subcategoriesRepository)
 
         // Then
         coVerify(exactly = 1) {
-            roomRepository.updateSubcategories(categoriesWithSubcategories.values.flatten())
-            roomRepository.updateCategories(categoriesWithSubcategories.keys.toList())
+            subcategoriesRepository.updateSubcategories(categoriesWithSubcategories.values.flatten())
+            categoriesRepository.updateCategories(categoriesWithSubcategories.keys.toList())
         }
     }
 
@@ -51,10 +53,10 @@ class CategoriesViewModelTest {
         // Given
         val categories: List<Category> = mockk()
         val categoriesLiveData = MutableLiveData(categories)
-        every { roomRepository.getCategories() }.answers { categoriesLiveData }
+        every { categoriesRepository.getCategories() }.answers { categoriesLiveData }
 
         // When
-        val viewModel = CategoriesViewModel(networkRepository, roomRepository)
+        val viewModel = CategoriesViewModel(networkRepository, categoriesRepository, subcategoriesRepository)
 
         // Then
         viewModel.getCategories().observeForTesting {

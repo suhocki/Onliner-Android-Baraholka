@@ -10,6 +10,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.hadilq.liveevent.LiveEvent
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
@@ -44,7 +45,7 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun showCategories() {
+    fun `show categories`() {
         // Given
         mockkConstructor(AppRecyclerAdapter::class)
         val categories = listOf(Category("categoryName1"), Category("categoryName2"))
@@ -61,7 +62,7 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun showProgress() {
+    fun `show progress`() {
         // Given
         val isProgressVisible = true
         every { viewModel.getProgress() } returns MutableLiveData<Boolean>(isProgressVisible)
@@ -73,11 +74,15 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun showError() {
+    fun `show error`() {
         // Given
         val exception = IllegalStateException("failure")
-        val error = MutableLiveData<Throwable>(exception)
+        val error = LiveEvent<Throwable>()
         every { viewModel.getError() } returns error
+
+        // When
+        scenario.recreate()
+        error.value = exception
 
         // Then
         scenario.onFragment {
@@ -86,7 +91,7 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun navigateToSubcategories() {
+    fun `navigate to subcategories`() {
         // Given
         val categoryName = "test category name"
         val categories = MutableLiveData<List<Category>>(listOf(Category(categoryName)))

@@ -6,33 +6,28 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hadilq.liveevent.LiveEvent
 import kotlinx.coroutines.launch
+import kt.school.starlord.domain.CategoriesRepository
+import kt.school.starlord.domain.CategoriesWithSubcategoriesRepository
+import kt.school.starlord.domain.SubcategoriesRepository
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
-import kt.school.starlord.model.network.NetworkRepository
-import kt.school.starlord.model.room.RoomRepository
 
 /**
  * Contains logic with fetching categories asynchronously.
  */
 class CategoriesViewModel(
-    private val networkRepository: NetworkRepository,
-    private val roomRepository: RoomRepository
+    private val networkRepository: CategoriesWithSubcategoriesRepository,
+    private val categoriesRepository: CategoriesRepository,
+    private val subcategoriesRepository: SubcategoriesRepository
 ) : ViewModel() {
+
     private val categories = MutableLiveData<List<Category>>()
     private val error = LiveEvent<Throwable>()
     private val progress = MutableLiveData<Boolean>()
 
     init {
-        roomRepository.getCategories().observeForever(categories::setValue)
-
-        viewModelScope.launch {
-            progress.value = true
-
-            runCatching { networkRepository.getCategoriesWithSubcategories() }
-                .fold({ updateDatabase(it) }, error::setValue)
-
-            progress.value = false
-        }
+        categoriesRepository.getCategories().observeForever(categories::setValue)
+        refreshData()
     }
 
     /**
@@ -50,8 +45,19 @@ class CategoriesViewModel(
      */
     fun getProgress(): LiveData<Boolean> = progress
 
+    private fun refreshData() {
+        viewModelScope.launch {
+            progress.value = true
+
+            runCatching { networkRepository.getCategoriesWithSubcategories() }
+                .fold({ updateDatabase(it) }, error::setValue)
+
+            progress.value = false
+        }
+    }
+
     private suspend fun updateDatabase(categoriesWithSubcategories: Map<Category, List<Subcategory>>) {
-        roomRepository.updateCategories(categoriesWithSubcategories.keys.toList())
-        roomRepository.updateSubcategories(categoriesWithSubcategories.values.flatten())
+        categoriesRepository.updateCategories(categoriesWithSubcategories.keys.toList())
+        subcategoriesRepository.updateSubcategories(categoriesWithSubcategories.values.flatten())
     }
 }

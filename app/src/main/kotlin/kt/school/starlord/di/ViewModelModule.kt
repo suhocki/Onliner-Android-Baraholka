@@ -10,7 +10,7 @@ import org.koin.dsl.module
  */
 val viewModelModule = module {
 
-    viewModel { CategoriesViewModel(get(), get()) }
+    viewModel { CategoriesViewModel(get(), get(), get()) }
 
     viewModel { (categoryName: String) -> SubcategoriesViewModel(get(), categoryName) }
 }

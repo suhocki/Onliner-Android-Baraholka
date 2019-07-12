@@ -3,8 +3,8 @@ package kt.school.starlord
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import kotlinx.android.synthetic.main.activity_main.*
-import kt.school.starlord.extension.fixIMMLeak
+import kotlinx.android.synthetic.main.activity_app.*
+import kt.school.starlord.extension.removeInputMethodManager
 import kt.school.starlord.model.system.SystemMessageNotifier
 import kt.school.starlord.model.system.SystemMessageReceiver
 import org.jetbrains.anko.longToast
@@ -23,7 +23,7 @@ class AppActivity : AppCompatActivity(), SystemMessageReceiver {
     override fun onCreate(savedInstanceState: Bundle?) {
         setTheme(R.style.AppTheme)
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
+        setContentView(R.layout.activity_app)
     }
 
     override fun onResume() {
@@ -38,7 +38,7 @@ class AppActivity : AppCompatActivity(), SystemMessageReceiver {
 
     override fun onDestroy() {
         super.onDestroy()
-        fixIMMLeak()
+        removeInputMethodManager()
     }
 
     override fun showMessage(message: String) {

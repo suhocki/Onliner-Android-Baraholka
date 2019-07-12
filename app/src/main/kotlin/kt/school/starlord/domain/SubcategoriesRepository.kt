@@ -14,4 +14,9 @@ interface SubcategoriesRepository {
      * @return subcategories
      */
     fun getSubcategories(categoryName: String): LiveData<List<Subcategory>>
+
+    /**
+     * Deletes existing subcategories and puts new ones.
+     */
+    suspend fun updateSubcategories(subcategories: List<Subcategory>)
 }

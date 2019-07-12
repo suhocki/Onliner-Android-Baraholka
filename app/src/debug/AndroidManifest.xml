@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="kt.school.starlord">
 
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
     <application
         android:name=".AppDebug"
         tools:ignore="AllowBackup,GoogleAppIndexingWarning"

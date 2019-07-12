@@ -15,7 +15,7 @@ val mapperModule = module {
     single { Mapper(converters) }
 }
 
-private val converters = setOf(
+val converters = setOf(
     object : BaseConverter<RoomCategory, Category>(RoomCategory::class.java, Category::class.java) {
         override fun convert(value: RoomCategory) = Category(value.name)
     },

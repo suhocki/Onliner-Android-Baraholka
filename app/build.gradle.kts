@@ -1,5 +1,6 @@
-
 import com.android.build.gradle.internal.api.BaseVariantOutputImpl
+import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
+import com.android.build.gradle.internal.dsl.TestOptions
 import io.gitlab.arturbosch.detekt.detekt
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
@@ -14,6 +15,7 @@ plugins {
     id("jacoco-android")
     id("com.github.triplet.play")
     id("com.getkeepsafe.dexcount")
+    id("by.bulba.android.environments")
     id("org.jlleitschuh.gradle.ktlint") version "8.0.0"
     id("io.gitlab.arturbosch.detekt") version "1.0.0-RC14"
     id("com.novoda.static-analysis") version "1.0"
@@ -33,6 +35,13 @@ val buildVersionName by lazy {
 val buildVersionCode by lazy {
     if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh code".runCommand().toInt() else 1
 }
+val reportsDirectory = "$projectDir/src/main/play/listings/ru-RU/graphics/phone-screenshots"
+val configProperties by lazy {
+    gradleLocalProperties(file("$rootDir")).apply {
+        load(file("../config/config.properties").inputStream())
+    }
+}
+val screenshotsDirectory = configProperties["screenshots.folder"].toString().replace("\"", "")
 
 android {
     compileSdkVersion(AndroidVersion.P)
@@ -50,9 +59,6 @@ android {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
         }
-
-        buildConfigField("String", "DATABASE_FILE_NAME", "${properties["databaseFileName"]}")
-        buildConfigField("String", "BARAHOLKA_ONLINER_URL", "${properties["baraholkaOnlinerUrl"]}")
 
         signingConfigs {
             create("prod") {
@@ -82,6 +88,11 @@ android {
             }
         }
 
+        environments {
+            useBuildTypes = true
+            useProductFlavors = true
+        }
+
         applicationVariants.all applicationVariants@{
             outputs.all outputs@{
                 val buildLabel = if (this@applicationVariants.name == "debug") "_debug" else ""
@@ -100,9 +111,11 @@ android {
         val main by getting
         val debug by getting
         val test by getting
+        val androidTest by getting
         main.java.srcDirs("src/main/kotlin")
         debug.java.srcDirs("src/debug/kotlin")
         test.java.srcDirs("src/test/kotlin")
+        androidTest.java.srcDirs("src/androidTest/kotlin")
     }
 
     testOptions {
@@ -113,7 +126,10 @@ android {
             all {
                 extensions
                     .getByType(JacocoTaskExtension::class.java)
-                    .isIncludeNoLocationClasses = true
+                    .apply {
+                        isIncludeNoLocationClasses = true
+                        excludes?.add("jdk.internal.*")
+                    }
             }
         }
     }
@@ -146,12 +162,6 @@ jacoco {
     toolVersion = "0.8.4"
 }
 
-gradle.buildFinished {
-    println("VersionName: ${android.defaultConfig.versionName}")
-    println("VersionCode: ${android.defaultConfig.versionCode}")
-    println("BuildUid: $buildUid")
-}
-
 play {
     isEnabled = isRunningFromTravis
     track = "internal"
@@ -159,34 +169,6 @@ play {
     serviceAccountEmail = System.getenv("google_play_email")
     serviceAccountCredentials = file("../keys/google-play-key.p12")
     resolutionStrategy = "auto"
-}
-
-fun String.runCommand(workingDir: File = file(".")) =
-    ProcessBuilder(*split("\\s".toRegex()).toTypedArray())
-        .directory(workingDir)
-        .redirectOutput(ProcessBuilder.Redirect.PIPE)
-        .redirectError(ProcessBuilder.Redirect.PIPE)
-        .start()
-        .apply { waitFor(scriptExecutionTime, TimeUnit.SECONDS) }
-        .inputStream
-        .bufferedReader()
-        .readText()
-        .trim()
-
-// This is a workaround for https://issuetracker.google.com/issues/78547461
-fun com.android.build.gradle.internal.dsl.TestOptions.UnitTestOptions.all(block: Test.() -> Unit) =
-    all(KotlinClosure1<Any, Test>({ (this as Test).apply(block) }, owner = this))
-
-tasks {
-    withType<JacocoCoverageVerification> {
-        violationRules {
-            rule {
-                limit {
-                    minimum = "0.52".toBigDecimal()
-                }
-            }
-        }
-    }
 }
 
 dependencies {
@@ -248,16 +230,91 @@ dependencies {
     testImplementation("androidx.test:rules:$testingVersion")
     testImplementation("androidx.test.ext:junit:1.1.2-alpha01")
 
-    implementation("androidx.test:core:$testingVersion")
-    implementation("androidx.fragment:fragment-testing:$appcompatVersion")
-
-    // Android runner and rules support
-    testImplementation("com.android.support.test:runner:1.0.2")
-    testImplementation("com.android.support.test:rules:1.0.2")
+    testImplementation("androidx.test:core:$testingVersion")
+    implementation("androidx.fragment:fragment-testing:$appcompatVersion") {
+        exclude(group = "androidx.test", module = "core")
+    }
 
     // Espresso support
     testImplementation("androidx.test.espresso:espresso-core:3.3.0-alpha01")
 
+    androidTestImplementation("androidx.test:runner:$testingVersion")
+    androidTestImplementation("androidx.test:rules:$testingVersion")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0-alpha01")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.3.0-alpha01")
+    androidTestImplementation("androidx.test:core:$testingVersion")
+    androidTestImplementation("androidx.test.ext:junit:1.1.2-alpha01")
+    androidTestImplementation("io.mockk:mockk:$mockkVersion")
+    androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
+    androidTestImplementation("org.koin:koin-test:$koinVersion")
+
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
 }
+
+// region Gradle Tasks
+val clearScreenshotsTask = task("clearScreenshots", Exec::class) {
+    executable = "${android.adbExecutable}"
+    args("shell", "rm", "-r", "/sdcard/Pictures/$screenshotsDirectory")
+}
+
+val createScreenshotDirectoryTask = task("createScreenshotDirectory", Exec::class) {
+    group = "reporting"
+    executable = "${android.adbExecutable}"
+    args("shell", "mkdir", "-p", "/sdcard/Pictures/$screenshotsDirectory/.")
+}
+
+val fetchScreenshotsTask = task("fetchScreenshotsTask", Exec::class) {
+    group = "reporting"
+    executable = "${android.adbExecutable}"
+    args("pull", "/sdcard/Pictures/$screenshotsDirectory/.", reportsDirectory)
+
+    finalizedBy(clearScreenshotsTask)
+
+    dependsOn(createScreenshotDirectoryTask)
+
+    doFirst {
+        File(reportsDirectory).mkdirs()
+    }
+}
+
+tasks {
+    withType<JacocoCoverageVerification> {
+        violationRules {
+            rule {
+                limit {
+                    minimum = "0.52".toBigDecimal()
+                }
+            }
+        }
+    }
+    whenTaskAdded {
+        if (name == "connectedDebugAndroidTest") {
+            finalizedBy(fetchScreenshotsTask)
+        }
+    }
+}
+
+gradle.buildFinished {
+    println("VersionName: ${android.defaultConfig.versionName}")
+    println("VersionCode: ${android.defaultConfig.versionCode}")
+    println("BuildUid: $buildUid")
+}
+// endregion
+
+// region Extensions
+fun String.runCommand(workingDir: File = file(".")) =
+    ProcessBuilder(*split("\\s".toRegex()).toTypedArray())
+        .directory(workingDir)
+        .redirectOutput(ProcessBuilder.Redirect.PIPE)
+        .redirectError(ProcessBuilder.Redirect.PIPE)
+        .start()
+        .apply { waitFor(scriptExecutionTime, TimeUnit.SECONDS) }
+        .inputStream
+        .bufferedReader()
+        .readText()
+        .trim()
+
+fun TestOptions.UnitTestOptions.all(block: Test.() -> Unit) =
+    all(KotlinClosure1<Any, Test>({ (this as Test).apply(block) }, owner = this))
+// endregion

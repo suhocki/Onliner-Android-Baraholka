@@ -2,12 +2,13 @@ package kt.school.starlord.di
 
 import androidx.room.Room
 import kt.school.starlord.BuildConfig
+import kt.school.starlord.domain.CategoriesRepository
 import kt.school.starlord.domain.SubcategoriesRepository
 import kt.school.starlord.model.room.AppDatabase
 import kt.school.starlord.model.room.DaoManager
 import kt.school.starlord.model.room.RoomRepository
 import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.bind
+import org.koin.dsl.binds
 import org.koin.dsl.module
 
 /**
@@ -28,5 +29,5 @@ val databaseModule = module {
 
     factory { DaoManager(get(), get()) }
 
-    single { RoomRepository(get(), get()) } bind SubcategoriesRepository::class
+    single { RoomRepository(get(), get()) } binds arrayOf(SubcategoriesRepository::class, CategoriesRepository::class)
 }

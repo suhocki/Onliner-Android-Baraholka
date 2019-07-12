@@ -29,7 +29,7 @@ class ExtensionsKtTest {
         every { view.context } returns activity
 
         // When
-        activity.fixIMMLeak()
+        activity.removeInputMethodManager()
 
         // Then
         verify {
