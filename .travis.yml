@@ -28,6 +28,7 @@ android:
     - 'google-gdk-license-.+'
 
 before_install:
+  - sudo chmod 755 -R scripts
   - touch $HOME/.android/repositories.cfg
   - yes | sdkmanager "platforms;android-28"
   - yes | sdkmanager "build-tools;28.0.3"
@@ -54,7 +55,6 @@ cache:
     - $HOME/.android/build-cache
 
 before_script:
-  - sudo chmod 755 -R scripts
   - export COMMITTER_EMAIL="$(git log -1 $TRAVIS_COMMIT --pretty="%cE")"
   - export AUTHOR_NAME="$(git log -1 $TRAVIS_COMMIT --pretty="%aN")"
 
