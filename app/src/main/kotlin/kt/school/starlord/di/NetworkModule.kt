@@ -21,5 +21,5 @@ val networkModule = module {
 
     single { PageParser(get()) }
 
-    single { NetworkRepository(get(), get()) } bind CategoriesWithSubcategoriesRepository::class
+    single { NetworkRepository(get(), get(), get()) } bind CategoriesWithSubcategoriesRepository::class
 }

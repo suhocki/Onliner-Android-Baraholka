@@ -37,7 +37,6 @@ class RoomRepository(
 
     override suspend fun updateSubcategories(subcategories: List<Subcategory>) {
         val roomSubcategories = subcategories.map { mapper.map<RoomSubcategory>(it) }
-        daoManager.subcategoryDao.deleteAll()
-        daoManager.subcategoryDao.putSubcategories(roomSubcategories)
+        daoManager.subcategoryDao.replaceAll(roomSubcategories)
     }
 }

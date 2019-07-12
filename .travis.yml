@@ -75,10 +75,11 @@ branches:
     - develop
 
 before_deploy:
-  - git tag $(scripts/versionizer/versionizer.sh name)
   - ./scripts/get_whats_new.sh
-  - ./gradlew connectedDebugAndroidTest publish
+  - ./gradlew connectedDebugAndroidTest
+  - ./gradlew publish
   - ./scripts/telegram_notify_on_google_play_publish.sh
+  - git tag $(scripts/versionizer/versionizer.sh name)
 
 deploy:
   provider: releases

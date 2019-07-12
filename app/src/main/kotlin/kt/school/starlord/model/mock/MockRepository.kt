@@ -36,19 +36,19 @@ class MockRepository : CategoriesRepository, SubcategoriesRepository, Categories
 
     override fun getSubcategories(categoryName: String) = MutableLiveData<List<Subcategory>>(
         listOf(
-            Subcategory("Шкафы. Комоды. Горки. Секции. Полки", "", 3388, ""),
-            Subcategory("Диваны. Кресла. Мягкая мебель", "", 8962, ""),
-            Subcategory("Столы. Стулья. Тумбы", "", 2575, ""),
-            Subcategory("Кровати. Матрасы. Мебель для спальни", "", 2740, ""),
-            Subcategory("Кухни и кухонная мебель", "", 2976, ""),
-            Subcategory("Мебель для детской комнаты", "", 4059, ""),
-            Subcategory("Мебель для ванной", "", 1904, ""),
-            Subcategory("Офисная мебель", "", 4704, ""),
-            Subcategory("Элементы интерьера. Дизайн.", "", 17044, ""),
-            Subcategory("Постельное белье и принадлежности", "", 11112, ""),
-            Subcategory("Посуда и кухонные принадлежности", "", 638, ""),
-            Subcategory("Бытовая техника.", "", 2842, ""),
-            Subcategory("Бытовая техника: ремонт, подключение и другие услуги", "", 423, "")
+            Subcategory("Шкафы. Комоды. Горки. Секции. Полки", categoryName, 3388, ""),
+            Subcategory("Диваны. Кресла. Мягкая мебель", categoryName, 8962, ""),
+            Subcategory("Столы. Стулья. Тумбы", categoryName, 2575, ""),
+            Subcategory("Кровати. Матрасы. Мебель для спальни", categoryName, 2740, ""),
+            Subcategory("Кухни и кухонная мебель", categoryName, 2976, ""),
+            Subcategory("Мебель для детской комнаты", categoryName, 4059, ""),
+            Subcategory("Мебель для ванной", categoryName, 1904, ""),
+            Subcategory("Офисная мебель", categoryName, 4704, ""),
+            Subcategory("Элементы интерьера. Дизайн.", categoryName, 17044, ""),
+            Subcategory("Постельное белье и принадлежности", categoryName, 11112, ""),
+            Subcategory("Посуда и кухонные принадлежности", categoryName, 638, ""),
+            Subcategory("Бытовая техника.", categoryName, 2842, ""),
+            Subcategory("Бытовая техника: ремонт, подключение и другие услуги", categoryName, 423, "")
         )
     )
 

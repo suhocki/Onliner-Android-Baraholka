@@ -5,28 +5,34 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
+import androidx.room.Transaction
+import kt.school.starlord.model.room.entity.RoomCategory
 import kt.school.starlord.model.room.entity.RoomSubcategory
 
 /**
  * Defines queries for working with subcategories in database.
  */
 @Dao
-interface SubcategoryDao {
+abstract class SubcategoryDao {
     /**
      *  @return all subcategories.
      */
     @Query("SELECT * FROM Subcategories WHERE categoryName=:categoryName")
-    fun getSubcategories(categoryName: String): LiveData<List<RoomSubcategory>>
+    abstract fun getSubcategories(categoryName: String): LiveData<List<RoomSubcategory>>
 
     /**
      * @param subcategories subcategories that will be saved in database.
+     * Previous subcategories will be dropped.
      */
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun putSubcategories(subcategories: List<RoomSubcategory>)
+    @Transaction
+    open suspend fun replaceAll(subcategories: List<RoomSubcategory>) {
+        deleteAll()
+        putSubcategories(subcategories)
+    }
 
-    /**
-     * Deletes all subcategories from database.
-     */
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    protected abstract suspend fun putSubcategories(subcategories: List<RoomSubcategory>)
+
     @Query("DELETE FROM Subcategories")
-    suspend fun deleteAll()
+    protected abstract suspend fun deleteAll()
 }
