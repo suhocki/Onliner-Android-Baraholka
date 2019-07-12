@@ -86,10 +86,6 @@ android {
             }
         }
 
-        adbOptions {
-            installOptions("-g", "-r")
-        }
-
         environments {
             useBuildTypes = true
             useProductFlavors = true
