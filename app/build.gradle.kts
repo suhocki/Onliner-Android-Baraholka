@@ -35,11 +35,13 @@ val buildVersionName by lazy {
 val buildVersionCode by lazy {
     if (isRunningFromTravis) "bash ../scripts/versionizer/versionizer.sh code".runCommand().toInt() else 1
 }
+val reportsDirectory = "$projectDir/src/main/play/listings/ru-RU/graphics/phone-screenshots"
 val configProperties by lazy {
     gradleLocalProperties(file("$rootDir")).apply {
         load(file("../config/config.properties").inputStream())
     }
 }
+val screenshotsDirectory = configProperties["screenshots.folder"].toString().replace("\"", "")
 
 android {
     compileSdkVersion(AndroidVersion.P)
@@ -251,9 +253,6 @@ dependencies {
 }
 
 // region Gradle Tasks
-val reportsDirectory = "$projectDir/src/main/play/listings/ru-RU/graphics/phone-screenshots"
-val screenshotsDirectory = configProperties["screenshots.folder"]
-
 val clearScreenshotsTask = task("clearScreenshots", Exec::class) {
     executable = "${android.adbExecutable}"
     args("shell", "rm", "-r", "/sdcard/Pictures/$screenshotsDirectory")
