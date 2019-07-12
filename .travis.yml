@@ -41,22 +41,7 @@ before_install:
   - sudo apt-get install jq
 
 install:
-  - echo 'count=0' > /home/travis/.android/repositories.cfg # Avoid harmless sdkmanager warning
-  - echo y | sdkmanager "platform-tools" >/dev/null
-  - echo y | sdkmanager "tools" >/dev/null # A second time per Travis docs, gets latest versions
-  - echo y | sdkmanager "build-tools;28.0.3" >/dev/null # Implicit gradle dependency - gradle drives changes
-  - echo y | sdkmanager "platforms;android-$API" >/dev/null # We need the API of the emulator we will run
-  - echo y | sdkmanager "platforms;android-28" >/dev/null # We need the API of the current compileSdkVersion from gradle.properties
-  - echo y | sdkmanager --channel=4 "emulator" # Experiment with canary, specifying 28.0.3 (prior version) did not work
-  - echo y | sdkmanager "extras;android;m2repository" >/dev/null
-  - echo y | sdkmanager "system-images;android-$API;$EMU_FLAVOR;$ABI" #>/dev/null # install our emulator
-  - echo no | avdmanager create avd --force -n test -k "system-images;android-$API;$EMU_FLAVOR;$ABI" -c 10M
-  - emulator -verbose -avd test -no-accel -no-snapshot -no-window $AUDIO -camera-back none -camera-front none -selinux permissive -qemu -m 2048 &
-  - android-wait-for-emulator
-  - adb shell settings put global window_animation_scale 0 &
-  - adb shell settings put global transition_animation_scale 0 &
-  - adb shell settings put global animator_duration_scale 0 &
-  - adb shell input keyevent 82 &
+  - ./scripts/start_emulator.sh
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -76,6 +61,14 @@ before_script:
 script:
   - ./gradlew test check detekt assemble connectedDebugAndroidTest jacocoTestReport
 
+after_success:
+  - bash <(curl -s https://codecov.io/bash)
+  - ./scripts/comment_pull_request_on_success.sh
+  - ./scripts/telegram_notify_on_pull_request.sh
+
+after_failure:
+  - ./scripts/comment_pull_request_on_failure.sh
+
 branches:
   only:
     - master
@@ -84,7 +77,7 @@ branches:
 before_deploy:
   - git tag $(scripts/versionizer/versionizer.sh name)
   - ./scripts/get_whats_new.sh
-  - ./gradlew publish
+  - ./gradlew connectedDebugAndroidTest publish
   - ./scripts/telegram_notify_on_google_play_publish.sh
 
 deploy:
@@ -95,11 +88,3 @@ deploy:
   file: app/build/outputs/apk/release/*.apk
   on:
     all_branches: true
-
-after_success:
-  - bash <(curl -s https://codecov.io/bash)
-  - ./scripts/comment_pull_request_on_success.sh
-  - ./scripts/telegram_notify_on_pull_request.sh
-
-after_failure:
-  - ./scripts/comment_pull_request_on_failure.sh
