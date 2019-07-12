@@ -1,9 +1,11 @@
 package kt.school.starlord.di
 
 import kt.school.starlord.BuildConfig
+import kt.school.starlord.domain.CategoriesWithSubcategoriesRepository
 import kt.school.starlord.model.urlconnection.PageLoader
 import kt.school.starlord.model.network.NetworkRepository
 import kt.school.starlord.model.parser.PageParser
+import org.koin.dsl.bind
 import org.koin.dsl.module
 import java.net.URL
 
@@ -19,5 +21,5 @@ val networkModule = module {
 
     single { PageParser(get()) }
 
-    single { NetworkRepository(get(), get()) }
+    single { NetworkRepository(get(), get()) } bind CategoriesWithSubcategoriesRepository::class
 }

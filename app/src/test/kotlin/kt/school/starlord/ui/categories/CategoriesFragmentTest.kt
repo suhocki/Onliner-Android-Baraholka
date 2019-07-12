@@ -10,6 +10,7 @@ import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import com.hadilq.liveevent.LiveEvent
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
@@ -76,8 +77,12 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     fun `show error`() {
         // Given
         val exception = IllegalStateException("failure")
-        val error = MutableLiveData<Throwable>(exception)
+        val error = LiveEvent<Throwable>()
         every { viewModel.getError() } returns error
+
+        // When
+        scenario.recreate()
+        error.value = exception
 
         // Then
         scenario.onFragment {
