@@ -14,7 +14,7 @@ import kt.school.starlord.model.parser.PageParser
 class NetworkRepository(
     private val pageLoader: PageLoader,
     private val parser: PageParser
-): CategoriesWithSubcategoriesRepository {
+) : CategoriesWithSubcategoriesRepository {
 
     override suspend fun getCategoriesWithSubcategories(): Map<Category, List<Subcategory>> {
         val page = withContext(Dispatchers.IO) { pageLoader.getPage() }

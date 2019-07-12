@@ -11,6 +11,7 @@ import kt.school.starlord.entity.Subcategory
 /**
  * Repository that contains fake (mocked) data from all application data sources.
  */
+@Suppress("all")
 class MockRepository : CategoriesRepository, SubcategoriesRepository, CategoriesWithSubcategoriesRepository {
     override fun getCategories(): LiveData<List<Category>> = MutableLiveData<List<Category>>(
         listOf(
