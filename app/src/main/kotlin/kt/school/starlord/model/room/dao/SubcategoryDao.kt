@@ -6,7 +6,6 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
-import kt.school.starlord.model.room.entity.RoomCategory
 import kt.school.starlord.model.room.entity.RoomSubcategory
 
 /**

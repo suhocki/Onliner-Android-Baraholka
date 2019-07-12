@@ -59,7 +59,7 @@ before_script:
   - export AUTHOR_NAME="$(git log -1 $TRAVIS_COMMIT --pretty="%aN")"
 
 script:
-  - ./gradlew test check detekt assemble connectedDebugAndroidTest jacocoTestReport
+  - ./gradlew check detekt assemble connectedDebugAndroidTest jacocoTestReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
