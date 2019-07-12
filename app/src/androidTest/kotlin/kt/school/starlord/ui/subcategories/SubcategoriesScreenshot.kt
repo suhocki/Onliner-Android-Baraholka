@@ -78,6 +78,6 @@ class SubcategoriesScreenshot : KoinTest {
 
         onIdle()
 
-        takeScreenshot("subcategories")
+        takeScreenshot("1_subcategories")
     }
 }

@@ -63,6 +63,6 @@ class CategoriesScreenshot : KoinTest {
 
     @Test
     fun captureCategoriesScreen() {
-        takeScreenshot("categories")
+        takeScreenshot("0_categories")
     }
 }
