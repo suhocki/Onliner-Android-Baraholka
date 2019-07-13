@@ -1,9 +1,9 @@
 package kt.school.starlord.di
 
-import kt.school.starlord.domain.CoroutineContextProvider
-import kt.school.starlord.model.coroutine.AppCoroutineContextProvider
-import kt.school.starlord.model.system.SystemMessageNotifier
-import kt.school.starlord.model.system.SystemMessageReceiver
+import kt.school.starlord.domain.system.coroutine.CoroutineContextProvider
+import kt.school.starlord.model.system.coroutine.AppCoroutineContextProvider
+import kt.school.starlord.model.system.message.SystemMessageNotifier
+import kt.school.starlord.domain.system.message.SystemMessageReceiver
 import org.koin.dsl.bind
 import org.koin.dsl.module
 

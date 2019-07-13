@@ -18,7 +18,7 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import kt.school.starlord.entity.Category
-import kt.school.starlord.model.system.SystemMessageReceiver
+import kt.school.starlord.domain.system.message.SystemMessageReceiver
 import kt.school.starlord.ui.global.AppRecyclerAdapter
 import org.junit.Before
 import org.junit.Test

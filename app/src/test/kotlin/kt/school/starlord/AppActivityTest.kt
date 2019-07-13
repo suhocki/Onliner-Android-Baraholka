@@ -7,7 +7,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
 import kt.school.starlord.extension.removeInputMethodManager
-import kt.school.starlord.model.system.SystemMessageNotifier
+import kt.school.starlord.model.system.message.SystemMessageNotifier
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,7 +45,7 @@ class AppActivityTest : AutoCloseKoinTest() {
 
     @Test
     fun `remove input method manager`() {
-        mockkStatic("kt.school.starlord.extension.ExtensionsKt")
+        mockkStatic("kt.school.starlord.extension.AndroidExtensionsKt")
 
         scenario.onActivity {
             scenario.moveToState(Lifecycle.State.DESTROYED)

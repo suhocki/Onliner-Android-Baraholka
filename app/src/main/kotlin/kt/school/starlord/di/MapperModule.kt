@@ -1,11 +1,11 @@
 package kt.school.starlord.di
 
+import kt.school.starlord.domain.data.mapper.Converter
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
-import kt.school.starlord.model.mapper.BaseConverter
-import kt.school.starlord.model.mapper.Mapper
-import kt.school.starlord.model.room.entity.RoomCategory
-import kt.school.starlord.model.room.entity.RoomSubcategory
+import kt.school.starlord.model.data.mapper.Mapper
+import kt.school.starlord.model.data.room.entity.RoomCategory
+import kt.school.starlord.model.data.room.entity.RoomSubcategory
 import org.koin.dsl.module
 
 /**
@@ -15,12 +15,13 @@ val mapperModule = module {
     single { Mapper(converters) }
 }
 
-val converters = setOf(
+val converters: Set<Converter<*, *>> = setOf(
     object : BaseConverter<RoomCategory, Category>(RoomCategory::class.java, Category::class.java) {
         override fun convert(value: RoomCategory) = Category(value.name)
     },
     object : BaseConverter<Category, RoomCategory>(Category::class.java, RoomCategory::class.java) {
-        override fun convert(value: Category) = RoomCategory(name = value.name)
+        override fun convert(value: Category) =
+            RoomCategory(name = value.name)
     },
     object : BaseConverter<RoomSubcategory, Subcategory>(RoomSubcategory::class.java, Subcategory::class.java) {
         override fun convert(value: RoomSubcategory) =
@@ -28,7 +29,12 @@ val converters = setOf(
     },
     object : BaseConverter<Subcategory, RoomSubcategory>(Subcategory::class.java, RoomSubcategory::class.java) {
         override fun convert(value: Subcategory) =
-            RoomSubcategory(value.name, value.categoryName, value.count, value.link)
+            RoomSubcategory(
+                value.name,
+                value.categoryName,
+                value.count,
+                value.link
+            )
     },
     object : BaseConverter<MatchResult, Category>(MatchResult::class.java, Category::class.java) {
         override fun convert(value: MatchResult): Category {
@@ -50,3 +56,8 @@ val converters = setOf(
         }
     }
 )
+
+private abstract class BaseConverter<FROM, TO>(
+    override val fromClass: Class<FROM>,
+    override val toClass: Class<TO>
+) : Converter<FROM, TO>

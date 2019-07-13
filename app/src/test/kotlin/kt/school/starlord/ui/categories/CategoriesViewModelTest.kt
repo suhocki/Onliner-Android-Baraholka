@@ -6,9 +6,9 @@ import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import kt.school.starlord.domain.CategoriesRepository
-import kt.school.starlord.domain.CategoriesWithSubcategoriesRepository
-import kt.school.starlord.domain.SubcategoriesRepository
+import kt.school.starlord.domain.repository.CategoriesRepository
+import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
+import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.ui.TestCoroutineRule

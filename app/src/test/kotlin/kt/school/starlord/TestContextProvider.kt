@@ -1,7 +1,7 @@
 package kt.school.starlord
 
 import kotlinx.coroutines.Dispatchers
-import kt.school.starlord.domain.CoroutineContextProvider
+import kt.school.starlord.domain.system.coroutine.CoroutineContextProvider
 import kotlin.coroutines.CoroutineContext
 
 class TestContextProvider : CoroutineContextProvider {

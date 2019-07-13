@@ -1,9 +1,9 @@
 package kt.school.starlord.di
 
-import kt.school.starlord.domain.CategoriesRepository
-import kt.school.starlord.domain.CategoriesWithSubcategoriesRepository
-import kt.school.starlord.domain.SubcategoriesRepository
-import kt.school.starlord.model.mock.MockRepository
+import kt.school.starlord.domain.repository.CategoriesRepository
+import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
+import kt.school.starlord.domain.repository.SubcategoriesRepository
+import kt.school.starlord.model.repository.mock.MockRepository
 import org.koin.dsl.binds
 import org.koin.dsl.module
 

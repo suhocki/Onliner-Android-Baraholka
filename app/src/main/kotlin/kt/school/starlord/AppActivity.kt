@@ -5,8 +5,8 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import kotlinx.android.synthetic.main.activity_app.*
 import kt.school.starlord.extension.removeInputMethodManager
-import kt.school.starlord.model.system.SystemMessageNotifier
-import kt.school.starlord.model.system.SystemMessageReceiver
+import kt.school.starlord.model.system.message.SystemMessageNotifier
+import kt.school.starlord.domain.system.message.SystemMessageReceiver
 import org.jetbrains.anko.longToast
 import org.jetbrains.anko.toast
 import org.koin.android.ext.android.inject
