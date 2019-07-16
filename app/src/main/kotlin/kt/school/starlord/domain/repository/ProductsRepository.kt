@@ -1,7 +1,6 @@
 package kt.school.starlord.domain.repository
 
 import androidx.lifecycle.LiveData
-import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.entity.product.Product
 
 /**

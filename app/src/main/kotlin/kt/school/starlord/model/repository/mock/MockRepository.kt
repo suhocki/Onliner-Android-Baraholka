@@ -1,6 +1,6 @@
+@file:Suppress("all")
 package kt.school.starlord.model.repository.mock
 
-import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import kt.school.starlord.domain.repository.CategoriesRepository
@@ -17,7 +17,7 @@ import kt.school.starlord.entity.product.ProductType
 /**
  * Repository that contains fake (mocked) data from all application data sources.
  */
-@Suppress("all")
+/* ktlint-disable */
 class MockRepository : CategoriesRepository,
     SubcategoriesRepository,
     CategoriesWithSubcategoriesRepository,

@@ -13,7 +13,7 @@ import kt.school.starlord.entity.product.Product
 class ProductsViewModel(
     productsRepository: ProductsRepository,
     subcategoryName: String
-): ViewModel() {
+) : ViewModel() {
     private val products = MutableLiveData<List<Product>>()
     private val error = LiveEvent<Throwable>()
     private val progress = MutableLiveData<Boolean>()

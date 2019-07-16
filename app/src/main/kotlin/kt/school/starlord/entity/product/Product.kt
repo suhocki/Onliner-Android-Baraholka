@@ -17,5 +17,5 @@ data class Product(
     val price: ProductPrice,
     val lastUpdate: String,
     val commentsCount: Long,
-    val isPaid : Boolean = false
+    val isPaid: Boolean = false
 )

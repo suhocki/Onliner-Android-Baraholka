@@ -22,7 +22,6 @@ class SystemMessageNotifier : SystemMessageReceiver {
         requireSystemMessageReceiver().showProgress(visible)
     }
 
-    private fun requireSystemMessageReceiver(): SystemMessageReceiver {
-        return systemMessageReceiver ?: error("SystemMessageReceiver $this not attached to a context.")
-    }
+    private fun requireSystemMessageReceiver() =
+        systemMessageReceiver ?: error("SystemMessageReceiver $this not attached to a context.")
 }

@@ -3,8 +3,8 @@ package kt.school.starlord.ui.subcategories
 import android.os.Bundle
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.ActionOnlyNavDirections
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
@@ -57,9 +57,13 @@ class SubcategoriesFragmentTest : AutoCloseKoinTest() {
 
         // Then
         scenario.onFragment {
-            val direction = slot<ActionOnlyNavDirections>()
+            val direction = slot<NavDirections>()
+
             verify { navController.navigate(capture(direction)) }
-            assert(direction.captured.actionId == R.id.to_products)
+
+            val arguments = direction.captured.arguments
+            val keys = arguments.keySet()
+            assert(keys.any { arguments.getString(it) == subcategoryName })
         }
     }
 }
