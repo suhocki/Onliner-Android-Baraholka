@@ -1,11 +1,7 @@
 Барахолка Onliner.by [Android]
 =====
-[![Google Play][2]][3]
-
 [![Build Status][4]][5]
 [![GitHub release][6]][7]
-
-[![Codacy Badge][8]][9]
 [![codecov.io][10]][11]
 
 Built by [StarLord team][12] within [Kotlin School][14] organized by [Belarus Kotlin User Group][15] 
@@ -14,18 +10,18 @@ Manifest
 -------
 Our goal is to create amazing application for [baraholka.onliner.by][19]
 
-For testers
+For testers [![Google Play][2]][3]
 -------
 How to get invite to internal testing?
 1. Send your e-mail to [https://t.me/suhocki][17] and wait for response.
 2. Accept invite via [link][18].
-3. Download application in [Google Play][3].
+3. Download application from [Google Play][3].
 
-For contributors
+For contributors [![Codacy Badge][8]][9]
 -------
 Join us in [Telegram chat][16].
 
-Before any pull request: ```gradlew ktlintFormat detekt``` and other tests.  
+Before any pull request: ```./gradlew ktlintFormat detekt``` and other tests.  
 
 Roadmap
 -------
@@ -34,7 +30,7 @@ The application is under active development.
 Future improvements can be found on the repository's
 [issue tracker][13].
 
-License
+License [![License Badge][20]][1]
 -------
 MIT. See the [LICENSE][1] file for details.
 
@@ -61,3 +57,4 @@ This is not an official Onliner product.
 [17]: https://t.me/suhocki
 [18]: https://play.google.com/apps/internaltest/4699859943304666267
 [19]: https://baraholka.onliner.by/
+[20]: https://img.shields.io/badge/License-MIT-yellow.svg
