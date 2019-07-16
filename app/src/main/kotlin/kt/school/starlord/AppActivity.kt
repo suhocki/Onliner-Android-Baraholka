@@ -2,7 +2,7 @@ package kt.school.starlord
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kt.school.starlord.extension.removeInputMethodManager
+import kt.school.starlord.extension.fixIMMLeak
 
 /**
  * The only activity class for this application.
@@ -18,6 +18,6 @@ class AppActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-        removeInputMethodManager()
+        fixIMMLeak()
     }
 }

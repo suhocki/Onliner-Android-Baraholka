@@ -5,7 +5,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.mockkStatic
 import io.mockk.verify
-import kt.school.starlord.extension.removeInputMethodManager
+import kt.school.starlord.extension.fixIMMLeak
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.test.AutoCloseKoinTest
@@ -22,7 +22,7 @@ class AppActivityTest : AutoCloseKoinTest() {
 
         scenario.onActivity {
             scenario.moveToState(Lifecycle.State.DESTROYED)
-            verify { it.removeInputMethodManager() }
+            verify { it.fixIMMLeak() }
         }
     }
 }
