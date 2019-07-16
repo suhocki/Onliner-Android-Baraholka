@@ -4,19 +4,25 @@ import kt.school.starlord.domain.system.message.SystemMessageReceiver
 
 /**
  * Class that has a link on message receiver for sending messages.
+ * Usually it is used to link activity with fragments without casting to AppActivity class.
+ * Fixes lint issue.
  */
 class SystemMessageNotifier : SystemMessageReceiver {
     var systemMessageReceiver: SystemMessageReceiver? = null
 
     override fun showMessage(message: String) {
-        systemMessageReceiver?.showMessage(message)
+        requireSystemMessageReceiver().showMessage(message)
     }
 
     override fun showError(error: Throwable) {
-        systemMessageReceiver?.showError(error)
+        requireSystemMessageReceiver().showError(error)
     }
 
     override fun showProgress(visible: Boolean) {
-        systemMessageReceiver?.showProgress(visible)
+        requireSystemMessageReceiver().showProgress(visible)
+    }
+
+    private fun requireSystemMessageReceiver(): SystemMessageReceiver {
+        return systemMessageReceiver ?: error("SystemMessageReceiver $this not attached to a context.")
     }
 }

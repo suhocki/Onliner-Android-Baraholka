@@ -26,13 +26,13 @@ class AppActivity : AppCompatActivity(), SystemMessageReceiver {
         setContentView(R.layout.activity_app)
     }
 
-    override fun onResume() {
-        super.onResume()
+    override fun onStart() {
         systemMessageNotifier.systemMessageReceiver = this
+        super.onStart()
     }
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
         systemMessageNotifier.systemMessageReceiver = null
     }
 

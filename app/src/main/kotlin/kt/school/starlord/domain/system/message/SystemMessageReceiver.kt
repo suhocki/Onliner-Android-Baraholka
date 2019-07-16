@@ -1,7 +1,7 @@
 package kt.school.starlord.domain.system.message
 
 /**
- * Interface with basic methods to tell user what is happening now.
+ * Interface with basic methods to tell owner what is happening now.
  */
 interface SystemMessageReceiver {
     /**

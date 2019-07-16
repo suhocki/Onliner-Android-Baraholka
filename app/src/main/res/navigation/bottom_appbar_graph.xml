@@ -37,5 +37,10 @@
         android:id="@+id/productsFragment"
         android:name="kt.school.starlord.ui.products.ProductsFragment"
         android:label="fragment_products"
-        tools:layout="@layout/fragment_products"></fragment>
+        tools:layout="@layout/fragment_products">
+
+        <argument
+            android:name="subcategoryName"
+            app:argType="string" />
+    </fragment>
 </navigation>

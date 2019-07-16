@@ -182,6 +182,7 @@ dependencies {
     val appcompatVersion = "1.1.0-beta01"
     val mockkVersion = "1.9.3"
     val testingVersion = "1.2.0"
+    val glideVersion = "4.9.0"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
@@ -213,6 +214,8 @@ dependencies {
     implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
     // Log
     implementation("com.jakewharton.timber:timber:4.7.1")
+
+    implementation("com.github.bumptech.glide:glide:$glideVersion")
 
     // Find memory leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
@@ -250,6 +253,7 @@ dependencies {
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
+    kapt("com.github.bumptech.glide:compiler:$glideVersion")
 }
 
 // region Gradle Tasks

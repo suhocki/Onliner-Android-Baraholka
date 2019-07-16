@@ -1,0 +1,24 @@
+{
+  "data": [
+    {
+      "title": "Buy a compact sofa",
+      "description": "Buy a compact sofa. For example, like Ikea Swanst, but more reliable and not parting. Can not be displayed. Your delivery to the metro station Partizanskaya.",
+      "type": "Buy",
+      "location": "Minsk",
+      "owner": "xrystal",
+      "price": "150 p.",
+      "lastUpdate": "1 hour ago",
+      "commentsCount": 1
+    },
+    {
+      "title": "Rattan Rocking Chair",
+      "description": "Sell due to relocation. 8029593 ****. Pickup from ul.Koltsova.",
+      "type": "Sell",
+      "location": "Minsk",
+      "owner": "angel_1988",
+      "price": "200 p.",
+      "lastUpdate": "33 minutes ago",
+      "commentsCount": 4
+    }
+  ]
+}

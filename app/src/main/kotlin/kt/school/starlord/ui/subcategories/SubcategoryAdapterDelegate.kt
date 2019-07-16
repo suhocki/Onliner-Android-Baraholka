@@ -41,7 +41,7 @@ class SubcategoryAdapterDelegate(
         fun bind(item: Subcategory) = with(itemView) {
             subcategory = item
             name.text = item.name
-            count.text = item.count.toString()
+            price.text = item.count.toString()
         }
     }
 }

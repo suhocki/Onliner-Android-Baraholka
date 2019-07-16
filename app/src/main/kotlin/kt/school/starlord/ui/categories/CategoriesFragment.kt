@@ -38,14 +38,17 @@ class CategoriesFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        with(recyclerView) {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = this@CategoriesFragment.adapter
-        }
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = adapter
 
         viewModel.getCategories().observe(viewLifecycleOwner, Observer(adapter::setData))
         viewModel.getProgress().observe(viewLifecycleOwner, Observer(systemMessageReceiver::showProgress))
         viewModel.getError().observe(viewLifecycleOwner, Observer(systemMessageReceiver::showError))
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        recyclerView.adapter = null
     }
 }

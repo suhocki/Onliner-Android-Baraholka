@@ -1,0 +1,17 @@
+{
+  "data": [
+    {"subcategory": "Cabinets. Dressers. Gorki. Sections Shelves", "count": 55},
+    {"subcategory": "Sofas. Chairs. Cushioned furniture", "count": 45},
+    {"subcategory": "Tables. Chairs. Thumbs", "count": 4654},
+    {"subcategory": "The beds. Mattresses. Bedroom furniture", "count": 687},
+    {"subcategory": "Kitchens and kitchen furniture", "count": 45},
+    {"subcategory": "Furniture for children's room", "count": 256},
+    {"subcategory": "Bathroom furniture", "count": 256},
+    {"subcategory": "Office furniture", "count": 256},
+    {"subcategory": "Interior elements. Design.", "count": 256},
+    {"subcategory": "Bed linen and accessories", "count": 256},
+    {"subcategory": "Cookware and Kitchenware", "count": 256},
+    {"subcategory": "Appliances.", "count": 256},
+    {"subcategory": "Household appliances: repair, connection and others", "count": 256}
+  ]
+}

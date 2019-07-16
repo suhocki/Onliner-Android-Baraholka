@@ -4,6 +4,17 @@
     <color name="colorPrimaryDark">#cccccc</color>
     <color name="colorAccent">#1E5593</color>
 
+    <!--Onliner colors-->
+    <color name="colorDarkRed">#cb4300</color>
+    <color name="colorBrightRed">#FF4443</color>
+    <color name="colorBlue">#29B6D3</color>
+    <color name="colorGreen">#00B446</color>
+    <color name="colorPurple">#A441C9</color>
+    <color name="colorOrange">#FF6633</color>
+    <color name="colorGray">#808080</color>
+
+    <!--Text colors-->
+    <color name="whiteText">#fff</color>
     <color name="primaryText">#ff1f1f1f</color>
     <color name="secondaryText">#aa1f1f1f</color>
 </resources>
