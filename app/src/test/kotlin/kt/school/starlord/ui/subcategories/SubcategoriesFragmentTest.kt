@@ -2,6 +2,7 @@ package kt.school.starlord.ui.subcategories
 
 import android.os.Bundle
 import androidx.fragment.app.testing.FragmentScenario
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.navigation.NavController
 import androidx.navigation.NavDirections
@@ -15,6 +16,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
+import kotlinx.android.synthetic.main.fragment_subcategories.*
 import kt.school.starlord.entity.Subcategory
 import org.junit.Before
 import org.junit.Test
@@ -63,6 +65,22 @@ class SubcategoriesFragmentTest : AutoCloseKoinTest() {
             val arguments = direction.captured.arguments
             val keys = arguments.keySet()
             assert(keys.any { arguments.getString(it) == subcategoryName })
+        }
+    }
+
+    @Test
+    fun `clear adapter in recycler in onDestroy`() {
+        // Given
+        scenario.moveToState(Lifecycle.State.RESUMED)
+
+        scenario.onFragment {
+            val recyclerView = it.recyclerView
+
+            // When
+            scenario.moveToState(Lifecycle.State.DESTROYED)
+
+            // Then
+            assert(recyclerView.adapter == null)
         }
     }
 }

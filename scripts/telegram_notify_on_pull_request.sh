@@ -2,6 +2,7 @@
 
 if [[ "$TRAVIS_PULL_REQUEST" != "false" ]] ; then
 BOT_URL="https://api.telegram.org/bot${telegram_bot_token}/sendMessage"
+GITHUB_BOT_ID=49678291
 
 PARSE_MODE="Markdown"
 
@@ -10,9 +11,18 @@ send_msg () {
         -d text="$1" -d parse_mode=${PARSE_MODE}
 }
 
-send_msg "
-Code-review time!
+githubBotCommentsCount=$(curl -H "Authorization:token ${github_comment_bot_api_key}" -X GET "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments" | jq .[].user.id | grep -c ${GITHUB_BOT_ID})
 
-Guys, take a moment to review [pull request](https://github.com/suhocki/starlord/pull/${TRAVIS_PULL_REQUEST}) made by ${AUTHOR_NAME}, please.
-"
+if [[ "$githubBotCommentsCount" -gt 0 ]]; then
+    send_msg "
+    ${AUTHOR_NAME} updated his [pull request](https://github.com/${TRAVIS_REPO_SLUG}/pull/${TRAVIS_PULL_REQUEST}).
+    "
+
+    else
+    send_msg "
+    Code-review time!
+
+    Guys, take a moment to review [pull request](https://github.com/${TRAVIS_REPO_SLUG}/pull/${TRAVIS_PULL_REQUEST}) made by ${AUTHOR_NAME}, please.
+    "
+fi
 fi

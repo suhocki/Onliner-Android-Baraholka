@@ -9,7 +9,6 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
-import org.jetbrains.anko.longToast
 import org.junit.Test
 import timber.log.Timber
 import java.lang.reflect.Field
