@@ -16,31 +16,8 @@ import org.koin.test.mock.declare
 
 @RunWith(AndroidJUnit4::class)
 class AppActivityTest : AutoCloseKoinTest() {
-    private val systemMessageNotifier: SystemMessageNotifier = mockk(relaxUnitFun = true)
     private val scenario by lazy {
         ActivityScenario.launch(AppActivity::class.java)
-    }
-
-    @Before
-    fun setUp() {
-        declare {
-            single { systemMessageNotifier }
-        }
-    }
-
-    @Test
-    fun `listen to system messages`() {
-        scenario.onActivity {
-            verify { systemMessageNotifier.systemMessageReceiver = it }
-        }
-    }
-
-    @Test
-    fun `remove system messages listener`() {
-        scenario.onActivity {
-            scenario.moveToState(Lifecycle.State.DESTROYED)
-            verify { systemMessageNotifier.systemMessageReceiver = null }
-        }
     }
 
     @Test

@@ -7,6 +7,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.annotation.LayoutRes
+import org.jetbrains.anko.longToast
 import timber.log.Timber
 
 /**
@@ -41,4 +42,19 @@ fun Activity.removeInputMethodManager() {
             }
         }.onFailure(Timber::e)
     }
+}
+
+/**
+ * Show toast with error text from throwable.
+ */
+fun Context.showError(error: Throwable) {
+    Timber.e(error)
+    longToast(error.toString())
+}
+
+/**
+ * Apply visibility through boolean flag.
+ */
+fun View.setVisible(visible: Boolean) {
+    visibility = if (visible) View.VISIBLE else View.GONE
 }

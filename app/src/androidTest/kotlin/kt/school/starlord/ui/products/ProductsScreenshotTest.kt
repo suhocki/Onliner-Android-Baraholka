@@ -54,6 +54,8 @@ class ProductsScreenshotTest : KoinTest {
         Espresso.onView(ViewMatchers.withId(R.id.recyclerView)).perform(clickOnFirstSubcategory)
         onIdle()
 
+        Thread.sleep(1000)
+
         takeScreenshot("2_products")
     }
 }
