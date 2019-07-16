@@ -8,12 +8,16 @@
 [![Codacy Badge][8]][9]
 [![codecov.io][10]][11]
 
-With ❤️ by [StarLord team][12] within [Kotlin School][14] by [Belarus Kotlin User Group][15] 
+Built by [StarLord team][12] within [Kotlin School][14] by [Belarus Kotlin User Group][15] 
+
+Manifest
+-------
+Our goal is to create amazing application for [baraholka.onliner.by][19]
 
 For testers
 -------
 How to get invite to internal testing?
-1. Send your e-mail to [https://t.me/suhocki][17] and wait 🐌 for response.
+1. Send your e-mail to [https://t.me/suhocki][17] and wait for response.
 2. Accept invite via [link][18].
 3. Download application in [Google Play][3].
 
@@ -56,3 +60,4 @@ This is not an official Onliner product.
 [16]: https://t.me/starlord_team
 [17]: https://t.me/suhocki
 [18]: https://play.google.com/apps/internaltest/4699859943304666267
+[19]: https://baraholka.onliner.by/

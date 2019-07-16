@@ -15,7 +15,6 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
-import kt.school.starlord.R
 import kt.school.starlord.entity.Subcategory
 import org.junit.Before
 import org.junit.Test
