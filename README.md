@@ -8,7 +8,7 @@
 [![Codacy Badge][8]][9]
 [![codecov.io][10]][11]
 
-Built by [StarLord team][12] within [Kotlin School][14] by [Belarus Kotlin User Group][15] 
+Built by [StarLord team][12] within [Kotlin School][14] organized by [Belarus Kotlin User Group][15] 
 
 Manifest
 -------
