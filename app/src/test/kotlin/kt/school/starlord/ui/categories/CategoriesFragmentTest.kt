@@ -1,5 +1,6 @@
 package kt.school.starlord.ui.categories
 
+import android.view.View
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
@@ -16,7 +17,9 @@ import io.mockk.mockkConstructor
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
+import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.entity.Category
+import kt.school.starlord.extension.showError
 import kt.school.starlord.ui.global.AppRecyclerAdapter
 import org.junit.Before
 import org.junit.Test
@@ -37,6 +40,57 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     fun setUp() {
         declare {
             viewModel { viewModel }
+        }
+    }
+
+    @Test
+    fun `show progress bar`() {
+        // Given
+        val progress = MutableLiveData(false)
+
+        every { viewModel.getProgress() } returns progress
+
+        scenario.onFragment {
+            // When
+            progress.value = true
+
+            // Then
+            assert(it.progressBar.visibility == View.VISIBLE)
+        }
+    }
+
+    @Test
+    fun `hide progress bar`() {
+        // Given
+        val progress = MutableLiveData<Boolean>()
+
+        every { viewModel.getProgress() } returns progress
+
+        scenario.onFragment {
+            // When
+            progress.value = false
+
+            // Then
+            assert(it.progressBar.visibility == View.GONE)
+        }
+    }
+
+    @Test
+    fun `show error message`() {
+        // Given
+        val error = Throwable("some error occured")
+        val errorLiveData = MutableLiveData<Throwable>()
+
+        every { viewModel.getError() } returns errorLiveData
+
+        mockkStatic("kt.school.starlord.extension.AndroidExtensionsKt")
+
+        scenario.onFragment {
+            // When
+            errorLiveData.value = error
+
+            // Then
+            verify { it.requireContext().showError(error) }
         }
     }
 
@@ -81,6 +135,22 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
             val arguments = direction.captured.arguments
             val keys = arguments.keySet()
             assert(keys.any { arguments.getString(it) == categoryName })
+        }
+    }
+
+    @Test
+    fun `clear adapter in recycler in onDestroy`() {
+        // Given
+        scenario.moveToState(Lifecycle.State.RESUMED)
+
+        scenario.onFragment {
+            val recyclerView = it.recyclerView
+
+            // When
+            scenario.moveToState(Lifecycle.State.DESTROYED)
+
+            // Then
+            assert(recyclerView.adapter == null)
         }
     }
 }
