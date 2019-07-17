@@ -6,9 +6,9 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.hadilq.liveevent.LiveEvent
 import kotlinx.coroutines.launch
-import kt.school.starlord.domain.CategoriesRepository
-import kt.school.starlord.domain.CategoriesWithSubcategoriesRepository
-import kt.school.starlord.domain.SubcategoriesRepository
+import kt.school.starlord.domain.repository.CategoriesRepository
+import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
+import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
 

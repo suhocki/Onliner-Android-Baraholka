@@ -1,3 +1,7 @@
 <resources>
     <string name="app_name">StarLord</string>
+    <string name="bargain">Торг</string>
+    <string name="up">Up!</string>
+    <string name="for_free">Даром</string>
+    <string name="price">%1$s р.</string>
 </resources>

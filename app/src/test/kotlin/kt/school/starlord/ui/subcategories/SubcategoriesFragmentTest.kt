@@ -2,9 +2,10 @@ package kt.school.starlord.ui.subcategories
 
 import android.os.Bundle
 import androidx.fragment.app.testing.FragmentScenario
+import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
-import androidx.navigation.ActionOnlyNavDirections
 import androidx.navigation.NavController
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.NavHostFragment
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.action.ViewActions
@@ -15,7 +16,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
-import kt.school.starlord.R
+import kotlinx.android.synthetic.main.fragment_subcategories.*
 import kt.school.starlord.entity.Subcategory
 import org.junit.Before
 import org.junit.Test
@@ -57,9 +58,29 @@ class SubcategoriesFragmentTest : AutoCloseKoinTest() {
 
         // Then
         scenario.onFragment {
-            val direction = slot<ActionOnlyNavDirections>()
+            val direction = slot<NavDirections>()
+
             verify { navController.navigate(capture(direction)) }
-            assert(direction.captured.actionId == R.id.to_products)
+
+            val arguments = direction.captured.arguments
+            val keys = arguments.keySet()
+            assert(keys.any { arguments.getString(it) == subcategoryName })
+        }
+    }
+
+    @Test
+    fun `clear adapter in recycler in onDestroy`() {
+        // Given
+        scenario.moveToState(Lifecycle.State.RESUMED)
+
+        scenario.onFragment {
+            val recyclerView = it.recyclerView
+
+            // When
+            scenario.moveToState(Lifecycle.State.DESTROYED)
+
+            // Then
+            assert(recyclerView.adapter == null)
         }
     }
 }

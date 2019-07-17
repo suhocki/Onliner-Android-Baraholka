@@ -12,7 +12,8 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         app:defaultNavHost="true"
-        app:navGraph="@navigation/bottom_appbar_graph" />
+        app:navGraph="@navigation/bottom_appbar_graph"
+        tools:layout="@layout/fragment_categories" />
 
     <com.google.android.material.bottomappbar.BottomAppBar
         android:id="@+id/bar"

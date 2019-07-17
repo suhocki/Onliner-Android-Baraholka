@@ -3,7 +3,8 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="70dp">
+    android:layout_height="70dp"
+    tools:showIn="@layout/fragment_categories">
 
     <TextView
         android:id="@+id/name"
@@ -19,5 +20,5 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        tools:text="Телефоны. Смартфоны" />
+        tools:text="@sample/categories.json/data/category" />
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -22,14 +22,13 @@ class SubcategoriesFragment : Fragment() {
 
     private val viewModel: SubcategoriesViewModel by viewModel(parameters = {
         val safeArgs = SubcategoriesFragmentArgs.fromBundle(requireArguments())
-        val categoryName = safeArgs.categoryName
-        parametersOf(categoryName)
+        parametersOf(safeArgs.categoryName)
     })
 
     private val adapter by lazy {
         AppRecyclerAdapter(
             SubcategoryAdapterDelegate {
-                val direction = SubcategoriesFragmentDirections.toProducts()
+                val direction = SubcategoriesFragmentDirections.toProducts(it.name)
                 findNavController().navigate(direction)
             }
         )
@@ -40,12 +39,15 @@ class SubcategoriesFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        with(recyclerView) {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = this@SubcategoriesFragment.adapter
-        }
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = adapter
 
         viewModel.getSubcategories().observe(viewLifecycleOwner, Observer(adapter::setData))
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        recyclerView.adapter = null
     }
 }

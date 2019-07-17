@@ -3,7 +3,7 @@ package kt.school.starlord.ui.subcategories
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kt.school.starlord.domain.SubcategoriesRepository
+import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.entity.Subcategory
 
 /**

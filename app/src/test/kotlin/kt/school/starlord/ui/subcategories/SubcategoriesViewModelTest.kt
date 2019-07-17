@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import kt.school.starlord.domain.SubcategoriesRepository
+import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.ui.TestCoroutineRule
 import kt.school.starlord.ui.observeForTesting
@@ -36,7 +36,7 @@ class SubcategoriesViewModelTest {
         // Then
         coVerify(exactly = 1) { subcategoriesRepository.getSubcategories(categoryName) }
         viewModel.getSubcategories().observeForTesting {
-            assert(viewModel.getSubcategories().value == subcategories)
+            assert(it == subcategories)
         }
     }
 }

@@ -182,6 +182,9 @@ dependencies {
     val appcompatVersion = "1.1.0-beta01"
     val mockkVersion = "1.9.3"
     val testingVersion = "1.2.0"
+    val glideVersion = "4.9.0"
+    val espressoVersion = "3.3.0-alpha02"
+    val junitVersion = "1.1.2-alpha01"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
@@ -214,6 +217,8 @@ dependencies {
     // Log
     implementation("com.jakewharton.timber:timber:4.7.1")
 
+    implementation("com.github.bumptech.glide:glide:$glideVersion")
+
     // Find memory leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
 
@@ -228,7 +233,7 @@ dependencies {
     testImplementation("androidx.room:room-testing:$roomVersion")
     testImplementation("androidx.test:runner:$testingVersion")
     testImplementation("androidx.test:rules:$testingVersion")
-    testImplementation("androidx.test.ext:junit:1.1.2-alpha01")
+    testImplementation("androidx.test.ext:junit:$junitVersion")
 
     testImplementation("androidx.test:core:$testingVersion")
     implementation("androidx.fragment:fragment-testing:$appcompatVersion") {
@@ -236,20 +241,21 @@ dependencies {
     }
 
     // Espresso support
-    testImplementation("androidx.test.espresso:espresso-core:3.3.0-alpha01")
+    testImplementation("androidx.test.espresso:espresso-core:$espressoVersion")
 
     androidTestImplementation("androidx.test:runner:$testingVersion")
     androidTestImplementation("androidx.test:rules:$testingVersion")
-    androidTestImplementation("androidx.test.espresso:espresso-core:3.3.0-alpha01")
-    androidTestImplementation("androidx.test.espresso:espresso-contrib:3.3.0-alpha01")
+    androidTestImplementation("androidx.test.espresso:espresso-core:$espressoVersion")
+    androidTestImplementation("androidx.test.espresso:espresso-contrib:$espressoVersion")
     androidTestImplementation("androidx.test:core:$testingVersion")
-    androidTestImplementation("androidx.test.ext:junit:1.1.2-alpha01")
+    androidTestImplementation("androidx.test.ext:junit:$junitVersion")
     androidTestImplementation("io.mockk:mockk:$mockkVersion")
     androidTestImplementation("io.mockk:mockk-android:$mockkVersion")
     androidTestImplementation("org.koin:koin-test:$koinVersion")
 
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
+    kapt("com.github.bumptech.glide:compiler:$glideVersion")
 }
 
 // region Gradle Tasks

@@ -1,9 +1,7 @@
 package kt.school.starlord.di
 
-import kt.school.starlord.domain.CoroutineContextProvider
-import kt.school.starlord.model.coroutine.AppCoroutineContextProvider
-import kt.school.starlord.model.system.SystemMessageNotifier
-import kt.school.starlord.model.system.SystemMessageReceiver
+import kt.school.starlord.domain.system.coroutine.CoroutineContextProvider
+import kt.school.starlord.model.system.coroutine.AppCoroutineContextProvider
 import org.koin.dsl.bind
 import org.koin.dsl.module
 
@@ -12,7 +10,5 @@ import org.koin.dsl.module
  * Depends on MapperModule.
  */
 val appModule = module {
-    single { SystemMessageNotifier() } bind SystemMessageReceiver::class
-
     single { AppCoroutineContextProvider() } bind CoroutineContextProvider::class
 }

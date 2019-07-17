@@ -1,0 +1,18 @@
+{
+  "data": [
+    {"category": "Cell phones"},
+    {"category": "Computers"},
+    {"category": "Cameras"},
+    {"category": "Auto"},
+    {"category": "Spare parts"},
+    {"category": "House"},
+    {"category": "Building"},
+    {"category": "Family"},
+    {"category": "Job"},
+    {"category": "Animals"},
+    {"category": "Holidays"},
+    {"category": "The property"},
+    {"category": "Women's clothing"},
+    {"category": "Men's clothing"}
+  ]
+}

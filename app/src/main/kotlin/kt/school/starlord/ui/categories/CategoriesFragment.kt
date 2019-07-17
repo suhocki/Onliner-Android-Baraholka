@@ -10,9 +10,9 @@ import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.R
-import kt.school.starlord.model.system.SystemMessageReceiver
+import kt.school.starlord.extension.setVisible
+import kt.school.starlord.extension.showError
 import kt.school.starlord.ui.global.AppRecyclerAdapter
-import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 
 /**
@@ -22,7 +22,6 @@ import org.koin.androidx.viewmodel.ext.android.viewModel
 class CategoriesFragment : Fragment() {
 
     private val viewModel: CategoriesViewModel by viewModel()
-    private val systemMessageReceiver: SystemMessageReceiver by inject()
 
     private val adapter by lazy {
         AppRecyclerAdapter(
@@ -38,14 +37,17 @@ class CategoriesFragment : Fragment() {
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
-        with(recyclerView) {
-            layoutManager = LinearLayoutManager(context)
-            setHasFixedSize(true)
-            adapter = this@CategoriesFragment.adapter
-        }
+        recyclerView.layoutManager = LinearLayoutManager(context)
+        recyclerView.setHasFixedSize(true)
+        recyclerView.adapter = adapter
 
         viewModel.getCategories().observe(viewLifecycleOwner, Observer(adapter::setData))
-        viewModel.getProgress().observe(viewLifecycleOwner, Observer(systemMessageReceiver::showProgress))
-        viewModel.getError().observe(viewLifecycleOwner, Observer(systemMessageReceiver::showError))
+        viewModel.getProgress().observe(viewLifecycleOwner, Observer(progressBar::setVisible))
+        viewModel.getError().observe(viewLifecycleOwner, Observer(requireContext()::showError))
+    }
+
+    override fun onDestroyView() {
+        super.onDestroyView()
+        recyclerView.adapter = null
     }
 }
