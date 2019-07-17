@@ -41,7 +41,7 @@ class ProductsFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
-        viewModel.getSubcategories().observe(viewLifecycleOwner, Observer(adapter::setData))
+        viewModel.getProducts().observe(viewLifecycleOwner, Observer(adapter::setData))
         viewModel.getProgress().observe(viewLifecycleOwner, Observer(progressBar::setVisible))
         viewModel.getError().observe(viewLifecycleOwner, Observer(requireContext()::showError))
     }

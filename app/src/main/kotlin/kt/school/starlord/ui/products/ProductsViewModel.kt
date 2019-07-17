@@ -25,7 +25,7 @@ class ProductsViewModel(
     /**
      * Use for observing products.
      */
-    fun getSubcategories(): LiveData<List<Product>> = products
+    fun getProducts(): LiveData<List<Product>> = products
 
     /**
      * LiveData for observing errors.

@@ -36,7 +36,7 @@ class SubcategoriesViewModelTest {
         // Then
         coVerify(exactly = 1) { subcategoriesRepository.getSubcategories(categoryName) }
         viewModel.getSubcategories().observeForTesting {
-            assert(viewModel.getSubcategories().value == subcategories)
+            assert(it == subcategories)
         }
     }
 }

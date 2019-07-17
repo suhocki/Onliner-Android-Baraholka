@@ -9,11 +9,11 @@ import io.mockk.mockk
 import io.mockk.slot
 import kt.school.starlord.di.converters
 import kt.school.starlord.entity.Category
-import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.data.mapper.Mapper
-import kt.school.starlord.model.repository.mock.MockRepository
+import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
+import kt.school.starlord.model.repository.mock.MockRepository
 import kt.school.starlord.ui.TestCoroutineRule
 import kt.school.starlord.ui.observeForTesting
 import org.junit.Rule
@@ -46,8 +46,7 @@ class DatabaseRepositoryTest {
         val categories: LiveData<List<Category>> = roomRepository.getCategories()
 
         // Then
-        categories.observeForTesting {
-            val answer = categories.value!!
+        categories.observeForTesting { answer ->
             assert(answer.all {
                 val indexOfCategory = answer.indexOf(it)
                 it.name == roomData[indexOfCategory].name
@@ -90,8 +89,7 @@ class DatabaseRepositoryTest {
         val subcategories = roomRepository.getSubcategories(categoryName)
 
         // Then
-        subcategories.observeForTesting {
-            val answer = subcategories.value!!
+        subcategories.observeForTesting { answer ->
             assert(answer.all { subcategory ->
                 val indexOfCategory = answer.indexOf(subcategory)
                 subcategory.name == roomData[indexOfCategory].name &&

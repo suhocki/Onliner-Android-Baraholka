@@ -53,6 +53,7 @@ class CategoriesViewModelTest {
         // Given
         val categories: List<Category> = mockk()
         val categoriesLiveData = MutableLiveData(categories)
+
         every { categoriesRepository.getCategories() }.answers { categoriesLiveData }
 
         // When
@@ -60,7 +61,7 @@ class CategoriesViewModelTest {
 
         // Then
         viewModel.getCategories().observeForTesting {
-            assert(viewModel.getCategories().value == categories)
+            assert(it == categories)
         }
     }
 }
