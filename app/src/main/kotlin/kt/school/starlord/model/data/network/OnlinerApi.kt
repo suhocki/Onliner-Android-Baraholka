@@ -1,7 +1,7 @@
 package kt.school.starlord.model.data.network
 
-import kt.school.starlord.BuildConfig
 import java.net.URL
+import kt.school.starlord.BuildConfig
 
 /**
  * Implements network requests using URLConnection.

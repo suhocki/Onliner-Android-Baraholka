@@ -143,7 +143,7 @@ staticAnalysis {
         maxWarnings = 0
     }
     ktlint {
-        version.set("0.32.0")
+        version.set("0.34.0")
         android.set(true)
         outputToConsole.set(true)
         reporters.set(setOf(ReporterType.PLAIN, ReporterType.CHECKSTYLE))
