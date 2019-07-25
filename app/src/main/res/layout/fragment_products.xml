@@ -4,8 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:descendantFocusability="blocksDescendants"
-    tools:context=".ui.products.ProductsFragment"
-    tools:showIn="@layout/fragment_appbar">
+    tools:context=".ui.products.ProductsFragment">
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerView"

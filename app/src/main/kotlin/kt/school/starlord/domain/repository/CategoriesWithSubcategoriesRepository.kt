@@ -1,7 +1,6 @@
 package kt.school.starlord.domain.repository
 
-import kt.school.starlord.entity.Category
-import kt.school.starlord.entity.Subcategory
+import kt.school.starlord.entity.CategoriesWithSubcategories
 
 /**
  * Defines access methods for objects representing pairs of categories with subcategories.
@@ -9,10 +8,10 @@ import kt.school.starlord.entity.Subcategory
 interface CategoriesWithSubcategoriesRepository {
 
     /**
-     * Loads map were keys are categories and values are subcategories.
+     * Loads CategoriesWithSubcategories.
      *
      * @return categories with appropriate subcategories.
      * @throws NotImplementedError in case of missing implementation.
      */
-    suspend fun getCategoriesWithSubcategories(): Map<Category, List<Subcategory>>
+    suspend fun getCategoriesWithSubcategories(): CategoriesWithSubcategories
 }

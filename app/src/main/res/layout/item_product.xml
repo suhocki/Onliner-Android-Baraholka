@@ -64,13 +64,12 @@
         android:id="@+id/price"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
         android:textColor="@android:color/black"
         android:textSize="18sp"
+        android:textStyle="bold"
         app:layout_constraintBottom_toTopOf="@+id/bargain"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/description"
-        app:layout_constraintVertical_bias="1.0"
         tools:text="@sample/products.json/data/price" />
 
     <TextView
@@ -80,10 +79,11 @@
         android:text="@string/bargain"
         android:textAllCaps="true"
         android:textColor="@color/colorBrightRed"
-        android:textSize="14sp"
+        android:textSize="12sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="@+id/price"
+        app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintStart_toStartOf="@+id/price"
         tools:visibility="visible" />
 
@@ -101,10 +101,15 @@
 
     <TextView
         android:id="@+id/lastUpdate"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="4dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toStartOf="@+id/price"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/up"
         app:layout_constraintTop_toBottomOf="@+id/description"
         tools:text="@sample/products.json/data/lastUpdate" />
@@ -117,31 +122,39 @@
         android:layout_marginTop="4dp"
         android:textColor="@android:color/black"
         android:textStyle="bold"
-        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toBottomOf="@+id/up"
         tools:text="@sample/products.json/data/location" />
 
     <TextView
         android:id="@+id/owner"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:maxLines="1"
+        app:layout_constraintEnd_toEndOf="@+id/lastUpdate"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/location"
+        app:layout_constraintTop_toBottomOf="@+id/up"
         tools:text="@sample/products.json/data/owner" />
 
     <TextView
         android:id="@+id/commentsCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="4dp"
-        android:drawableStart="@drawable/ic_message"
+        android:background="@android:color/white"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
-        app:layout_constraintStart_toEndOf="@+id/lastUpdate"
-        app:layout_constraintTop_toBottomOf="@+id/description"
+        android:includeFontPadding="false"
+        android:padding="4dp"
+        android:textAllCaps="true"
+        android:textSize="12sp"
+        android:typeface="monospace"
+        app:drawableStartCompat="@drawable/ic_message"
+        app:layout_constraintBottom_toBottomOf="@+id/image"
+        app:layout_constraintStart_toStartOf="@+id/image"
         tools:text="@sample/products.json/data/commentsCount" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

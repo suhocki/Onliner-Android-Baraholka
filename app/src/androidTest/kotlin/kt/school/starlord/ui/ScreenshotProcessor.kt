@@ -4,9 +4,9 @@ import android.os.Environment.DIRECTORY_PICTURES
 import android.os.Environment.getExternalStoragePublicDirectory
 import androidx.test.runner.screenshot.BasicScreenCaptureProcessor
 import androidx.test.runner.screenshot.Screenshot
+import java.io.File
 import kt.school.starlord.BuildConfig
 import timber.log.Timber
-import java.io.File
 
 class ScreenshotProcessor : BasicScreenCaptureProcessor() {
 

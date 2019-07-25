@@ -143,7 +143,7 @@ staticAnalysis {
         maxWarnings = 0
     }
     ktlint {
-        version.set("0.32.0")
+        version.set("0.34.0")
         android.set(true)
         outputToConsole.set(true)
         reporters.set(setOf(ReporterType.PLAIN, ReporterType.CHECKSTYLE))
@@ -218,6 +218,7 @@ dependencies {
     implementation("com.jakewharton.timber:timber:4.7.1")
 
     implementation("com.github.bumptech.glide:glide:$glideVersion")
+    implementation("org.jsoup:jsoup:1.12.1")
 
     // Find memory leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")

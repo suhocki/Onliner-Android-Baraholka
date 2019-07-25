@@ -2,8 +2,8 @@ package kt.school.starlord.model.repository.database
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.domain.repository.CategoriesRepository
+import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.model.data.mapper.Mapper

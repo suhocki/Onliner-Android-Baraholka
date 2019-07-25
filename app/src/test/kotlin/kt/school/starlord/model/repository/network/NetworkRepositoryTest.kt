@@ -1,14 +1,19 @@
 package kt.school.starlord.model.repository.network
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import io.mockk.coEvery
+import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
+import java.net.URL
+import kt.school.starlord.BuildConfig
 import kt.school.starlord.TestContextProvider
-import kt.school.starlord.entity.Category
-import kt.school.starlord.entity.Subcategory
-import kt.school.starlord.model.data.network.OnlinerApi
-import kt.school.starlord.model.data.parser.PageParser
+import kt.school.starlord.domain.data.mapper.Converter
+import kt.school.starlord.entity.CategoriesWithSubcategories
+import kt.school.starlord.model.data.mapper.Mapper
+import kt.school.starlord.model.data.mapper.entity.BaseConverter
 import kt.school.starlord.ui.TestCoroutineRule
+import org.jsoup.Jsoup
+import org.jsoup.nodes.Document
 import org.junit.Rule
 import org.junit.Test
 
@@ -19,25 +24,31 @@ class NetworkRepositoryTest {
     @get:Rule
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val pageLoader: OnlinerApi = mockk()
-    private val parser: PageParser = mockk()
-
-    private val networkRepository =
-        NetworkRepository(pageLoader, parser, TestContextProvider())
+    private val categoriesWithSubcategories: CategoriesWithSubcategories = mockk()
+    private val converters: Set<Converter<*, *>> = setOf(
+        object : BaseConverter<Document, CategoriesWithSubcategories>(
+            Document::class.java, CategoriesWithSubcategories::class.java
+        ) {
+            override fun convert(value: Document) = categoriesWithSubcategories
+        }
+    )
+    private val mapper = Mapper(converters)
+    private val networkRepository = NetworkRepository(mapper, TestContextProvider())
 
     @Test
     fun `get categories with subcategories`() = testCoroutineRule.runBlockingTest {
         // Given
-        val page = "page"
-        val data: Map<Category, List<Subcategory>> = mockk()
+        val document: Document = mockk()
 
-        coEvery { pageLoader.loadPage() } coAnswers { page }
-        coEvery { parser.parseCategories(page) } coAnswers { data }
+        mockkStatic(Jsoup::class)
+
+        every { Jsoup.parse(URL(BuildConfig.BARAHOLKA_ONLINER_URL), BuildConfig.NETWORK_REQUEST_TIMEOUT_MILLIS) }
+            .answers { document }
 
         // When
         val answer = networkRepository.getCategoriesWithSubcategories()
 
         // Then
-        assert(answer == data)
+        assert(answer == categoriesWithSubcategories)
     }
 }

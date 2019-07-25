@@ -6,6 +6,7 @@ import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
+import kotlin.properties.Delegates
 import kotlinx.android.synthetic.main.item_product.view.*
 import kt.school.starlord.R
 import kt.school.starlord.entity.product.Product
@@ -15,7 +16,6 @@ import kt.school.starlord.extension.inflate
 import kt.school.starlord.extension.toRoundedPrice
 import org.jetbrains.anko.backgroundColorResource
 import org.jetbrains.anko.textResource
-import kotlin.properties.Delegates
 
 /**
  * Delegate for product item in recycler view.

@@ -4,11 +4,11 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
+import kotlin.properties.Delegates
 import kotlinx.android.synthetic.main.item_category.view.*
 import kt.school.starlord.R
 import kt.school.starlord.entity.Category
 import kt.school.starlord.extension.inflate
-import kotlin.properties.Delegates
 
 /**
  * Delegate for categories in recycler view.

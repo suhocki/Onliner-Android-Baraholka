@@ -1,8 +1,8 @@
 package kt.school.starlord
 
+import kotlin.coroutines.CoroutineContext
 import kotlinx.coroutines.Dispatchers
 import kt.school.starlord.domain.system.coroutine.CoroutineContextProvider
-import kotlin.coroutines.CoroutineContext
 
 class TestContextProvider : CoroutineContextProvider {
     override val main: CoroutineContext = Dispatchers.Unconfined

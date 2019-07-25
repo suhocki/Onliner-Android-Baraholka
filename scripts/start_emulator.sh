@@ -9,7 +9,7 @@ if [[ "$TRAVIS_PULL_REQUEST" == "false" ]] ; then
     echo y | sdkmanager --channel=4 "emulator" # Experiment with canary, specifying 28.0.3 (prior version) did not work
     echo y | sdkmanager "extras;android;m2repository" >/dev/null
     echo y | sdkmanager "system-images;android-$API;$EMU_FLAVOR;$ABI" #>/dev/null # install our emulator
-    echo no | avdmanager create avd --force -n test -k "system-images;android-$API;$EMU_FLAVOR;$ABI" -c 10M
+    echo no | avdmanager create avd --force -n test -k "system-images;android-$API;$EMU_FLAVOR;$ABI" -c 10M --device 'Nexus 4' --sdcard 128M
     emulator -verbose -avd test -skin 768x1280 -no-accel -no-snapshot -no-window $AUDIO -camera-back none -camera-front none -selinux permissive -qemu -m 2048 &
 
     else echo "Skipping emulator install because the current build is a pull request."
