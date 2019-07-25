@@ -32,7 +32,7 @@ class NetworkRepositoryTest {
         val data: Map<Category, List<Subcategory>> = mockk()
 
         coEvery { pageLoader.loadPage() } coAnswers { page }
-        coEvery { parser.parseCategories(page) } coAnswers { data }
+        coEvery { parser.loadCategories(page) } coAnswers { data }
 
         // When
         val answer = networkRepository.getCategoriesWithSubcategories()

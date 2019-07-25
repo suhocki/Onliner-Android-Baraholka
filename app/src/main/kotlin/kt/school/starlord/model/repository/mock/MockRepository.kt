@@ -41,7 +41,7 @@ class MockRepository : CategoriesRepository,
         )
     )
 
-    override suspend fun updateCategories(categories: List<Category>) {}
+    override suspend fun updateCategories(categories: List<Category>) = TODO("Not implemented")
 
     override fun getSubcategories(categoryName: String) = MutableLiveData(
         listOf(
@@ -61,9 +61,9 @@ class MockRepository : CategoriesRepository,
         )
     )
 
-    override suspend fun updateSubcategories(subcategories: List<Subcategory>) {}
+    override suspend fun updateSubcategories(subcategories: List<Subcategory>) = TODO("Not implemented")
 
-    override suspend fun getCategoriesWithSubcategories(): Map<Category, List<Subcategory>> = mapOf()
+    override suspend fun getCategoriesWithSubcategories() = TODO("Not implemented")
 
     override fun getProducts(subcategoryName: String) = MutableLiveData(
         listOf(

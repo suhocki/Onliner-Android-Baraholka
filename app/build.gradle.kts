@@ -218,6 +218,7 @@ dependencies {
     implementation("com.jakewharton.timber:timber:4.7.1")
 
     implementation("com.github.bumptech.glide:glide:$glideVersion")
+    implementation("org.jsoup:jsoup:1.12.1")
 
     // Find memory leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")

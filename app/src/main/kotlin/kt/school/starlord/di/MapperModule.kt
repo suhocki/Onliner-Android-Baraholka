@@ -1,11 +1,13 @@
 package kt.school.starlord.di
 
 import kt.school.starlord.domain.data.mapper.Converter
+import kt.school.starlord.entity.CategoriesWithSubcategories
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
+import org.jsoup.nodes.Document
 import org.koin.dsl.module
 
 /**
@@ -29,30 +31,40 @@ val converters: Set<Converter<*, *>> = setOf(
     },
     object : BaseConverter<Subcategory, RoomSubcategory>(Subcategory::class.java, RoomSubcategory::class.java) {
         override fun convert(value: Subcategory) =
-            RoomSubcategory(
-                value.name,
-                value.categoryName,
-                value.count,
-                value.link
-            )
+            RoomSubcategory(value.name, value.categoryName, value.count, value.link)
     },
-    object : BaseConverter<MatchResult, Category>(MatchResult::class.java, Category::class.java) {
-        override fun convert(value: MatchResult): Category {
-            val regex = """<h3>((.|\n)*?)</h3>""".toRegex()
-            return Category(regex.find(value.value)?.groups?.get(1)?.value.toString())
-        }
-    },
-    object : BaseConverter<MatchResult, Subcategory>(MatchResult::class.java, Subcategory::class.java) {
-        override fun convert(value: MatchResult): Subcategory {
-            return Subcategory(
-                name = """">((.|\n)*?)</a""".toRegex()
-                    .find(value.value)?.groups?.get(1)?.value.toString(),
-                categoryName = "undefined",
-                count = """<sup>((.|\n)*?)</sup>""".toRegex()
-                    .find(value.value)?.groups?.get(1)?.value.toString().trim().toInt(),
-                link = """<a href="((.|\n)*?)"""".toRegex()
-                    .find(value.value)?.groups?.get(1)?.value.toString()
-            )
+    object : BaseConverter<Document, CategoriesWithSubcategories>(
+        Document::class.java, CategoriesWithSubcategories::class.java
+    ) {
+        override fun convert(value: Document): CategoriesWithSubcategories {
+            val htmlCategories = value.getElementsByClass(HtmlTag.CATEGORIES)
+            val categories = mutableListOf<Category>()
+            val subcategories = mutableListOf<Subcategory>()
+
+            htmlCategories.map {
+                val categoryName = it.select(HtmlTag.CATEGORY_NAME).text()
+
+                val htmlSubcategories = it.getElementsByClass(HtmlTag.SUBCATEGORIES)
+                    .first()
+                    .select(HtmlTag.SUBCATEGORIES_DATA)
+
+                val category = Category(categoryName)
+
+                val subcategoriesOfCategory = htmlSubcategories.map { htmlSubcategory ->
+                    val htmlSubcategoryNameAndLink = htmlSubcategory.getElementsByAttribute(HtmlTag.LINK)
+                    Subcategory(
+                        name = htmlSubcategoryNameAndLink.text(),
+                        categoryName = category.name,
+                        count = htmlSubcategory.select(HtmlTag.PRODUCTS_COUNT).text().toInt(),
+                        link = htmlSubcategoryNameAndLink.attr(HtmlTag.LINK)
+                    )
+                }
+
+                categories.add(category)
+                subcategories.addAll(subcategoriesOfCategory)
+            }
+
+            return CategoriesWithSubcategories(categories, subcategories)
         }
     }
 )
@@ -61,3 +73,12 @@ private abstract class BaseConverter<FROM, TO>(
     override val fromClass: Class<FROM>,
     override val toClass: Class<TO>
 ) : Converter<FROM, TO>
+
+private object HtmlTag {
+    const val CATEGORIES = "cm-onecat"
+    const val SUBCATEGORIES = "b-cm-list"
+    const val PRODUCTS_COUNT = "sup"
+    const val SUBCATEGORIES_DATA = "li"
+    const val CATEGORY_NAME = "h3"
+    const val LINK = "href"
+}
