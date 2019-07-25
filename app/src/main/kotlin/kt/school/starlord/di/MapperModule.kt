@@ -41,7 +41,7 @@ val converters: Set<Converter<*, *>> = setOf(
             val categories = mutableListOf<Category>()
             val subcategories = mutableListOf<Subcategory>()
 
-            htmlCategories.map {
+            htmlCategories.forEach {
                 val categoryName = it.select(HtmlTag.CATEGORY_NAME).text()
 
                 val htmlSubcategories = it.getElementsByClass(HtmlTag.SUBCATEGORIES)
