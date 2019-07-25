@@ -4,18 +4,18 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
+import java.net.URL
 import kt.school.starlord.BuildConfig
 import kt.school.starlord.TestContextProvider
-import kt.school.starlord.di.BaseConverter
 import kt.school.starlord.domain.data.mapper.Converter
 import kt.school.starlord.entity.CategoriesWithSubcategories
 import kt.school.starlord.model.data.mapper.Mapper
+import kt.school.starlord.model.data.mapper.entity.BaseConverter
 import kt.school.starlord.ui.TestCoroutineRule
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
 import org.junit.Rule
 import org.junit.Test
-import java.net.URL
 
 class NetworkRepositoryTest {
     @get:Rule

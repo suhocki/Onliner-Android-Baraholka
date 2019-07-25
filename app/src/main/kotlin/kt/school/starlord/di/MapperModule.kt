@@ -5,6 +5,7 @@ import kt.school.starlord.entity.CategoriesWithSubcategories
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.model.data.mapper.Mapper
+import kt.school.starlord.model.data.mapper.entity.BaseConverter
 import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
 import org.jsoup.nodes.Document
@@ -68,14 +69,6 @@ val converters: Set<Converter<*, *>> = setOf(
         }
     }
 )
-
-/**
- * Contains constructor with parameters for simplicity.
- */
-abstract class BaseConverter<FROM, TO>(
-    override val fromClass: Class<FROM>,
-    override val toClass: Class<TO>
-) : Converter<FROM, TO>
 
 private object HtmlTag {
     const val CATEGORIES = "cm-onecat"
