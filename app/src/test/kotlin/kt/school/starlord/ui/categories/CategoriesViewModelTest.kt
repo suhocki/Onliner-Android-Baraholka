@@ -9,6 +9,7 @@ import io.mockk.mockk
 import kt.school.starlord.domain.repository.CategoriesRepository
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
+import kt.school.starlord.entity.CategoriesWithSubcategories
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.ui.TestCoroutineRule
@@ -31,11 +32,9 @@ class CategoriesViewModelTest {
     @Test
     fun `refresh data by network`() = testCoroutineRule.runBlockingTest {
         // Given
-        val categoriesWithSubcategories = mapOf<Category, List<Subcategory>>(
-            mockk<Category>() to listOf(mockk(), mockk()),
-            mockk<Category>() to listOf(mockk(), mockk()),
-            mockk<Category>() to listOf(mockk(), mockk())
-        )
+        val categories: List<Category> = mockk()
+        val subcategories: List<Subcategory> = mockk()
+        val categoriesWithSubcategories = CategoriesWithSubcategories(categories, subcategories)
         coEvery { networkRepository.getCategoriesWithSubcategories() }.coAnswers { categoriesWithSubcategories }
 
         // When
@@ -43,8 +42,8 @@ class CategoriesViewModelTest {
 
         // Then
         coVerify(exactly = 1) {
-            subcategoriesRepository.updateSubcategories(categoriesWithSubcategories.values.flatten())
-            categoriesRepository.updateCategories(categoriesWithSubcategories.keys.toList())
+            subcategoriesRepository.updateSubcategories(subcategories)
+            categoriesRepository.updateCategories(categories)
         }
     }
 
