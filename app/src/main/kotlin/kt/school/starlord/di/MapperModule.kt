@@ -69,6 +69,9 @@ val converters: Set<Converter<*, *>> = setOf(
     }
 )
 
+/**
+ * Contains constructor with parameters for simplicity.
+ */
 abstract class BaseConverter<FROM, TO>(
     override val fromClass: Class<FROM>,
     override val toClass: Class<TO>
