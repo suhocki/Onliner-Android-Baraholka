@@ -56,7 +56,7 @@ cache:
 
 before_script:
   - export COMMITTER_EMAIL="$(git log -1 $TRAVIS_COMMIT --pretty="%cE")"
-  - export AUTHOR_NAME="$(git log -1 $TRAVIS_COMMIT --pretty="%aN")"
+  - export AUTHOR_NAME="$(curl -H "Authorization:token ${github_comment_bot_api_key}" -X GET "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}" | jq .user.login | cut -d '"' -f2)"
 
 script:
   - ./gradlew check detekt assemble jacocoTestReport
