@@ -3,11 +3,12 @@ package kt.school.starlord.model.repository.database
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
-import kt.school.starlord.di.converters
+import kt.school.starlord.di.mapperModule
 import kt.school.starlord.entity.Category
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.room.DaoManager
@@ -16,21 +17,34 @@ import kt.school.starlord.model.data.room.entity.RoomSubcategory
 import kt.school.starlord.model.repository.mock.MockRepository
 import kt.school.starlord.ui.TestCoroutineRule
 import kt.school.starlord.ui.observeForTesting
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
+import org.koin.core.context.loadKoinModules
+import org.koin.core.context.unloadKoinModules
+import org.koin.test.AutoCloseKoinTest
+import org.koin.test.inject
 
-class DatabaseRepositoryTest {
+@RunWith(AndroidJUnit4::class)
+class DatabaseRepositoryTest : AutoCloseKoinTest() {
     @get:Rule
     internal val testCoroutineRule = TestCoroutineRule()
 
     @get:Rule
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
+    private val mapper: Mapper by inject()
     private val daoManager: DaoManager = mockk(relaxed = true)
-    private val mapper = Mapper(converters)
     private val mockRepository = MockRepository()
 
     private val roomRepository = DatabaseRepository(daoManager, mapper)
+
+    @Before
+    fun before() {
+        unloadKoinModules(listOf(mapperModule))
+        loadKoinModules(mapperModule)
+    }
 
     @Test
     fun `get categories`() {
@@ -40,7 +54,7 @@ class DatabaseRepositoryTest {
             RoomCategory("category2"),
             RoomCategory("category3")
         )
-        every { daoManager.categoryDao.getCategories() } returns MutableLiveData<List<RoomCategory>>(roomData)
+        every { daoManager.categoryDao.getCategories() } returns MutableLiveData(roomData)
 
         // When
         val categories: LiveData<List<Category>> = roomRepository.getCategories()
@@ -83,7 +97,7 @@ class DatabaseRepositoryTest {
             RoomSubcategory("category3", "name", 3, "link3")
         )
         every { daoManager.subcategoryDao.getSubcategories(categoryName) }
-            .returns(MutableLiveData<List<RoomSubcategory>>(roomData))
+            .returns(MutableLiveData(roomData))
 
         // When
         val subcategories = roomRepository.getSubcategories(categoryName)

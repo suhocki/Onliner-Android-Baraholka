@@ -1,4 +1,5 @@
 @file:Suppress("all")
+
 package kt.school.starlord.model.repository.mock
 
 import androidx.lifecycle.LiveData
@@ -7,6 +8,7 @@ import kt.school.starlord.domain.repository.CategoriesRepository
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
 import kt.school.starlord.domain.repository.ProductsRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
+import kt.school.starlord.entity.CategoriesWithSubcategories
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.ProductOwner
 import kt.school.starlord.entity.Subcategory
@@ -41,7 +43,7 @@ class MockRepository : CategoriesRepository,
         )
     )
 
-    override suspend fun updateCategories(categories: List<Category>) = TODO("Not implemented")
+    override suspend fun updateCategories(categories: List<Category>) {}
 
     override fun getSubcategories(categoryName: String) = MutableLiveData(
         listOf(
@@ -61,9 +63,10 @@ class MockRepository : CategoriesRepository,
         )
     )
 
-    override suspend fun updateSubcategories(subcategories: List<Subcategory>) = TODO("Not implemented")
+    override suspend fun updateSubcategories(subcategories: List<Subcategory>) {}
 
-    override suspend fun getCategoriesWithSubcategories() = TODO("Not implemented")
+    override suspend fun getCategoriesWithSubcategories() =
+        CategoriesWithSubcategories(emptyList(), emptyList())
 
     override fun getProducts(subcategoryName: String) = MutableLiveData(
         listOf(
