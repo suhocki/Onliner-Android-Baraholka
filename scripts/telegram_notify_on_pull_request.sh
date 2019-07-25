@@ -11,7 +11,7 @@ send_msg () {
         -d text="$1" -d parse_mode=${PARSE_MODE}
 }
 
-githubBotCommentsCount=$(curl -H "Authorization:token ${github_comment_bot_api_key}" -X GET "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments" | jq .[].user.id | grep -c ${GITHUB_BOT_ID})
+githubBotCommentsCount=$(curl -H "Authorization:token ${github_comment_bot_api_key}" -X GET "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments" | jq ".. | objects | select(.user.id == ${GITHUB_BOT_ID})" | grep "body" | grep -c "Build successful.")
 
 if [[ "$githubBotCommentsCount" -gt 0 ]]; then
     send_msg "
