@@ -63,8 +63,8 @@ script:
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
-  - ./scripts/comment_pull_request_on_success.sh
   - ./scripts/telegram_notify_on_pull_request.sh
+  - ./scripts/comment_pull_request_on_success.sh
 
 after_failure:
   - ./scripts/comment_pull_request_on_failure.sh

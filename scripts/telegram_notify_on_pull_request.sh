@@ -15,14 +15,14 @@ githubBotCommentsCount=$(curl -H "Authorization:token ${github_comment_bot_api_k
 
 if [[ "$githubBotCommentsCount" -gt 0 ]]; then
     send_msg "
-    ${AUTHOR_NAME} updated his [pull request](https://github.com/${TRAVIS_REPO_SLUG}/pull/${TRAVIS_PULL_REQUEST}).
+    @${AUTHOR_NAME} updated his [pull request](https://github.com/${TRAVIS_REPO_SLUG}/pull/${TRAVIS_PULL_REQUEST}).
     "
 
     else
     send_msg "
     Code-review time!
 
-    Guys, take a moment to review [pull request](https://github.com/${TRAVIS_REPO_SLUG}/pull/${TRAVIS_PULL_REQUEST}) made by ${AUTHOR_NAME}, please.
+    Guys, take a moment to review [pull request](https://github.com/${TRAVIS_REPO_SLUG}/pull/${TRAVIS_PULL_REQUEST}) made by @${AUTHOR_NAME}, please.
     "
 fi
 fi
