@@ -4,26 +4,29 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.hadilq.liveevent.LiveEvent
 import kotlinx.coroutines.launch
 import kt.school.starlord.domain.repository.CategoriesRepository
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
+import kt.school.starlord.domain.system.viewmodel.ErrorEmitter
+import kt.school.starlord.domain.system.viewmodel.ProgressEmitter
 import kt.school.starlord.entity.CategoriesWithSubcategories
 import kt.school.starlord.entity.Category
+import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
+import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 
 /**
  * Contains logic with fetching categories asynchronously.
  */
 class CategoriesViewModel(
+    private val progressFeature: ProgressViewModelFeature,
+    private val errorFeature: ErrorViewModelFeature,
     private val networkRepository: CategoriesWithSubcategoriesRepository,
     private val categoriesRepository: CategoriesRepository,
     private val subcategoriesRepository: SubcategoriesRepository
-) : ViewModel() {
+) : ViewModel(), ProgressEmitter by progressFeature, ErrorEmitter by errorFeature {
 
     private val categories = MutableLiveData<List<Category>>()
-    private val error = LiveEvent<Throwable>()
-    private val progress = MutableLiveData<Boolean>()
 
     init {
         categoriesRepository.getCategories().observeForever(categories::setValue)
@@ -35,24 +38,14 @@ class CategoriesViewModel(
      */
     fun getCategories(): LiveData<List<Category>> = categories
 
-    /**
-     * LiveData for observing errors.
-     */
-    fun getError(): LiveData<Throwable> = error
-
-    /**
-     * LiveData for observing progress state.
-     */
-    fun getProgress(): LiveData<Boolean> = progress
-
     private fun refreshData() {
         viewModelScope.launch {
-            progress.value = true
+            progressFeature.showProgress(true)
 
             runCatching { networkRepository.getCategoriesWithSubcategories() }
-                .fold({ updateDatabase(it) }, error::setValue)
+                .fold({ updateDatabase(it) }, errorFeature::showError)
 
-            progress.value = false
+            progressFeature.showProgress(false)
         }
     }
 

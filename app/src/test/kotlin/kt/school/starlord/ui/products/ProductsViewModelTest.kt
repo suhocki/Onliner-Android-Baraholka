@@ -6,6 +6,8 @@ import io.mockk.every
 import io.mockk.mockk
 import kt.school.starlord.domain.repository.ProductsRepository
 import kt.school.starlord.entity.product.Product
+import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
+import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 import kt.school.starlord.ui.TestCoroutineRule
 import kt.school.starlord.ui.observeForTesting
 import org.junit.Rule
@@ -19,6 +21,8 @@ class ProductsViewModelTest {
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val subcategoryName = "subcategoryName"
+    private val errorFeature: ErrorViewModelFeature = mockk(relaxUnitFun = true)
+    private val progressFeature: ProgressViewModelFeature = mockk(relaxUnitFun = true)
     private val productsRepository: ProductsRepository = mockk()
 
     @Test
@@ -29,7 +33,7 @@ class ProductsViewModelTest {
         every { productsRepository.getProducts(subcategoryName) } returns MutableLiveData(products)
 
         // When
-        val viewModel = ProductsViewModel(productsRepository, subcategoryName)
+        val viewModel = ProductsViewModel(progressFeature, errorFeature, productsRepository, subcategoryName)
 
         // Then
         viewModel.getProducts().observeForTesting {

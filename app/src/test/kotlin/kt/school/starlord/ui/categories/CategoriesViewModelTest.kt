@@ -3,7 +3,7 @@ package kt.school.starlord.ui.categories
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import io.mockk.coEvery
-import io.mockk.coVerify
+import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
 import kt.school.starlord.domain.repository.CategoriesRepository
@@ -12,6 +12,8 @@ import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.entity.CategoriesWithSubcategories
 import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
+import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
+import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 import kt.school.starlord.ui.TestCoroutineRule
 import kt.school.starlord.ui.observeForTesting
 import org.junit.Rule
@@ -25,12 +27,14 @@ class CategoriesViewModelTest {
     @get:Rule
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
+    private val errorFeature: ErrorViewModelFeature = mockk(relaxUnitFun = true)
+    private val progressFeature: ProgressViewModelFeature = mockk(relaxUnitFun = true)
     private val networkRepository: CategoriesWithSubcategoriesRepository = mockk()
     private val categoriesRepository: CategoriesRepository = mockk(relaxed = true)
     private val subcategoriesRepository: SubcategoriesRepository = mockk(relaxed = true)
 
     @Test
-    fun `refresh data by network`() = testCoroutineRule.runBlockingTest {
+    fun `refresh data by network successfully`() = testCoroutineRule.runBlockingTest {
         // Given
         val categories: List<Category> = mockk()
         val subcategories: List<Subcategory> = mockk()
@@ -38,12 +42,45 @@ class CategoriesViewModelTest {
         coEvery { networkRepository.getCategoriesWithSubcategories() }.coAnswers { categoriesWithSubcategories }
 
         // When
-        CategoriesViewModel(networkRepository, categoriesRepository, subcategoriesRepository)
+        CategoriesViewModel(
+            progressFeature,
+            errorFeature,
+            networkRepository,
+            categoriesRepository,
+            subcategoriesRepository
+        )
 
         // Then
-        coVerify(exactly = 1) {
-            subcategoriesRepository.updateSubcategories(subcategories)
+        coVerifyOrder {
+            progressFeature.showProgress(true)
+
             categoriesRepository.updateCategories(categories)
+            subcategoriesRepository.updateSubcategories(subcategories)
+
+            progressFeature.showProgress(false)
+        }
+    }
+
+    @Test
+    fun `refresh data by network failure`() = testCoroutineRule.runBlockingTest {
+        // Given
+        val error = Throwable()
+        coEvery { networkRepository.getCategoriesWithSubcategories() }.throws(error)
+
+        // When
+        CategoriesViewModel(
+            progressFeature,
+            errorFeature,
+            networkRepository,
+            categoriesRepository,
+            subcategoriesRepository
+        )
+
+        // Then
+        coVerifyOrder {
+            progressFeature.showProgress(true)
+            errorFeature.showError(error)
+            progressFeature.showProgress(false)
         }
     }
 
@@ -56,7 +93,13 @@ class CategoriesViewModelTest {
         every { categoriesRepository.getCategories() }.answers { categoriesLiveData }
 
         // When
-        val viewModel = CategoriesViewModel(networkRepository, categoriesRepository, subcategoriesRepository)
+        val viewModel = CategoriesViewModel(
+            progressFeature,
+            errorFeature,
+            networkRepository,
+            categoriesRepository,
+            subcategoriesRepository
+        )
 
         // Then
         viewModel.getCategories().observeForTesting {

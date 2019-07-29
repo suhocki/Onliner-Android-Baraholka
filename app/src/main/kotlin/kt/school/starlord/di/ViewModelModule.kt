@@ -1,5 +1,7 @@
 package kt.school.starlord.di
 
+import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
+import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 import kt.school.starlord.ui.categories.CategoriesViewModel
 import kt.school.starlord.ui.products.ProductsViewModel
 import kt.school.starlord.ui.subcategories.SubcategoriesViewModel
@@ -11,9 +13,13 @@ import org.koin.dsl.module
  */
 val viewModelModule = module {
 
-    viewModel { CategoriesViewModel(get(), get(), get()) }
+    single { ProgressViewModelFeature() }
+
+    single { ErrorViewModelFeature() }
+
+    viewModel { CategoriesViewModel(get(), get(), get(), get(), get()) }
 
     viewModel { (categoryName: String) -> SubcategoriesViewModel(get(), categoryName) }
 
-    viewModel { (subcategoryName: String) -> ProductsViewModel(get(), subcategoryName) }
+    viewModel { (subcategoryName: String) -> ProductsViewModel(get(), get(), get(), subcategoryName) }
 }
