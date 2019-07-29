@@ -4,10 +4,10 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kt.school.starlord.domain.repository.ProductsRepository
-import kt.school.starlord.entity.product.Product
 import kt.school.starlord.domain.system.viewmodel.ErrorEmitter
-import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.domain.system.viewmodel.ProgressEmitter
+import kt.school.starlord.entity.product.Product
+import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 
 /**
