@@ -24,8 +24,11 @@ class NetworkRepository(
         get(BuildConfig.BARAHOLKA_ONLINER_URL)
 
     override suspend fun getProducts(link: String): ProductsList = get(
-        if (link.startsWith("./")) link.replace("./", BuildConfig.BARAHOLKA_ONLINER_URL + "/")
-        else link
+        if (link.startsWith("./")) {
+            link.replace("./", BuildConfig.BARAHOLKA_ONLINER_URL + "/")
+        } else {
+            link
+        }
     )
 
     private suspend inline fun <reified T> get(url: String): T =

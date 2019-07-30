@@ -8,6 +8,8 @@ import kt.school.starlord.entity.product.ProductsList
 import kt.school.starlord.model.data.mapper.converter.DocumentToCategoriesWithSubcategoriesConverter.Companion.LINK
 import kt.school.starlord.model.data.mapper.entity.BaseConverter
 import org.jsoup.nodes.Document
+import org.jsoup.nodes.Element
+import org.jsoup.select.Elements
 
 /**
  * Contains logic on how to convert Jsoup Docu  ment to CategoriesWithSubcategories entity.
@@ -24,60 +26,16 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
                     val cost = product.getElementsByClass(COST).first()
                     if (title.hasText() && signature != null && cost != null) add(
                         Product(
-                            id = title.first().getElementsByTag(A).attr(LINK).split("=").last().toLong(),
+                            id = getId(title),
                             title = title.text(),
-                            description = if (product.getElementsByClass(DESCRIPTION).isNotEmpty()) {
-                                product.getElementsByClass(DESCRIPTION).text()
-                            } else {
-                                ""
-                            },
-                            image = product.getElementsByClass(IMAGE)
-                                .first()
-                                .getElementsByTag(IMG)
-                                .first()
-                                .attr(SRC),
-                            price = ProductPrice(
-                                amount = cost.let { c ->
-                                    if (c.hasText()) {
-                                        c.getElementsByClass(PRICE).text()
-                                            .replace(",", ".")
-                                            .split(" ")[0]
-                                            .toDoubleOrNull()
-                                    } else {
-                                        null
-                                    }
-                                },
-                                isBargainAvailable = cost.getElementsByClass(COST_TORG).hasText()
-                            ),
-                            location = if (signature.hasText()) {
-                                signature.getElementsByTag(STRONG).first().text()
-                            } else {
-                                ""
-                            },
+                            description = getDescription(product),
+                            image = getImgLink(product),
+                            price = getProductPrice(cost),
+                            location = getLocation(signature),
                             lastUpdate = product.getElementsByClass(LAST_UPDATE).first().text(),
-                            commentsCount = if (product.getElementsByClass(COMMENTS).isNotEmpty()) {
-                                product.getElementsByClass(COMMENTS).text().toLong()
-                            } else {
-                                0L
-                            },
-                            type = product.getElementsByClass(TYPE).let {
-                                when {
-                                    it.hasClass(SELL) -> ProductType.SELL
-                                    it.hasClass(BUY) -> ProductType.BUY
-                                    it.hasClass(RENT) -> ProductType.RENT
-                                    it.hasClass(EXCHANGE) -> ProductType.EXCHANGE
-                                    it.hasClass(SERVICE) -> ProductType.SERVICE
-                                    it.hasClass(CLOSED) -> ProductType.CLOSED
-                                    else -> ProductType.NON
-                                }
-                            },
-                            owner = signature.let {
-                                val owner = it.getElementsByTag(A).first()
-                                ProductOwner(
-                                    id = owner.attr(LINK).split(SEPARATOR).last().toLong(),
-                                    name = owner.text()
-                                )
-                            },
+                            commentsCount = getCommentsCount(product),
+                            type = getProductType(product),
+                            owner = getProductOwner(signature),
                             isPaid = product.hasClass(M_IMP)
                         )
                     )
@@ -85,6 +43,74 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
             }
         }.toList()
     )
+
+    private fun getProductOwner(signature: Element) =
+        signature.let {
+            val owner = it.getElementsByTag(A).first()
+            ProductOwner(
+                id = owner.attr(LINK).split(SEPARATOR).last().toLong(),
+                name = owner.text()
+            )
+        }
+
+    private fun getProductType(product: Element) =
+        product.getElementsByClass(TYPE).let {
+            when {
+                it.hasClass(SELL) -> ProductType.SELL
+                it.hasClass(BUY) -> ProductType.BUY
+                it.hasClass(RENT) -> ProductType.RENT
+                it.hasClass(EXCHANGE) -> ProductType.EXCHANGE
+                it.hasClass(SERVICE) -> ProductType.SERVICE
+                it.hasClass(CLOSED) -> ProductType.CLOSED
+                else -> ProductType.NON
+            }
+        }
+
+    private fun getCommentsCount(product: Element): Long =
+        if (product.getElementsByClass(COMMENTS).isNotEmpty()) {
+            product.getElementsByClass(COMMENTS).text().toLong()
+        } else {
+            0L
+        }
+
+    private fun getLocation(signature: Element): String =
+        if (signature.hasText()) {
+            signature.getElementsByTag(STRONG).first().text()
+        } else {
+            ""
+        }
+
+    private fun getProductPrice(cost: Element) =
+        ProductPrice(
+            amount = cost.let { c ->
+                if (c.hasText()) {
+                    c.getElementsByClass(PRICE).text()
+                        .replace(",", ".")
+                        .split(" ")[0]
+                        .toDoubleOrNull()
+                } else {
+                    null
+                }
+            },
+            isBargainAvailable = cost.getElementsByClass(COST_TORG).hasText()
+        )
+
+    private fun getImgLink(product: Element): String =
+        product.getElementsByClass(IMAGE)
+            .first()
+            .getElementsByTag(IMG)
+            .first()
+            .attr(SRC)
+
+    private fun getDescription(product: Element): String =
+        if (product.getElementsByClass(DESCRIPTION).isNotEmpty()) {
+            product.getElementsByClass(DESCRIPTION).text()
+        } else {
+            ""
+        }
+
+    private fun getId(title: Elements) =
+        title.first().getElementsByTag(A).attr(LINK).split("=").last().toLong()
 
     companion object {
         const val A = "a"
