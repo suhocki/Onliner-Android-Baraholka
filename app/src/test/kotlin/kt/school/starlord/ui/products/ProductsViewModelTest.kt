@@ -5,9 +5,9 @@ import io.mockk.coEvery
 import io.mockk.mockk
 import kt.school.starlord.domain.repository.ProductsListRepository
 import kt.school.starlord.entity.product.Product
+import kt.school.starlord.entity.product.ProductsList
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
-import kt.school.starlord.entity.product.ProductsList
 import kt.school.starlord.ui.TestCoroutineRule
 import kt.school.starlord.ui.observeForTesting
 import org.junit.Rule

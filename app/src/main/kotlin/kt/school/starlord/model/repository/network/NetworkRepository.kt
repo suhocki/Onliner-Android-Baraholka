@@ -1,5 +1,6 @@
 package kt.school.starlord.model.repository.network
 
+import java.net.URL
 import kotlinx.coroutines.withContext
 import kt.school.starlord.BuildConfig
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
@@ -9,7 +10,6 @@ import kt.school.starlord.entity.CategoriesWithSubcategories
 import kt.school.starlord.entity.product.ProductsList
 import kt.school.starlord.model.data.mapper.Mapper
 import org.jsoup.Jsoup
-import java.net.URL
 
 /**
  * Implement methods using Internet connection.
@@ -28,7 +28,6 @@ class NetworkRepository(
         else link
     )
 
-
     private suspend inline fun <reified T> get(url: String): T =
         withContext(coroutineContextProvider.io) {
             mapper.map<T>(
@@ -38,5 +37,4 @@ class NetworkRepository(
                 )
             )
         }
-
 }

@@ -8,7 +8,7 @@ import kt.school.starlord.entity.product.ProductsList
 interface ProductsListRepository {
 
     /**
-     * Loads data that represents products list by subcategory name and product response by product type
+     * Loads data that represents products list by subcategory name and product response by product type.
      *
      * @return products
      */

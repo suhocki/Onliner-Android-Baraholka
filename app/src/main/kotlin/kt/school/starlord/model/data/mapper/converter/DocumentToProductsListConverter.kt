@@ -113,4 +113,3 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
         const val CLOSED = "ba-label-7"
     }
 }
-
