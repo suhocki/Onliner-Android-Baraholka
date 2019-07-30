@@ -24,7 +24,7 @@ class ProductsViewModel(
     init {
         GlobalScope.launch(Dispatchers.Main) {
             products.setValue(
-                productsRepository.getProducts(subcategory = link).products
+                productsRepository.getProducts(link).products
             )
         }
     }

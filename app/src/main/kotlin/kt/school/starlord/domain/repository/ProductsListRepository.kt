@@ -12,5 +12,5 @@ interface ProductsListRepository {
      *
      * @return products
      */
-    suspend fun getProducts(subcategory: String): ProductsList
+    suspend fun getProducts(link: String): ProductsList
 }
