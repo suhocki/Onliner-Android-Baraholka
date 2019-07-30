@@ -1,11 +1,11 @@
 package kt.school.starlord.ui.products
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
-import io.mockk.every
+import io.mockk.coEvery
 import io.mockk.mockk
-import kt.school.starlord.domain.repository.ProductsRepository
+import kt.school.starlord.domain.repository.ProductsListRepository
 import kt.school.starlord.entity.product.Product
+import kt.school.starlord.entity.product.ProductsList
 import kt.school.starlord.ui.TestCoroutineRule
 import kt.school.starlord.ui.observeForTesting
 import org.junit.Rule
@@ -18,18 +18,18 @@ class ProductsViewModelTest {
     @get:Rule
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val subcategoryName = "subcategoryName"
-    private val productsRepository: ProductsRepository = mockk()
+    private val link = "https://baraholka.onliner.by/viewforum.php?f=2"
+    private val productsRepository: ProductsListRepository = mockk()
 
     @Test
-    fun `get products from database`() {
+    fun `get products`() {
         // Given
         val products: List<Product> = mockk()
 
-        every { productsRepository.getProducts(subcategoryName) } returns MutableLiveData(products)
+        coEvery { productsRepository.getProducts(link) }.coAnswers { ProductsList(products) }
 
         // When
-        val viewModel = ProductsViewModel(productsRepository, subcategoryName)
+        val viewModel = ProductsViewModel(productsRepository, link)
 
         // Then
         viewModel.getProducts().observeForTesting {
