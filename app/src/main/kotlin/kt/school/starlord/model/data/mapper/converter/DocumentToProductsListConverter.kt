@@ -21,10 +21,10 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
                 table.getElementsByTag(TR).forEach { product ->
                     val signature = product.getElementsByClass(SIGNATURE).first()
                     val title = product.getElementsByClass(TITLE)
-                    val cost = product.getElementsByClass("cost").first()
+                    val cost = product.getElementsByClass(COST).first()
                     if (title.hasText() && signature != null && cost != null) add(
                         Product(
-                            id = title.first().getElementsByTag("a").attr(LINK).split("=").last().toLong(),
+                            id = title.first().getElementsByTag(A).attr(LINK).split("=").last().toLong(),
                             title = title.text(),
                             description = if (product.getElementsByClass(DESCRIPTION).isNotEmpty()) {
                                 product.getElementsByClass(DESCRIPTION).text()
@@ -33,9 +33,9 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
                             },
                             image = product.getElementsByClass(IMAGE)
                                 .first()
-                                .getElementsByTag("img")
+                                .getElementsByTag(IMG)
                                 .first()
-                                .attr("src"),
+                                .attr(SRC),
                             price = ProductPrice(
                                 amount = cost.let { c ->
                                     if (c.hasText()) {
@@ -47,28 +47,38 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
                                         null
                                     }
                                 },
-                                isBargainAvailable = cost.getElementsByClass("cost-torg").hasText()
+                                isBargainAvailable = cost.getElementsByClass(COST_TORG).hasText()
                             ),
                             location = if (signature.hasText()) {
-                                signature.getElementsByTag("strong").first().text()
+                                signature.getElementsByTag(STRONG).first().text()
                             } else {
                                 ""
                             },
-                            lastUpdate = product.getElementsByClass("ba-post-up").first().text(),
+                            lastUpdate = product.getElementsByClass(LAST_UPDATE).first().text(),
                             commentsCount = if (product.getElementsByClass(COMMENTS).isNotEmpty()) {
                                 product.getElementsByClass(COMMENTS).text().toLong()
                             } else {
                                 0L
                             },
-                            type = TODO(),
+                            type = product.getElementsByClass(TYPE).let {
+                                when {
+                                    it.hasClass(SELL) -> ProductType.SELL
+                                    it.hasClass(BUY) -> ProductType.BUY
+                                    it.hasClass(RENT) -> ProductType.RENT
+                                    it.hasClass(EXCHANGE) -> ProductType.EXCHANGE
+                                    it.hasClass(SERVICE) -> ProductType.SERVICE
+                                    it.hasClass(CLOSED) -> ProductType.CLOSED
+                                    else -> ProductType.NON
+                                }
+                            },
                             owner = signature.let {
-                                val owner = it.getElementsByTag("a").first()
+                                val owner = it.getElementsByTag(A).first()
                                 ProductOwner(
-                                    id = owner.attr(LINK).split("user/").last().toLong(),
+                                    id = owner.attr(LINK).split(SEPARATOR).last().toLong(),
                                     name = owner.text()
                                 )
                             },
-                            isPaid = product.hasClass("m-imp")
+                            isPaid = product.hasClass(M_IMP)
                         )
                     )
                 }
@@ -77,6 +87,9 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
     )
 
     companion object {
+        const val A = "a"
+        const val COST = "cost"
+        const val COST_TORG = "cost-torg"
         const val TABLE = "ba-tbl-list__table"
         const val TR = "tr"
         const val TITLE = "wraptxt"
@@ -84,9 +97,20 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
         const val PRICE = "price-primary"
         const val IMAGE = "img-va"
         const val SIGNATURE = "ba-signature"
-        const val SELECT = "select"
-        const val GRAY_CLASS = "gray"
         const val COMMENTS = "c-org"
+        const val IMG = "img"
+        const val SRC = "src"
+        const val STRONG = "strong"
+        const val LAST_UPDATE = "ba-post-up"
+        const val SEPARATOR = "user/"
+        const val M_IMP = "m-imp"
+        const val TYPE = "ba-label"
+        const val SELL = "ba-label-2"
+        const val BUY = "ba-label-3"
+        const val EXCHANGE = "ba-label-4"
+        const val SERVICE = "ba-label-5"
+        const val RENT = "ba-label-6"
+        const val CLOSED = "ba-label-7"
     }
 }
 

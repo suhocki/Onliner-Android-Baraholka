@@ -24,6 +24,9 @@ enum class ProductType {
     },
     CLOSED {
         override val color = R.color.colorGray
+    },
+    NON {
+        override val color = R.color.colorAccent
     };
 
     @get:StringRes
