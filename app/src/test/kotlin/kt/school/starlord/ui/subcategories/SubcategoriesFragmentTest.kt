@@ -44,7 +44,8 @@ class SubcategoriesFragmentTest : AutoCloseKoinTest() {
     fun `navigate to products`() {
         // Given
         val subcategoryName = "subcategoryName"
-        val subcategories = MutableLiveData(listOf(Subcategory(subcategoryName, "", 0, "")))
+        val subcategoryLink = "subcategoryLink"
+        val subcategories = MutableLiveData(listOf(Subcategory(subcategoryName, "", 0, subcategoryLink)))
         val navController: NavController = mockk(relaxUnitFun = true)
         mockkStatic(NavHostFragment::class)
 
@@ -64,7 +65,7 @@ class SubcategoriesFragmentTest : AutoCloseKoinTest() {
 
             val arguments = direction.captured.arguments
             val keys = arguments.keySet()
-            assert(keys.any { arguments.getString(it) == subcategoryName })
+            assert(keys.any { arguments.getString(it) == subcategoryLink })
         }
     }
 
