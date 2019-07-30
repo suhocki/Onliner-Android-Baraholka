@@ -28,7 +28,7 @@ class SubcategoriesFragment : Fragment() {
     private val adapter by lazy {
         AppRecyclerAdapter(
             SubcategoryAdapterDelegate {
-                val direction = SubcategoriesFragmentDirections.toProducts(it.name)
+                val direction = SubcategoriesFragmentDirections.toProducts(it.link)
                 findNavController().navigate(direction)
             }
         )

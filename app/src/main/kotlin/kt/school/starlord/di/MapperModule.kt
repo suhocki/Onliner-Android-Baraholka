@@ -4,6 +4,7 @@ import kt.school.starlord.entity.Category
 import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.mapper.converter.DocumentToCategoriesWithSubcategoriesConverter
+import kt.school.starlord.model.data.mapper.converter.DocumentToProductsListConverter
 import kt.school.starlord.model.data.mapper.entity.BaseConverter
 import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
@@ -16,6 +17,7 @@ val mapperModule = module {
     single {
         val converters = setOf(
             DocumentToCategoriesWithSubcategoriesConverter(),
+            DocumentToProductsListConverter(),
             object : BaseConverter<RoomCategory, Category>(RoomCategory::class.java, Category::class.java) {
                 override fun convert(value: RoomCategory) = Category(value.name)
             },
