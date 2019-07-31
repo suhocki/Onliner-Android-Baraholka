@@ -1,6 +1,6 @@
 <resources>
 
-    <style name="AppTheme" parent="Theme.AppCompat.Light.NoActionBar">
+    <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <item name="colorPrimary">@color/colorPrimary</item>
         <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
         <item name="colorAccent">@color/colorAccent</item>
@@ -19,13 +19,13 @@
         <item name="android:windowBackground">@drawable/splash_background</item>
     </style>
 
-    <style name="PopupMenuTheme" parent="Widget.AppCompat.Light.PopupMenu">
+    <style name="PopupMenuTheme" parent="Widget.MaterialComponents.PopupMenu">
         <item name="android:popupBackground">@color/colorPrimary</item>
         <item name="android:dropDownHorizontalOffset">4dp</item>
         <item name="overlapAnchor">true</item>
     </style>
 
-    <style name="TextTitle" parent="TextAppearance.AppCompat.Title">
+    <style name="TextTitle" parent="TextAppearance.MaterialComponents.Body1">
         <item name="android:textColor">@color/primaryText</item>
         <item name="android:textSize">16sp</item>
         <item name="fontFamily">@font/roboto_medium</item>
