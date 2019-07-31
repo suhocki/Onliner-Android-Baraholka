@@ -22,7 +22,11 @@ class ScreenshotProcessor : BasicScreenCaptureProcessor() {
     override fun getFilename(prefix: String): String = prefix
 }
 
+private const val DELAY_BEFORE_SCREENSHOT = 1500L
+
 fun takeScreenshot(screenShotName: String) {
+    Thread.sleep(DELAY_BEFORE_SCREENSHOT)
+
     val screenCapture = Screenshot.capture()
     val processors = setOf(ScreenshotProcessor())
 
