@@ -62,7 +62,7 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
                 it.hasClass(EXCHANGE) -> ProductType.EXCHANGE
                 it.hasClass(SERVICE) -> ProductType.SERVICE
                 it.hasClass(CLOSED) -> ProductType.CLOSED
-                else -> ProductType.NON
+                else -> error("Unknown product type.")
             }
         }
 
