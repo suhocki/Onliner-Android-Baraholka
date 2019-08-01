@@ -9,6 +9,7 @@ import kt.school.starlord.domain.system.coroutine.CoroutineContextProvider
 import kt.school.starlord.entity.CategoriesWithSubcategories
 import kt.school.starlord.entity.product.ProductsList
 import kt.school.starlord.model.data.mapper.Mapper
+import kt.school.starlord.utils.urlCorrector
 import org.jsoup.Jsoup
 
 /**
@@ -23,13 +24,7 @@ class NetworkRepository(
     override suspend fun getCategoriesWithSubcategories(): CategoriesWithSubcategories =
         get(BuildConfig.BARAHOLKA_ONLINER_URL)
 
-    override suspend fun getProducts(link: String): ProductsList = get(
-        if (link.startsWith("./")) {
-            link.replace("./", BuildConfig.BARAHOLKA_ONLINER_URL + "/")
-        } else {
-            link
-        }
-    )
+    override suspend fun getProducts(link: String): ProductsList = get(urlCorrector(link))
 
     private suspend inline fun <reified T> get(url: String): T =
         withContext(coroutineContextProvider.io) {
