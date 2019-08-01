@@ -1,20 +1,18 @@
 package kt.school.starlord.ui.products
 
 import android.os.Bundle
-import android.view.View
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.hadilq.liveevent.LiveEvent
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
-import io.mockk.mockkStatic
 import io.mockk.verify
 import kotlinx.android.synthetic.main.fragment_products.*
+import kt.school.starlord.domain.system.view.ErrorSnackbar
+import kt.school.starlord.domain.system.view.ProgressSnackbar
 import kt.school.starlord.entity.product.Product
-import kt.school.starlord.extension.showError
 import kt.school.starlord.model.repository.mock.MockRepository
 import kt.school.starlord.ui.global.AppRecyclerAdapter
 import org.junit.Before
@@ -23,11 +21,14 @@ import org.junit.runner.RunWith
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.test.AutoCloseKoinTest
 import org.koin.test.mock.declare
+import org.mockito.ArgumentMatchers.anyString
 
 @RunWith(AndroidJUnit4::class)
 class ProductsFragmentTest : AutoCloseKoinTest() {
 
     private val viewModel: ProductsViewModel = mockk(relaxed = true)
+    private val progressSnackbar: ProgressSnackbar = mockk(relaxUnitFun = true)
+    private val errorSnackbar: ErrorSnackbar = mockk(relaxUnitFun = true)
     private val mockRepository = MockRepository()
     private val arguments = Bundle().apply { putString("subcategoryName", "some data") }
     private val scenario by lazy {
@@ -38,11 +39,14 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
     fun setUp() {
         declare {
             viewModel { viewModel }
+            single { errorSnackbar }
+            single { progressSnackbar }
         }
     }
 
+    // region Testing snackbars
     @Test
-    fun `show progress bar`() {
+    fun `show snackbar with updating`() {
         // Given
         val progress = MutableLiveData(false)
 
@@ -53,12 +57,12 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
             progress.value = true
 
             // Then
-            assert(it.progressBar.visibility == View.VISIBLE)
+            verify { progressSnackbar.setVisibility(false) }
         }
     }
 
     @Test
-    fun `hide progress bar`() {
+    fun `hide snackbar with updating`() {
         // Given
         val progress = MutableLiveData<Boolean>()
 
@@ -69,34 +73,70 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
             progress.value = false
 
             // Then
-            assert(it.progressBar.visibility == View.GONE)
+            verify { progressSnackbar.setVisibility(false) }
         }
     }
 
     @Test
-    fun `show error message`() {
+    fun `hide snackbar with updating when fragment is gone`() {
         // Given
-        val error = Throwable("some error occured")
-        val errorLiveEvent = LiveEvent<Throwable>()
+        val progressLiveData = MutableLiveData<Boolean>()
 
-        every { viewModel.getError() } returns errorLiveEvent
-
-        mockkStatic("kt.school.starlord.extension.AndroidExtensionsKt")
+        every { viewModel.getProgress() } returns progressLiveData
 
         scenario.onFragment {
             // When
-            errorLiveEvent.value = error
+            progressLiveData.value = true
+
+            scenario.moveToState(Lifecycle.State.DESTROYED)
 
             // Then
-            verify { it.requireContext().showError(error) }
+            verify { progressSnackbar.setVisibility(false) }
         }
     }
+
+    @Test
+    fun `show snackbar with error`() {
+        // Given
+        val error = Throwable(anyString())
+        val errorLiveData = MutableLiveData<Throwable>()
+
+        every { viewModel.getError() } returns errorLiveData
+
+        scenario.onFragment {
+            // When
+            errorLiveData.value = error
+
+            // Then
+            verify { errorSnackbar.show(error) }
+        }
+    }
+
+    @Test
+    fun `hide snackbar with error when fragment is gone`() {
+        // Given
+        val error = Throwable(anyString())
+        val errorLiveData = MutableLiveData<Throwable>()
+
+        every { viewModel.getError() } returns errorLiveData
+
+        scenario.onFragment {
+            // When
+            errorLiveData.value = error
+
+            scenario.moveToState(Lifecycle.State.DESTROYED)
+
+            // Then
+            verify { errorSnackbar.dismiss() }
+        }
+    }
+    // endregion
 
     @Test
     fun `show products`() {
         // Given
         mockkConstructor(AppRecyclerAdapter::class)
-        val products: MutableLiveData<List<Product>> = mockRepository.getProducts("")
+        val products: MutableLiveData<List<Product>> = mockRepository.getProducts(anyString())
         every { viewModel.getProducts() } returns products
         scenario.moveToState(Lifecycle.State.CREATED)
 
@@ -106,6 +146,22 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
         // Then
         scenario.onFragment {
             verify { anyConstructed<AppRecyclerAdapter>().setData(products.value!!) }
+        }
+    }
+
+    @Test
+    fun `clear adapter in recycler in onDestroy`() {
+        // Given
+        scenario.moveToState(Lifecycle.State.RESUMED)
+
+        scenario.onFragment {
+            val recyclerView = it.recyclerView
+
+            // When
+            scenario.moveToState(Lifecycle.State.DESTROYED)
+
+            // Then
+            assert(recyclerView.adapter == null)
         }
     }
 }

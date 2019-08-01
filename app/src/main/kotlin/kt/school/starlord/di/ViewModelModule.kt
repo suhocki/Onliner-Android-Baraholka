@@ -13,9 +13,9 @@ import org.koin.dsl.module
  */
 val viewModelModule = module {
 
-    single { ProgressViewModelFeature() }
+    factory { ProgressViewModelFeature() }
 
-    single { ErrorViewModelFeature() }
+    factory { ErrorViewModelFeature() }
 
     viewModel { CategoriesViewModel(get(), get(), get(), get(), get()) }
 

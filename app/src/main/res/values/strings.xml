@@ -4,4 +4,6 @@
     <string name="up">Up!</string>
     <string name="for_free">Даром</string>
     <string name="price">%1$s р.</string>
+    <string name="updating">Updating…</string>
+    <string name="ok">OK</string>
 </resources>
