@@ -9,7 +9,6 @@ import kt.school.starlord.domain.system.coroutine.CoroutineContextProvider
 import kt.school.starlord.entity.CategoriesWithSubcategories
 import kt.school.starlord.entity.product.ProductsList
 import kt.school.starlord.model.data.mapper.Mapper
-import kt.school.starlord.utils.urlCorrector
 import org.jsoup.Jsoup
 
 /**
@@ -35,4 +34,10 @@ class NetworkRepository(
                 )
             )
         }
+
+    private fun urlCorrector(url: String) = if (url.startsWith("./")) {
+        url.replace("./", BuildConfig.BARAHOLKA_ONLINER_URL + "/")
+    } else {
+        url
+    }
 }
