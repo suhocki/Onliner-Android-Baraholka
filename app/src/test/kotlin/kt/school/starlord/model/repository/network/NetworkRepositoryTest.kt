@@ -32,7 +32,8 @@ class NetworkRepositoryTest {
             Document::class.java, CategoriesWithSubcategories::class.java
         ) {
             override fun convert(value: Document) = categoriesWithSubcategories
-        }, object : BaseConverter<Document, ProductsList>(
+        },
+        object : BaseConverter<Document, ProductsList>(
             Document::class.java, ProductsList::class.java
         ) {
             override fun convert(value: Document) = productsList
