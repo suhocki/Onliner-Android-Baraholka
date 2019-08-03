@@ -82,8 +82,8 @@ android {
                 }
 
                 proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    file("proguard-rules.pro")
+                    *file("$projectDir/proguard/libs").listFiles()!!,
+                    file("$projectDir/proguard/proguard-rules.pro")
                 )
             }
         }
@@ -172,7 +172,6 @@ play {
 }
 
 dependencies {
-    val kotlinxVersion = "1.2.1"
     val lifecycleVersion = "2.2.0-alpha01"
     val navigationVersion = "2.1.0-alpha04"
     val koinVersion = "2.0.1"
@@ -188,8 +187,9 @@ dependencies {
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0-RC")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${KotlinCompilerVersion.VERSION}")
     implementation("androidx.core:core-ktx:1.2.0-alpha02")
     implementation("androidx.appcompat:appcompat:$appcompatVersion")
     implementation("com.google.android.material:material:1.1.0-alpha09")
@@ -227,7 +227,7 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-android:$mockkVersion")
     testImplementation("org.koin:koin-test:$koinVersion")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1")
     testImplementation("org.robolectric:robolectric:4.3")
     testImplementation("androidx.arch.core:core-testing:2.1.0-rc01")
     testImplementation("androidx.room:room-testing:$roomVersion")
