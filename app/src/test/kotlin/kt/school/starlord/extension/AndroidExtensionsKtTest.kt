@@ -9,9 +9,9 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
-import java.lang.reflect.Field
 import org.junit.Test
 import timber.log.Timber
+import java.lang.reflect.Field
 
 class AndroidExtensionsKtTest {
 
@@ -45,7 +45,6 @@ class AndroidExtensionsKtTest {
         // Given
         mockkStatic(Timber::class)
         mockkStatic(Toast::class)
-        mockkStatic("org.jetbrains.anko.ToastsKt")
 
         val errorMessage = "errorMessage"
         val context: Context = mockk()

@@ -6,8 +6,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.Toast
 import androidx.annotation.LayoutRes
-import org.jetbrains.anko.longToast
 import timber.log.Timber
 
 /**
@@ -49,7 +49,7 @@ fun Activity.fixIMMLeak() {
  */
 fun Context.showError(error: Throwable) {
     Timber.e(error)
-    longToast(error.toString())
+    Toast.makeText(this, error.toString(), Toast.LENGTH_LONG).show()
 }
 
 /**
