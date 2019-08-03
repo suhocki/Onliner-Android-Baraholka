@@ -1,31 +1,16 @@
 package kt.school.starlord.entity.product
 
-import androidx.annotation.StringRes
+import androidx.annotation.ColorRes
 import kt.school.starlord.R
 
 /**
  * Product type can be sell/buy/exchange/service/rent/closed.
  */
-enum class ProductType {
-    SELL {
-        override val color = R.color.colorBrightRed
-    },
-    BUY {
-        override val color = R.color.colorGreen
-    },
-    EXCHANGE {
-        override val color = R.color.colorPurple
-    },
-    SERVICE {
-        override val color = R.color.colorBlue
-    },
-    RENT {
-        override val color = R.color.colorOrange
-    },
-    CLOSED {
-        override val color = R.color.colorGray
-    };
-
-    @get:StringRes
-    abstract val color: Int
+enum class ProductType(@ColorRes val color: Int) {
+    SELL(R.color.colorBrightRed),
+    BUY(R.color.colorGreen),
+    EXCHANGE(R.color.colorPurple),
+    SERVICE(R.color.colorBlue),
+    RENT(R.color.colorOrange),
+    CLOSED(R.color.colorGray);
 }

@@ -1,6 +1,8 @@
 package kt.school.starlord.di
 
 import android.app.Activity
+import com.squareup.moshi.Moshi
+import com.squareup.moshi.kotlin.reflect.KotlinJsonAdapterFactory
 import kt.school.starlord.domain.system.coroutine.CoroutineContextProvider
 import kt.school.starlord.domain.system.view.ErrorSnackbar
 import kt.school.starlord.domain.system.view.ProgressSnackbar
@@ -15,9 +17,12 @@ import org.koin.dsl.module
  * Depends on MapperModule.
  */
 val appModule = module {
+
     single { AppCoroutineContextProvider() } bind CoroutineContextProvider::class
 
     factory { (activity: Activity) -> ProgressSnackbarFeature(activity) } bind ProgressSnackbar::class
 
     factory { (activity: Activity) -> ErrorSnackbarFeature(activity) } bind ErrorSnackbar::class
+
+    single { Moshi.Builder().add(KotlinJsonAdapterFactory()).build() }
 }
