@@ -20,7 +20,6 @@ class ProductOwnerConverterTest : AutoCloseKoinTest() {
     private val adapter = mockk<JsonAdapter<ProductOwner>>()
     private val productOwnerConverter by lazy { ProductOwnerConverter() }
 
-
     @Before
     fun setUp() {
         declare {
