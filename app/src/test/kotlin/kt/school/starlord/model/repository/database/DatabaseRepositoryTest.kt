@@ -13,6 +13,7 @@ import kt.school.starlord.entity.Category
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.data.room.entity.RoomCategory
+import kt.school.starlord.model.data.room.entity.RoomProduct
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
 import kt.school.starlord.model.repository.mock.MockRepository
 import kt.school.starlord.ui.TestCoroutineRule
@@ -25,6 +26,7 @@ import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
 import org.koin.test.AutoCloseKoinTest
 import org.koin.test.inject
+import org.mockito.ArgumentMatchers.anyString
 
 @RunWith(AndroidJUnit4::class)
 class DatabaseRepositoryTest : AutoCloseKoinTest() {
@@ -136,5 +138,27 @@ class DatabaseRepositoryTest : AutoCloseKoinTest() {
                     roomSubcategory.count == subcategory.count &&
                     roomSubcategory.categoryName == categoryName
         })
+    }
+
+    @Test
+    fun `get products`() {
+        // Given
+        val subcategoryName = anyString()
+        val roomProducts = listOf(
+            RoomProduct(1, subcategoryName, "", "", mockk(), "", "", mockk(), mockk(), "", 0, false),
+            RoomProduct(2, subcategoryName, "", "", mockk(), "", "", mockk(), mockk(), "", 0, false)
+        )
+
+        every { daoManager.productDao.getProducts(subcategoryName) } returns MutableLiveData(roomProducts)
+
+        // When
+        val liveData = roomRepository.getProducts(subcategoryName)
+
+        // Then
+        liveData.observeForTesting {
+            assert(it.size == 2)
+            assert(it[0].id == 1L)
+            assert(it[1].id == 2L)
+        }
     }
 }

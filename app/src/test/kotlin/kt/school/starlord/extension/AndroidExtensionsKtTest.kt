@@ -41,11 +41,28 @@ class AndroidExtensionsKtTest {
     }
 
     @Test
+    fun `fix input manager memory leak failure`() {
+        // Given
+        val activity: Activity = mockk()
+        val error = Throwable()
+
+        mockkStatic("kt.school.starlord.extension.ReflectExtensionsKt")
+        mockkStatic(Timber::class)
+
+        every { activity.getSystemService(Context.INPUT_METHOD_SERVICE) } throws error
+
+        // When
+        activity.fixIMMLeak()
+
+        // Then
+        verify { Timber.e(error) }
+    }
+
+    @Test
     fun `show error`() {
         // Given
         mockkStatic(Timber::class)
         mockkStatic(Toast::class)
-        mockkStatic("org.jetbrains.anko.ToastsKt")
 
         val errorMessage = "errorMessage"
         val context: Context = mockk()

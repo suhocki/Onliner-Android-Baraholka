@@ -14,7 +14,8 @@ import kt.school.starlord.model.data.room.entity.RoomSubcategory
 @Dao
 abstract class SubcategoryDao {
     /**
-     *  @return all subcategories.
+     * @param categoryName selected category.
+     * @return all subcategories for selected category.
      */
     @Query("SELECT * FROM Subcategories WHERE categoryName=:categoryName")
     abstract fun getSubcategories(categoryName: String): LiveData<List<RoomSubcategory>>

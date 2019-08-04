@@ -21,16 +21,20 @@ import org.koin.dsl.module
 val databaseModule = module {
 
     factory {
-        Room.databaseBuilder(androidContext(), AppDatabase::class.java, BuildConfig.DATABASE_FILE_NAME)
+        val room = Room.databaseBuilder(
+            androidContext(),
+            AppDatabase::class.java,
+            BuildConfig.DATABASE_FILE_NAME
+        )
             .fallbackToDestructiveMigration()
             .build()
+
+        DaoManager(
+            room.categoryDao(),
+            room.subcategoryDao(),
+            room.productDao()
+        )
     }
-
-    factory { get<AppDatabase>().categoryDao() }
-
-    factory { get<AppDatabase>().subcategoryDao() }
-
-    factory { DaoManager(get(), get()) }
 
     single { DatabaseRepository(get(), get()) } binds arrayOf(
         SubcategoriesRepository::class,

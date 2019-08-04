@@ -3,6 +3,7 @@ package kt.school.starlord.ui.products
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
@@ -14,8 +15,6 @@ import kt.school.starlord.entity.product.ProductPrice
 import kt.school.starlord.entity.product.ProductType
 import kt.school.starlord.extension.inflate
 import kt.school.starlord.extension.toRoundedPrice
-import org.jetbrains.anko.backgroundColorResource
-import org.jetbrains.anko.textResource
 
 /**
  * Delegate for product item in recycler view.
@@ -60,8 +59,9 @@ class ProductAdapterDelegate(
         }
 
         private fun bindType(typeView: TextView, type: ProductType) {
+            val color = ResourcesCompat.getColor(typeView.resources, type.color, typeView.context.theme)
+            typeView.setBackgroundColor(color)
             typeView.text = type.toString()
-            typeView.backgroundColorResource = type.color
         }
 
         private fun bindCommentsCount(commentsView: TextView, commentsCount: Long) {
@@ -77,7 +77,7 @@ class ProductAdapterDelegate(
             null -> priceView.visibility = View.GONE
             0.0 -> {
                 priceView.visibility = View.VISIBLE
-                priceView.textResource = R.string.for_free
+                priceView.setText(R.string.for_free)
             }
             else -> priceView.text = itemView.resources.getString(R.string.price, price.amount.toRoundedPrice())
         }
