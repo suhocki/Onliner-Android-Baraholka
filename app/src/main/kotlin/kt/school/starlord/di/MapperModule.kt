@@ -49,23 +49,6 @@ val mapperModule = module {
                         isPaid = value.isPaid,
                         subcategoryName = value.subcategoryName
                     )
-            },
-            object : BaseConverter<Product, RoomProduct>(Product::class.java, RoomProduct::class.java) {
-                override fun convert(value: Product) =
-                    RoomProduct(
-                        id = value.id,
-                        title = value.title,
-                        description = value.description,
-                        type = value.type,
-                        location = value.location,
-                        image = value.image,
-                        owner = value.owner,
-                        price = value.price,
-                        lastUpdate = value.lastUpdate,
-                        commentsCount = value.commentsCount,
-                        isPaid = value.isPaid,
-                        subcategoryName = value.subcategoryName
-                    )
             }
         )
 
