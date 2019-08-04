@@ -9,9 +9,9 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.verify
-import java.lang.reflect.Field
 import org.junit.Test
 import timber.log.Timber
+import java.lang.reflect.Field
 
 class AndroidExtensionsKtTest {
 
@@ -38,6 +38,24 @@ class AndroidExtensionsKtTest {
             declaredField.isAccessible = true
             declaredField.set(inputMethodManager, null)
         }
+    }
+
+    @Test
+    fun `fix input manager memory leak failure`() {
+        // Given
+        val activity: Activity = mockk()
+        val error = Throwable()
+
+        mockkStatic("kt.school.starlord.extension.ReflectExtensionsKt")
+        mockkStatic(Timber::class)
+
+        every { activity.getSystemService(Context.INPUT_METHOD_SERVICE) } throws error
+
+        // When
+        activity.fixIMMLeak()
+
+        // Then
+        verify { Timber.e(error) }
     }
 
     @Test
