@@ -27,6 +27,7 @@ data class RoomSubcategory(
     val link: String
 ) {
     companion object {
+        const val NAME = "name"
         const val CATEGORY_NAME = "categoryName"
     }
 }

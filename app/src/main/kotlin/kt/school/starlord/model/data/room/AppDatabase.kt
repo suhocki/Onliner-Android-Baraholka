@@ -2,9 +2,15 @@ package kt.school.starlord.model.data.room
 
 import androidx.room.Database
 import androidx.room.RoomDatabase
+import androidx.room.TypeConverters
+import kt.school.starlord.model.data.room.converter.ProductOwnerConverter
+import kt.school.starlord.model.data.room.converter.ProductPriceConverter
+import kt.school.starlord.model.data.room.converter.ProductTypeConverter
 import kt.school.starlord.model.data.room.dao.CategoryDao
+import kt.school.starlord.model.data.room.dao.ProductDao
 import kt.school.starlord.model.data.room.dao.SubcategoryDao
 import kt.school.starlord.model.data.room.entity.RoomCategory
+import kt.school.starlord.model.data.room.entity.RoomProduct
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
 
 /**
@@ -14,8 +20,14 @@ import kt.school.starlord.model.data.room.entity.RoomSubcategory
     version = AppDatabase.DATABASE_VERSION,
     entities = [
         RoomCategory::class,
-        RoomSubcategory::class
+        RoomSubcategory::class,
+        RoomProduct::class
     ]
+)
+@TypeConverters(
+    ProductTypeConverter::class,
+    ProductOwnerConverter::class,
+    ProductPriceConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
     /**
@@ -28,8 +40,13 @@ abstract class AppDatabase : RoomDatabase() {
      */
     abstract fun subcategoryDao(): SubcategoryDao
 
+    /**
+     * Provides access to ProductDao.
+     */
+    abstract fun productDao(): ProductDao
+
     companion object {
-        const val DATABASE_VERSION = 1
+        const val DATABASE_VERSION = 2
     }
 
     /**
@@ -38,5 +55,6 @@ abstract class AppDatabase : RoomDatabase() {
     object Table {
         const val CATEGORIES = "Categories"
         const val SUBCATEGORIES = "Subcategories"
+        const val PRODUCTS = "Products"
     }
 }

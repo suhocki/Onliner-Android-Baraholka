@@ -82,8 +82,8 @@ android {
                 }
 
                 proguardFiles(
-                    getDefaultProguardFile("proguard-android-optimize.txt"),
-                    file("proguard-rules.pro")
+                    *file("$projectDir/proguard/libs").listFiles()!!,
+                    file("$projectDir/proguard/proguard-rules.pro")
                 )
             }
         }
@@ -172,11 +172,9 @@ play {
 }
 
 dependencies {
-    val kotlinxVersion = "1.2.1"
     val lifecycleVersion = "2.2.0-alpha01"
     val navigationVersion = "2.1.0-alpha04"
     val koinVersion = "2.0.1"
-    val ankoVersion = "0.10.8"
     val leakCanaryVersion = "2.0-alpha-2"
     val roomVersion = "2.1.0"
     val appcompatVersion = "1.1.0-beta01"
@@ -185,11 +183,13 @@ dependencies {
     val glideVersion = "4.9.0"
     val espressoVersion = "3.3.0-alpha02"
     val junitVersion = "1.1.2-alpha01"
+    val moshiVersion = "1.8.0"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$kotlinxVersion")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:$kotlinxVersion")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-RC")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0-RC")
+    implementation("org.jetbrains.kotlin:kotlin-reflect:${KotlinCompilerVersion.VERSION}")
     implementation("androidx.core:core-ktx:1.2.0-alpha02")
     implementation("androidx.appcompat:appcompat:$appcompatVersion")
     implementation("com.google.android.material:material:1.1.0-alpha09")
@@ -205,10 +205,6 @@ dependencies {
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
-    // Anko
-    implementation("org.jetbrains.anko:anko:$ankoVersion")
-    implementation("org.jetbrains.anko:anko-sdk25-coroutines:$ankoVersion")
-    implementation("org.jetbrains.anko:anko-appcompat-v7-coroutines:$ankoVersion")
     // Koin
     implementation("org.koin:koin-core:$koinVersion")
     implementation("org.koin:koin-androidx-scope:$koinVersion")
@@ -217,9 +213,11 @@ dependencies {
     implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
     // Log
     implementation("com.jakewharton.timber:timber:4.7.1")
+    // Parsing
+    implementation("com.squareup.moshi:moshi-kotlin:$moshiVersion")
+    implementation("org.jsoup:jsoup:1.12.1")
 
     implementation("com.github.bumptech.glide:glide:$glideVersion")
-    implementation("org.jsoup:jsoup:1.12.1")
 
     // Find memory leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
@@ -229,7 +227,7 @@ dependencies {
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-android:$mockkVersion")
     testImplementation("org.koin:koin-test:$koinVersion")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:$kotlinxVersion")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1")
     testImplementation("org.robolectric:robolectric:4.3")
     testImplementation("androidx.arch.core:core-testing:2.1.0-rc01")
     testImplementation("androidx.room:room-testing:$roomVersion")
@@ -258,6 +256,7 @@ dependencies {
     kapt("androidx.lifecycle:lifecycle-compiler:$lifecycleVersion")
     kapt("androidx.room:room-compiler:$roomVersion")
     kapt("com.github.bumptech.glide:compiler:$glideVersion")
+    kapt("com.squareup.moshi:moshi-kotlin-codegen:$moshiVersion")
 }
 
 // region Gradle Tasks

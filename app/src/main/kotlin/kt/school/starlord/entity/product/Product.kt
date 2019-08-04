@@ -1,13 +1,14 @@
 package kt.school.starlord.entity.product
 
-import kt.school.starlord.entity.ProductOwner
-
 /**
  * Entity for RecyclerView at ProductsFragment.
- * Can represents not only products but services
+ * Can represents not only products but services.
+ *
+ * @param isPaid product is premium item. Should be located in the top of the list.
  */
 data class Product(
     val id: Long,
+    val subcategoryName: String,
     val title: String,
     val description: String,
     val type: ProductType,

@@ -1,6 +1,7 @@
 package kt.school.starlord.model.data.room
 
 import kt.school.starlord.model.data.room.dao.CategoryDao
+import kt.school.starlord.model.data.room.dao.ProductDao
 import kt.school.starlord.model.data.room.dao.SubcategoryDao
 
 /**
@@ -8,5 +9,6 @@ import kt.school.starlord.model.data.room.dao.SubcategoryDao
  */
 data class DaoManager(
     val categoryDao: CategoryDao,
-    val subcategoryDao: SubcategoryDao
+    val subcategoryDao: SubcategoryDao,
+    val productDao: ProductDao
 )

@@ -10,9 +10,9 @@ import kt.school.starlord.domain.repository.ProductsRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.entity.CategoriesWithSubcategories
 import kt.school.starlord.entity.Category
-import kt.school.starlord.entity.ProductOwner
 import kt.school.starlord.entity.Subcategory
 import kt.school.starlord.entity.product.Product
+import kt.school.starlord.entity.product.ProductOwner
 import kt.school.starlord.entity.product.ProductPrice
 import kt.school.starlord.entity.product.ProductType
 
@@ -72,6 +72,7 @@ class MockRepository : CategoriesRepository,
         listOf(
             Product(
                 22175010,
+                "subcategoryName",
                 "Куплю компактный диван",
                 "Куплю компактный диван. Например, как Ikea Свэнста, но более надежный и не разъезжающийся. Можно не раскладывающийся. Ваша доставка в район метро Партизанская.",
                 ProductType.BUY,
@@ -85,6 +86,7 @@ class MockRepository : CategoriesRepository,
             ),
             Product(
                 22684921,
+                "subcategoryName",
                 "Диван-кровать Лагуна",
                 "Продаем в связи с переездом. 8029593****. Самовывоз с ул.Кольцова.",
                 ProductType.SELL,
@@ -97,6 +99,7 @@ class MockRepository : CategoriesRepository,
             ),
             Product(
                 23028259,
+                "subcategoryName",
                 "Кресло-качалка из ротанга",
                 "Обмен кресла-качалки из ротанга. Состояние нового. 8-029-113-**-** Лена",
                 ProductType.EXCHANGE,
@@ -109,6 +112,7 @@ class MockRepository : CategoriesRepository,
             ),
             Product(
                 23082929,
+                "subcategoryName",
                 "Покос травы, стрижка газона",
                 "Покос травы, бурьяна, стрижка газона. Быстро и качественно. Покос травы от 5р. Стрижка от 4р. Примеры работ:",
                 ProductType.SERVICE,
@@ -121,6 +125,7 @@ class MockRepository : CategoriesRepository,
             ),
             Product(
                 22917475,
+                "subcategoryName",
                 "iPhone 5S 16Gb Grey сост отл, не рев, хор комплект",
                 "iPhone 5S 16Gb Grey сост отличное, без Touch Id, не рев. Телефон сзади под пленкой, спереди ни единой царапины, батарея держит отлично. В комплекте отдаю оригинальный кубик м переходником, ориг провод и ориг наушники. Из облака вышел. 8-025-934-**-**",
                 ProductType.RENT,
@@ -133,6 +138,7 @@ class MockRepository : CategoriesRepository,
             ),
             Product(
                 22917475,
+                "subcategoryName",
                 "Офисное кресло",
                 "Продам офисное кожаное кресло. б.у. Неполадки с механизмом качается назад-вперёд, влево-вправо - без фиксации. Нужно разбираться с механизмом! 8029-566-**-** (МТС)",
                 ProductType.CLOSED,

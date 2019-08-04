@@ -59,7 +59,7 @@ before_script:
   - export AUTHOR_NAME="$(curl -H "Authorization:token ${github_comment_bot_api_key}" -X GET "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}" | jq .user.login | cut -d '"' -f2)"
 
 script:
-  - ./gradlew check detekt assemble jacocoTestReport
+  - ./gradlew ktlintCheck detekt assembleDebug assembleRelease testDebug jacocoTestReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
