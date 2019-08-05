@@ -16,7 +16,7 @@ class DocumentToCategoriesWithSubcategoriesConverterTest : AutoCloseKoinTest() {
     fun `convert document to categories with subcategories`() {
         // Given
         val assets = InstrumentationRegistry.getInstrumentation().context.assets
-        val inputStream = assets.open("html/categories_with_subcategories.html")
+        val inputStream = assets.open("html/categories_with_subcategories.html.test")
         val document = Jsoup.parse(inputStream, "UTF-8", "")
 
         // When

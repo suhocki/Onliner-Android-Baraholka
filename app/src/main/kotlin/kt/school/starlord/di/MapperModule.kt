@@ -1,11 +1,13 @@
 package kt.school.starlord.di
 
-import kt.school.starlord.entity.Category
-import kt.school.starlord.entity.Subcategory
+import kt.school.starlord.entity.category.Category
 import kt.school.starlord.entity.product.Product
+import kt.school.starlord.entity.product.ProductWithSubcategoryName
+import kt.school.starlord.entity.subcategory.Subcategory
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.mapper.converter.DocumentToCategoriesWithSubcategoriesConverter
 import kt.school.starlord.model.data.mapper.converter.DocumentToProductsListConverter
+import kt.school.starlord.model.data.mapper.converter.StringToUrlConverter
 import kt.school.starlord.model.data.mapper.entity.BaseConverter
 import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomProduct
@@ -20,6 +22,7 @@ val mapperModule = module {
         val converters = setOf(
             DocumentToCategoriesWithSubcategoriesConverter(),
             DocumentToProductsListConverter(),
+            StringToUrlConverter(),
             object : BaseConverter<RoomCategory, Category>(RoomCategory::class.java, Category::class.java) {
                 override fun convert(value: RoomCategory) = Category(value.name)
             },
@@ -29,7 +32,12 @@ val mapperModule = module {
             },
             object : BaseConverter<RoomSubcategory, Subcategory>(RoomSubcategory::class.java, Subcategory::class.java) {
                 override fun convert(value: RoomSubcategory) =
-                    Subcategory(value.name, value.categoryName, value.count, value.link)
+                    Subcategory(
+                        value.name,
+                        value.categoryName,
+                        value.count,
+                        value.link
+                    )
             },
             object : BaseConverter<Subcategory, RoomSubcategory>(Subcategory::class.java, RoomSubcategory::class.java) {
                 override fun convert(value: Subcategory) =
@@ -48,9 +56,30 @@ val mapperModule = module {
                         price = value.price,
                         lastUpdate = value.lastUpdate,
                         commentsCount = value.commentsCount,
-                        isPaid = value.isPaid,
-                        subcategoryName = value.subcategoryName
+                        isPaid = value.isPaid
                     )
+            },
+            object : BaseConverter<ProductWithSubcategoryName, RoomProduct>(
+                ProductWithSubcategoryName::class.java,
+                RoomProduct::class.java
+            ) {
+                override fun convert(value: ProductWithSubcategoryName): RoomProduct {
+                    val product = value.product
+                    return RoomProduct(
+                        id = product.id,
+                        subcategoryName = value.subcategoryName,
+                        title = product.title,
+                        description = product.description,
+                        type = product.type,
+                        location = product.location,
+                        image = product.image,
+                        owner = product.owner,
+                        price = product.price,
+                        lastUpdate = product.lastUpdate,
+                        commentsCount = product.commentsCount,
+                        isPaid = product.isPaid
+                    )
+                }
             }
         )
 

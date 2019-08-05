@@ -8,9 +8,7 @@ import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.model.data.room.AppDatabase
 import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.repository.database.DatabaseRepository
-import kt.school.starlord.model.repository.mock.MockRepository
 import org.koin.android.ext.koin.androidContext
-import org.koin.dsl.bind
 import org.koin.dsl.binds
 import org.koin.dsl.module
 
@@ -38,8 +36,7 @@ val databaseModule = module {
 
     single { DatabaseRepository(get(), get()) } binds arrayOf(
         SubcategoriesRepository::class,
-        CategoriesRepository::class
+        CategoriesRepository::class,
+        ProductsRepository::class
     )
-
-    single { MockRepository() } bind ProductsRepository::class
 }

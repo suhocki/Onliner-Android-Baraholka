@@ -4,7 +4,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import kt.school.starlord.domain.repository.SubcategoriesRepository
-import kt.school.starlord.entity.Subcategory
+import kt.school.starlord.entity.subcategory.Subcategory
 
 /**
  * Contains logic with fetching subcategories asynchronously.

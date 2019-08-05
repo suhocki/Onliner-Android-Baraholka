@@ -137,6 +137,10 @@ android {
     lintOptions.isWarningsAsErrors = true
 }
 
+androidExtensions {
+    isExperimental = true
+}
+
 staticAnalysis {
     penalty {
         maxErrors = 0

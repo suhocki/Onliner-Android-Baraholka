@@ -5,12 +5,14 @@ import androidx.lifecycle.map
 import kt.school.starlord.domain.repository.CategoriesRepository
 import kt.school.starlord.domain.repository.ProductsRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
-import kt.school.starlord.entity.Category
-import kt.school.starlord.entity.Subcategory
+import kt.school.starlord.entity.category.Category
 import kt.school.starlord.entity.product.Product
+import kt.school.starlord.entity.product.ProductWithSubcategoryName
+import kt.school.starlord.entity.subcategory.Subcategory
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.data.room.entity.RoomCategory
+import kt.school.starlord.model.data.room.entity.RoomProduct
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
 
 /**
@@ -47,5 +49,12 @@ class DatabaseRepository(
         return daoManager.productDao.getProducts(subcategoryName).map { roomProducts ->
             roomProducts.map { mapper.map<Product>(it) }
         }
+    }
+
+    override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {
+        val roomProducts = products.map {
+            mapper.map<RoomProduct>(ProductWithSubcategoryName(it, subcategoryName))
+        }
+        daoManager.productDao.replaceAll(subcategoryName, roomProducts)
     }
 }

@@ -1,7 +1,7 @@
 package kt.school.starlord.model.data.mapper.converter
 
-import kt.school.starlord.entity.ProductOwner
 import kt.school.starlord.entity.product.Product
+import kt.school.starlord.entity.product.ProductOwner
 import kt.school.starlord.entity.product.ProductPrice
 import kt.school.starlord.entity.product.ProductType
 import kt.school.starlord.entity.product.ProductsList

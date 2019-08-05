@@ -1,6 +1,6 @@
 package kt.school.starlord.domain.repository
 
-import kt.school.starlord.entity.product.ProductsList
+import kt.school.starlord.entity.product.Product
 
 /**
  * Defines access methods for products.
@@ -8,9 +8,9 @@ import kt.school.starlord.entity.product.ProductsList
 interface ProductsListRepository {
 
     /**
-     * Loads data that represents products list by subcategory name and product response by product type.
+     * Loads data that represents products list by subcategory link.
      *
      * @return products
      */
-    suspend fun getProducts(link: String): ProductsList
+    suspend fun getProducts(link: String): List<Product>
 }

@@ -1,6 +1,6 @@
 package kt.school.starlord.domain.repository
 
-import kt.school.starlord.entity.CategoriesWithSubcategories
+import kt.school.starlord.entity.category.CategoriesWithSubcategories
 
 /**
  * Defines access methods for objects representing pairs of categories with subcategories.

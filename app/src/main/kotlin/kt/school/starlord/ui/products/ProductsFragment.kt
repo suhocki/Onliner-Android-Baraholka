@@ -24,7 +24,7 @@ class ProductsFragment : Fragment() {
 
     private val viewModel: ProductsViewModel by viewModel(parameters = {
         val safeArgs = ProductsFragmentArgs.fromBundle(requireArguments())
-        parametersOf(safeArgs.subcategoryName)
+        parametersOf(safeArgs.subcategory)
     })
     private val progressSnackbar: ProgressSnackbar by inject(parameters = { parametersOf(requireActivity()) })
     private val errorSnackbar: ErrorSnackbar by inject(parameters = { parametersOf(requireActivity()) })

@@ -40,7 +40,7 @@
         tools:layout="@layout/fragment_products">
 
         <argument
-            android:name="subcategoryName"
-            app:argType="string" />
+            android:name="subcategory"
+            app:argType="kt.school.starlord.entity.subcategory.Subcategory" />
     </fragment>
 </navigation>

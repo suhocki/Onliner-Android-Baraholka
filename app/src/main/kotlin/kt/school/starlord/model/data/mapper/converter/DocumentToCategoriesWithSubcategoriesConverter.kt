@@ -1,8 +1,8 @@
 package kt.school.starlord.model.data.mapper.converter
 
-import kt.school.starlord.entity.CategoriesWithSubcategories
-import kt.school.starlord.entity.Category
-import kt.school.starlord.entity.Subcategory
+import kt.school.starlord.entity.category.CategoriesWithSubcategories
+import kt.school.starlord.entity.category.Category
+import kt.school.starlord.entity.subcategory.Subcategory
 import kt.school.starlord.model.data.mapper.entity.BaseConverter
 import org.jsoup.nodes.Document
 

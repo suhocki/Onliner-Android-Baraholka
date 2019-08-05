@@ -3,13 +3,14 @@ package kt.school.starlord.ui.products
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
+import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
 import kt.school.starlord.domain.repository.ProductsListRepository
+import kt.school.starlord.domain.repository.ProductsRepository
 import kt.school.starlord.domain.system.viewmodel.ErrorEmitter
 import kt.school.starlord.domain.system.viewmodel.ProgressEmitter
 import kt.school.starlord.entity.product.Product
+import kt.school.starlord.entity.subcategory.Subcategory
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 
@@ -19,21 +20,31 @@ import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 class ProductsViewModel(
     private val progressFeature: ProgressViewModelFeature,
     private val errorFeature: ErrorViewModelFeature,
-    productsRepository: ProductsListRepository,
-    link: String
+    private val productsListRepository: ProductsListRepository,
+    private val productsRepository: ProductsRepository,
+    private val subcategory: Subcategory
 ) : ViewModel(), ProgressEmitter by progressFeature, ErrorEmitter by errorFeature {
+
     private val products = MutableLiveData<List<Product>>()
 
     init {
-        GlobalScope.launch(Dispatchers.Main) {
-            products.setValue(
-                productsRepository.getProducts(link).products
-            )
-        }
+        productsRepository.getProducts(subcategory.name).observeForever(products::setValue)
+        refreshData()
     }
 
     /**
      * Use for observing products.
      */
     fun getProducts(): LiveData<List<Product>> = products
+
+    private fun refreshData() {
+        viewModelScope.launch {
+            progressFeature.showProgress(true)
+
+            runCatching { productsListRepository.getProducts(subcategory.link) }
+                .fold({ productsRepository.updateProducts(subcategory.name, it) }, errorFeature::showError)
+
+            progressFeature.showProgress(false)
+        }
+    }
 }
