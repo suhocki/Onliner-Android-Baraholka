@@ -20,15 +20,15 @@ import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 class ProductsViewModel(
     private val progressFeature: ProgressViewModelFeature,
     private val errorFeature: ErrorViewModelFeature,
-    private val productsListRepository: ProductsListRepository,
-    private val productsRepository: ProductsRepository,
+    private val networkRepository: ProductsListRepository,
+    private val databaseRepository: ProductsRepository,
     private val subcategory: Subcategory
 ) : ViewModel(), ProgressEmitter by progressFeature, ErrorEmitter by errorFeature {
 
     private val products = MutableLiveData<List<Product>>()
 
     init {
-        productsRepository.getProducts(subcategory.name).observeForever(products::setValue)
+        databaseRepository.getProducts(subcategory.name).observeForever(products::setValue)
         refreshData()
     }
 
@@ -41,8 +41,8 @@ class ProductsViewModel(
         viewModelScope.launch {
             progressFeature.showProgress(true)
 
-            runCatching { productsListRepository.getProducts(subcategory.link) }
-                .fold({ productsRepository.updateProducts(subcategory.name, it) }, errorFeature::showError)
+            runCatching { networkRepository.getProducts(subcategory.link) }
+                .fold({ databaseRepository.updateProducts(subcategory.name, it) }, errorFeature::showError)
 
             progressFeature.showProgress(false)
         }
