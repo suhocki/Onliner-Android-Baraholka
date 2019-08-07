@@ -9,11 +9,11 @@ if [[ "$TRAVIS_PULL_REQUEST" != "false" ]] ; then
 
     commentId=$(curl -H "Authorization:token ${github_comment_bot_api_key}" -X GET "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments" | jq "map(select(.user.id == ${GITHUB_BOT_ID})) | first | .id")
 
-    message="{\"body\":\"Build successful. [Output artifacts](https://drive.google.com/uc?id=${FILE_ID}&export=download)\"}"
+    message="Build successful. [Output artifacts](https://drive.google.com/uc?id=${FILE_ID}&export=download)"
 
     if [[ "$commentId" != "null" ]] ; then
         curl -H "Authorization:token ${github_comment_bot_api_key}" -X PATCH -d "{\"body\":\"${message}\"}" "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/comments/${commentId}"
     else
-        curl -H "Authorization:token ${github_comment_bot_api_key}" -X POST -d ${message} "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
+        curl -H "Authorization:token ${github_comment_bot_api_key}" -X POST -d "{\"body\":\"${message}\"}" "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}/comments"
     fi
 fi
