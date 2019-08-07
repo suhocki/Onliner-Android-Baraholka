@@ -2,7 +2,6 @@
 
 if [[ "$TRAVIS_PULL_REQUEST" != "false" ]] ; then
 BOT_URL="https://api.telegram.org/bot${telegram_bot_token}/sendMessage"
-GITHUB_BOT_ID=49678291
 
 PARSE_MODE="Markdown"
 
