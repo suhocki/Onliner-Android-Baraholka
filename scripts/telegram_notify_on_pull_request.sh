@@ -2,7 +2,6 @@
 
 if [[ "$TRAVIS_PULL_REQUEST" != "false" ]] ; then
 BOT_URL="https://api.telegram.org/bot${telegram_bot_token}/sendMessage"
-GITHUB_BOT_ID=49678291
 
 PARSE_MODE="Markdown"
 
@@ -21,7 +20,6 @@ if [[ "$githubBotCommentsCount" -gt 0 ]]; then
     else
     send_msg "
     Code-review time!
-
     Guys, take a moment to review [pull request](https://github.com/${TRAVIS_REPO_SLUG}/pull/${TRAVIS_PULL_REQUEST}) made by @${AUTHOR_NAME}, please.
     "
 fi

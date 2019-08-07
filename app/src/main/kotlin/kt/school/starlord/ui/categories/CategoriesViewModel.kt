@@ -10,8 +10,8 @@ import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepositor
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.domain.system.viewmodel.ErrorEmitter
 import kt.school.starlord.domain.system.viewmodel.ProgressEmitter
-import kt.school.starlord.entity.CategoriesWithSubcategories
-import kt.school.starlord.entity.Category
+import kt.school.starlord.entity.category.CategoriesWithSubcategories
+import kt.school.starlord.entity.category.Category
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 

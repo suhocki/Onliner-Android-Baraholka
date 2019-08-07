@@ -8,7 +8,6 @@ package kt.school.starlord.entity.product
  */
 data class Product(
     val id: Long,
-    val subcategoryName: String,
     val title: String,
     val description: String,
     val type: ProductType,

@@ -17,13 +17,14 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.android.synthetic.main.fragment_subcategories.*
-import kt.school.starlord.entity.Subcategory
+import kt.school.starlord.entity.subcategory.Subcategory
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.test.AutoCloseKoinTest
 import org.koin.test.mock.declare
+import org.mockito.ArgumentMatchers.anyString
 
 @RunWith(AndroidJUnit4::class)
 class SubcategoriesFragmentTest : AutoCloseKoinTest() {
@@ -44,11 +45,11 @@ class SubcategoriesFragmentTest : AutoCloseKoinTest() {
     fun `navigate to products`() {
         // Given
         val subcategoryName = "subcategoryName"
-        val subcategories = MutableLiveData(listOf(Subcategory(subcategoryName, "", 0, "")))
+        val subcategory = Subcategory(subcategoryName, anyString(), 0, anyString())
         val navController: NavController = mockk(relaxUnitFun = true)
         mockkStatic(NavHostFragment::class)
 
-        every { viewModel.getSubcategories() } returns subcategories
+        every { viewModel.getSubcategories() } returns MutableLiveData(listOf(subcategory))
         every { NavHostFragment.findNavController(any()) } returns navController
 
         // When
@@ -64,7 +65,7 @@ class SubcategoriesFragmentTest : AutoCloseKoinTest() {
 
             val arguments = direction.captured.arguments
             val keys = arguments.keySet()
-            assert(keys.any { arguments.getString(it) == subcategoryName })
+            assert(keys.any { arguments.getParcelable<Subcategory>(it) == subcategory })
         }
     }
 

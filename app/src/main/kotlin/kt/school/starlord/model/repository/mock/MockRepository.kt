@@ -8,13 +8,13 @@ import kt.school.starlord.domain.repository.CategoriesRepository
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
 import kt.school.starlord.domain.repository.ProductsRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
-import kt.school.starlord.entity.CategoriesWithSubcategories
-import kt.school.starlord.entity.Category
-import kt.school.starlord.entity.Subcategory
+import kt.school.starlord.entity.category.CategoriesWithSubcategories
+import kt.school.starlord.entity.category.Category
 import kt.school.starlord.entity.product.Product
 import kt.school.starlord.entity.product.ProductOwner
 import kt.school.starlord.entity.product.ProductPrice
 import kt.school.starlord.entity.product.ProductType
+import kt.school.starlord.entity.subcategory.Subcategory
 
 /**
  * Repository that contains fake (mocked) data from all application data sources.
@@ -47,19 +47,44 @@ class MockRepository : CategoriesRepository,
 
     override fun getSubcategories(categoryName: String) = MutableLiveData(
         listOf(
-            Subcategory("Шкафы. Комоды. Горки. Секции. Полки", categoryName, 3388, ""),
+            Subcategory(
+                "Шкафы. Комоды. Горки. Секции. Полки",
+                categoryName,
+                3388,
+                ""
+            ),
             Subcategory("Диваны. Кресла. Мягкая мебель", categoryName, 8962, ""),
             Subcategory("Столы. Стулья. Тумбы", categoryName, 2575, ""),
-            Subcategory("Кровати. Матрасы. Мебель для спальни", categoryName, 2740, ""),
+            Subcategory(
+                "Кровати. Матрасы. Мебель для спальни",
+                categoryName,
+                2740,
+                ""
+            ),
             Subcategory("Кухни и кухонная мебель", categoryName, 2976, ""),
             Subcategory("Мебель для детской комнаты", categoryName, 4059, ""),
             Subcategory("Мебель для ванной", categoryName, 1904, ""),
             Subcategory("Офисная мебель", categoryName, 4704, ""),
             Subcategory("Элементы интерьера. Дизайн.", categoryName, 17044, ""),
-            Subcategory("Постельное белье и принадлежности", categoryName, 11112, ""),
-            Subcategory("Посуда и кухонные принадлежности", categoryName, 638, ""),
+            Subcategory(
+                "Постельное белье и принадлежности",
+                categoryName,
+                11112,
+                ""
+            ),
+            Subcategory(
+                "Посуда и кухонные принадлежности",
+                categoryName,
+                638,
+                ""
+            ),
             Subcategory("Бытовая техника.", categoryName, 2842, ""),
-            Subcategory("Бытовая техника: ремонт, подключение и другие услуги", categoryName, 423, "")
+            Subcategory(
+                "Бытовая техника: ремонт, подключение и другие услуги",
+                categoryName,
+                423,
+                ""
+            )
         )
     )
 
@@ -72,7 +97,6 @@ class MockRepository : CategoriesRepository,
         listOf(
             Product(
                 22175010,
-                "subcategoryName",
                 "Куплю компактный диван",
                 "Куплю компактный диван. Например, как Ikea Свэнста, но более надежный и не разъезжающийся. Можно не раскладывающийся. Ваша доставка в район метро Партизанская.",
                 ProductType.BUY,
@@ -86,7 +110,6 @@ class MockRepository : CategoriesRepository,
             ),
             Product(
                 22684921,
-                "subcategoryName",
                 "Диван-кровать Лагуна",
                 "Продаем в связи с переездом. 8029593****. Самовывоз с ул.Кольцова.",
                 ProductType.SELL,
@@ -99,7 +122,6 @@ class MockRepository : CategoriesRepository,
             ),
             Product(
                 23028259,
-                "subcategoryName",
                 "Кресло-качалка из ротанга",
                 "Обмен кресла-качалки из ротанга. Состояние нового. 8-029-113-**-** Лена",
                 ProductType.EXCHANGE,
@@ -112,7 +134,6 @@ class MockRepository : CategoriesRepository,
             ),
             Product(
                 23082929,
-                "subcategoryName",
                 "Покос травы, стрижка газона",
                 "Покос травы, бурьяна, стрижка газона. Быстро и качественно. Покос травы от 5р. Стрижка от 4р. Примеры работ:",
                 ProductType.SERVICE,
@@ -125,7 +146,6 @@ class MockRepository : CategoriesRepository,
             ),
             Product(
                 22917475,
-                "subcategoryName",
                 "iPhone 5S 16Gb Grey сост отл, не рев, хор комплект",
                 "iPhone 5S 16Gb Grey сост отличное, без Touch Id, не рев. Телефон сзади под пленкой, спереди ни единой царапины, батарея держит отлично. В комплекте отдаю оригинальный кубик м переходником, ориг провод и ориг наушники. Из облака вышел. 8-025-934-**-**",
                 ProductType.RENT,
@@ -138,7 +158,6 @@ class MockRepository : CategoriesRepository,
             ),
             Product(
                 22917475,
-                "subcategoryName",
                 "Офисное кресло",
                 "Продам офисное кожаное кресло. б.у. Неполадки с механизмом качается назад-вперёд, влево-вправо - без фиксации. Нужно разбираться с механизмом! 8029-566-**-** (МТС)",
                 ProductType.CLOSED,
@@ -151,4 +170,6 @@ class MockRepository : CategoriesRepository,
             )
         )
     )
+
+    override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {}
 }

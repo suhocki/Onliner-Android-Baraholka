@@ -8,24 +8,23 @@ import org.junit.runner.RunWith
 import org.koin.test.AutoCloseKoinTest
 
 @RunWith(AndroidJUnit4::class)
-class DocumentToCategoriesWithSubcategoriesConverterTest : AutoCloseKoinTest() {
+class DocumentToProductConverterTest : AutoCloseKoinTest() {
 
-    private val converter = DocumentToCategoriesWithSubcategoriesConverter()
+    private val converter = DocumentToProductsListConverter()
 
     @Test
-    fun `convert document to categories with subcategories`() {
+    fun `convert document to products`() {
         // Given
         val assets = InstrumentationRegistry.getInstrumentation().context.assets
-        val inputStream = assets.open("html/categories_with_subcategories.html.test")
+        val inputStream = assets.open("html/products.html.test")
         val document = Jsoup.parse(inputStream, "UTF-8", "")
 
         // When
-        val categoriesWithSubcategories = converter.convert(document)
+        val productsList = converter.convert(document)
 
         // Then
-        with(categoriesWithSubcategories) {
-            assert(categories.size == 25)
-            assert(subcategories.size == 228)
+        with(productsList) {
+            assert(products.size == 62)
         }
     }
 }

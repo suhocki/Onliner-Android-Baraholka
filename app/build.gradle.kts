@@ -137,6 +137,10 @@ android {
     lintOptions.isWarningsAsErrors = true
 }
 
+androidExtensions {
+    isExperimental = true
+}
+
 staticAnalysis {
     penalty {
         maxErrors = 0
@@ -286,15 +290,6 @@ val fetchScreenshotsTask = task("fetchScreenshotsTask", Exec::class) {
 }
 
 tasks {
-    withType<JacocoCoverageVerification> {
-        violationRules {
-            rule {
-                limit {
-                    minimum = "0.52".toBigDecimal()
-                }
-            }
-        }
-    }
     whenTaskAdded {
         if (name == "connectedDebugAndroidTest") {
             finalizedBy(fetchScreenshotsTask)

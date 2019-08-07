@@ -9,7 +9,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import kt.school.starlord.di.mapperModule
-import kt.school.starlord.entity.Category
+import kt.school.starlord.entity.category.Category
+import kt.school.starlord.entity.product.Product
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.data.room.entity.RoomCategory
@@ -144,21 +145,71 @@ class DatabaseRepositoryTest : AutoCloseKoinTest() {
     fun `get products`() {
         // Given
         val subcategoryName = anyString()
-        val roomProducts = listOf(
-            RoomProduct(1, subcategoryName, "", "", mockk(), "", "", mockk(), mockk(), "", 0, false),
-            RoomProduct(2, subcategoryName, "", "", mockk(), "", "", mockk(), mockk(), "", 0, false)
+        val roomProducts = listOf<RoomProduct>(
+            mockk(relaxed = true),
+            mockk(relaxed = true)
         )
 
-        every { daoManager.productDao.getProducts(subcategoryName) } returns MutableLiveData(roomProducts)
+        every { daoManager.productDao.getProducts(subcategoryName) } returns MutableLiveData(
+            roomProducts
+        )
 
         // When
         val liveData = roomRepository.getProducts(subcategoryName)
 
         // Then
-        liveData.observeForTesting {
-            assert(it.size == 2)
-            assert(it[0].id == 1L)
-            assert(it[1].id == 2L)
+        liveData.observeForTesting { products ->
+
+            assert(products.all { actualProduct ->
+                val indexOfProduct = products.indexOf(actualProduct)
+                val product = products[indexOfProduct]
+
+                product.id == actualProduct.id &&
+                        product.title == actualProduct.title &&
+                        product.description == actualProduct.description &&
+                        product.type == actualProduct.type &&
+                        product.location == actualProduct.location &&
+                        product.image == actualProduct.image &&
+                        product.owner == actualProduct.owner &&
+                        product.price == actualProduct.price &&
+                        product.lastUpdate == actualProduct.lastUpdate &&
+                        product.commentsCount == actualProduct.commentsCount &&
+                        product.isPaid == actualProduct.isPaid
+            })
         }
+    }
+
+    @Test
+    fun `update products`() = testCoroutineRule.runBlockingTest {
+        // Given
+        val subcategoryName = anyString()
+        val product1: Product = mockk(relaxed = true)
+        val product2: Product = mockk(relaxed = true)
+        val products = listOf(product1, product2)
+        val slot = slot<List<RoomProduct>>()
+
+        coEvery { daoManager.productDao.replaceAll(subcategoryName, capture(slot)) } coAnswers { Unit }
+
+        // When
+        roomRepository.updateProducts(subcategoryName, products)
+
+        // Then
+        assert(slot.isCaptured)
+        assert(slot.captured.all { roomProduct ->
+            val indexOfRoomProduct = slot.captured.indexOf(roomProduct)
+            val product = products[indexOfRoomProduct]
+
+            roomProduct.subcategoryName == subcategoryName &&
+                    roomProduct.title == product.title &&
+                    roomProduct.description == product.description &&
+                    roomProduct.type == product.type &&
+                    roomProduct.location == product.location &&
+                    roomProduct.image == product.image &&
+                    roomProduct.owner == product.owner &&
+                    roomProduct.price == product.price &&
+                    roomProduct.lastUpdate == product.lastUpdate &&
+                    roomProduct.commentsCount == product.commentsCount &&
+                    roomProduct.isPaid == product.isPaid
+        })
     }
 }

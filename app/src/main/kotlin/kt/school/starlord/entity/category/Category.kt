@@ -1,4 +1,4 @@
-package kt.school.starlord.entity
+package kt.school.starlord.entity.category
 
 /**
  * Entity that appears on CategoryFragment.

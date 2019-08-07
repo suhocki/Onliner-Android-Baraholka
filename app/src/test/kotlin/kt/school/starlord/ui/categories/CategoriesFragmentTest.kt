@@ -19,7 +19,7 @@ import io.mockk.verify
 import kotlinx.android.synthetic.main.fragment_categories.*
 import kt.school.starlord.domain.system.view.ErrorSnackbar
 import kt.school.starlord.domain.system.view.ProgressSnackbar
-import kt.school.starlord.entity.Category
+import kt.school.starlord.entity.category.Category
 import kt.school.starlord.ui.global.AppRecyclerAdapter
 import org.junit.Before
 import org.junit.Test
@@ -140,7 +140,10 @@ class CategoriesFragmentTest : AutoCloseKoinTest() {
     fun `show categories`() {
         // Given
         mockkConstructor(AppRecyclerAdapter::class)
-        val categories = listOf(Category(anyString()), Category(anyString()))
+        val categories = listOf(
+            Category(anyString()),
+            Category(anyString())
+        )
         every { viewModel.getCategories() } returns MutableLiveData(categories)
         scenario.moveToState(Lifecycle.State.CREATED)
 

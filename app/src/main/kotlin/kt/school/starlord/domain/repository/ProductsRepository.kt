@@ -14,4 +14,9 @@ interface ProductsRepository {
      * @return products
      */
     fun getProducts(subcategoryName: String): LiveData<List<Product>>
+
+    /**
+     * Deletes existing products of selected subcategoryName and puts a new ones.
+     */
+    suspend fun updateProducts(subcategoryName: String, products: List<Product>)
 }

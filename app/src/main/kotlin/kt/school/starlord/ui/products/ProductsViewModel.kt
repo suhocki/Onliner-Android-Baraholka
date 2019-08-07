@@ -3,10 +3,14 @@ package kt.school.starlord.ui.products
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.launch
+import kt.school.starlord.domain.repository.ProductsListRepository
 import kt.school.starlord.domain.repository.ProductsRepository
 import kt.school.starlord.domain.system.viewmodel.ErrorEmitter
 import kt.school.starlord.domain.system.viewmodel.ProgressEmitter
 import kt.school.starlord.entity.product.Product
+import kt.school.starlord.entity.subcategory.Subcategory
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 
@@ -16,18 +20,31 @@ import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 class ProductsViewModel(
     private val progressFeature: ProgressViewModelFeature,
     private val errorFeature: ErrorViewModelFeature,
-    productsRepository: ProductsRepository,
-    subcategoryName: String
+    private val networkRepository: ProductsListRepository,
+    private val databaseRepository: ProductsRepository,
+    private val subcategory: Subcategory
 ) : ViewModel(), ProgressEmitter by progressFeature, ErrorEmitter by errorFeature {
 
     private val products = MutableLiveData<List<Product>>()
 
     init {
-        productsRepository.getProducts(subcategoryName).observeForever(products::setValue)
+        databaseRepository.getProducts(subcategory.name).observeForever(products::setValue)
+        refreshData()
     }
 
     /**
      * Use for observing products.
      */
     fun getProducts(): LiveData<List<Product>> = products
+
+    private fun refreshData() {
+        viewModelScope.launch {
+            progressFeature.showProgress(true)
+
+            runCatching { networkRepository.getProducts(subcategory.link) }
+                .fold({ databaseRepository.updateProducts(subcategory.name, it) }, errorFeature::showError)
+
+            progressFeature.showProgress(false)
+        }
+    }
 }

@@ -8,8 +8,10 @@ import java.net.URL
 import kt.school.starlord.BuildConfig
 import kt.school.starlord.TestContextProvider
 import kt.school.starlord.domain.data.mapper.Converter
-import kt.school.starlord.entity.CategoriesWithSubcategories
+import kt.school.starlord.entity.category.CategoriesWithSubcategories
+import kt.school.starlord.entity.product.ProductsList
 import kt.school.starlord.model.data.mapper.Mapper
+import kt.school.starlord.model.data.mapper.converter.StringToUrlConverter
 import kt.school.starlord.model.data.mapper.entity.BaseConverter
 import kt.school.starlord.ui.TestCoroutineRule
 import org.jsoup.Jsoup
@@ -25,12 +27,19 @@ class NetworkRepositoryTest {
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val categoriesWithSubcategories: CategoriesWithSubcategories = mockk()
+    private val productsList: ProductsList = mockk(relaxed = true)
     private val converters: Set<Converter<*, *>> = setOf(
         object : BaseConverter<Document, CategoriesWithSubcategories>(
             Document::class.java, CategoriesWithSubcategories::class.java
         ) {
             override fun convert(value: Document) = categoriesWithSubcategories
-        }
+        },
+        object : BaseConverter<Document, ProductsList>(
+            Document::class.java, ProductsList::class.java
+        ) {
+            override fun convert(value: Document) = productsList
+        },
+        StringToUrlConverter()
     )
     private val mapper = Mapper(converters)
     private val networkRepository = NetworkRepository(mapper, TestContextProvider())
@@ -50,5 +59,22 @@ class NetworkRepositoryTest {
 
         // Then
         assert(answer == categoriesWithSubcategories)
+    }
+
+    @Test
+    fun `get products list`() = testCoroutineRule.runBlockingTest {
+        // Given
+        val link = "https://baraholka.onliner.by/viewforum.php?f=2"
+        val document: Document = mockk()
+
+        mockkStatic(Jsoup::class)
+
+        every { Jsoup.parse(any(), BuildConfig.NETWORK_REQUEST_TIMEOUT_MILLIS) }.answers { document }
+
+        // When
+        val answer = networkRepository.getProducts(link)
+
+        // Then
+        assert(answer == productsList.products)
     }
 }

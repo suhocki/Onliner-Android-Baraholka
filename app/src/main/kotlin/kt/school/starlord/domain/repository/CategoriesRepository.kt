@@ -1,7 +1,7 @@
 package kt.school.starlord.domain.repository
 
 import androidx.lifecycle.LiveData
-import kt.school.starlord.entity.Category
+import kt.school.starlord.entity.category.Category
 
 /**
  * Defines access methods for categories.

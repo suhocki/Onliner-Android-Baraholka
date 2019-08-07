@@ -13,6 +13,7 @@ env:
     - ANDROID_HOME=/usr/local/android-sdk
     - TOOLS=${ANDROID_HOME}/tools
     - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
+    - GITHUB_BOT_ID=49678291
   matrix:
     - API=22 ABI=x86_64
 

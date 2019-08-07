@@ -13,6 +13,7 @@ import kotlinx.android.synthetic.main.fragment_products.*
 import kt.school.starlord.domain.system.view.ErrorSnackbar
 import kt.school.starlord.domain.system.view.ProgressSnackbar
 import kt.school.starlord.entity.product.Product
+import kt.school.starlord.entity.subcategory.Subcategory
 import kt.school.starlord.model.repository.mock.MockRepository
 import kt.school.starlord.ui.global.AppRecyclerAdapter
 import org.junit.Before
@@ -30,7 +31,8 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
     private val progressSnackbar: ProgressSnackbar = mockk(relaxUnitFun = true)
     private val errorSnackbar: ErrorSnackbar = mockk(relaxUnitFun = true)
     private val mockRepository = MockRepository()
-    private val arguments = Bundle().apply { putString("subcategoryName", "some data") }
+    private val subcategory: Subcategory = mockk()
+    private val arguments = Bundle().apply { putParcelable("subcategory", subcategory) }
     private val scenario by lazy {
         FragmentScenario.launchInContainer(ProductsFragment::class.java, arguments)
     }
