@@ -32,11 +32,13 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
                             image = getImgLink(product),
                             price = getProductPrice(cost),
                             location = getLocation(signature),
-                            lastUpdate = product.getElementsByClass(LAST_UPDATE).first().text(),
                             commentsCount = getCommentsCount(product),
                             type = getProductType(product),
                             owner = getProductOwner(signature),
-                            isPaid = product.hasClass(M_IMP)
+                            isPaid = product.hasClass(M_IMP),
+                            lastUpdate = product.getElementsByClass(LAST_UPDATE).first().text()
+                                .replaceFirst(UP, "", true)
+                                .replaceIndent()
                         )
                     )
                 }
@@ -80,20 +82,18 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
             ""
         }
 
-    private fun getProductPrice(cost: Element) =
-        ProductPrice(
-            amount = cost.let { c ->
-                if (c.hasText()) {
-                    c.getElementsByClass(PRICE).text()
-                        .replace(",", ".")
-                        .split(" ")[0]
-                        .toDoubleOrNull()
-                } else {
-                    null
-                }
-            },
-            isBargainAvailable = cost.getElementsByClass(COST_TORG).hasText()
-        )
+    private fun getProductPrice(cost: Element): ProductPrice {
+        val amount = if (cost.hasText()) {
+            cost.getElementsByClass(PRICE).text()
+                .replace(",", ".")
+                .split(" ")[0]
+                .toDoubleOrNull()
+        } else {
+            null
+        }
+        val isBargainAvailable = amount?.let { cost.getElementsByClass(COST_TORG).hasText() } ?: false
+        return ProductPrice(amount, isBargainAvailable)
+    }
 
     private fun getImgLink(product: Element): String =
         product.getElementsByClass(IMAGE)
@@ -137,5 +137,6 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
         const val SERVICE = "ba-label-5"
         const val RENT = "ba-label-6"
         const val CLOSED = "ba-label-7"
+        const val UP = "UP!"
     }
 }

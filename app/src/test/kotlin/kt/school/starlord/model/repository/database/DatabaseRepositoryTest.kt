@@ -188,12 +188,7 @@ class DatabaseRepositoryTest : AutoCloseKoinTest() {
         val products = listOf(product1, product2)
         val slot = slot<List<RoomProduct>>()
 
-        coEvery {
-            daoManager.productDao.replaceAll(
-                subcategoryName,
-                capture(slot)
-            )
-        } coAnswers { Unit }
+        coEvery { daoManager.productDao.replaceAll(subcategoryName, capture(slot)) } coAnswers { Unit }
 
         // When
         roomRepository.updateProducts(subcategoryName, products)

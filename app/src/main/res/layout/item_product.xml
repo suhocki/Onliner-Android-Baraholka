@@ -53,8 +53,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:ellipsize="end"
-        android:maxLines="3"
-        android:minHeight="52dp"
+        android:maxLines="2"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/image"
         app:layout_constraintTop_toBottomOf="@+id/title"
@@ -62,29 +61,41 @@
 
     <TextView
         android:id="@+id/price"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:maxLines="1"
         android:textColor="@android:color/black"
         android:textSize="18sp"
         android:textStyle="bold"
+        app:autoSizeMaxTextSize="18sp"
+        app:autoSizeMinTextSize="8sp"
+        app:autoSizeStepGranularity="1sp"
+        app:autoSizeTextType="uniform"
         app:layout_constraintBottom_toTopOf="@+id/bargain"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
         app:layout_constraintTop_toBottomOf="@+id/description"
         tools:text="@sample/products.json/data/price" />
 
     <TextView
         android:id="@+id/bargain"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:gravity="center"
         android:text="@string/bargain"
-        android:textAllCaps="true"
         android:textColor="@color/colorBrightRed"
         android:textSize="12sp"
         android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/price"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.5"
-        app:layout_constraintStart_toStartOf="@+id/price"
+        app:layout_constraintStart_toStartOf="@+id/guideline"
+        app:layout_constraintTop_toBottomOf="@+id/price"
+        app:textAllCaps="true"
         tools:visibility="visible" />
 
     <TextView
@@ -94,10 +105,10 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
         android:text="@string/up"
-        android:textAllCaps="true"
         android:textColor="@color/colorDarkRed"
         app:layout_constraintStart_toEndOf="@+id/image"
-        app:layout_constraintTop_toBottomOf="@+id/description" />
+        app:layout_constraintTop_toBottomOf="@+id/description"
+        app:textAllCaps="true" />
 
     <TextView
         android:id="@+id/lastUpdate"
@@ -108,7 +119,7 @@
         android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:maxLines="1"
-        app:layout_constraintEnd_toStartOf="@+id/price"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/up"
         app:layout_constraintTop_toBottomOf="@+id/description"
@@ -132,9 +143,10 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="4dp"
+        android:layout_marginEnd="8dp"
         android:ellipsize="end"
         android:maxLines="1"
-        app:layout_constraintEnd_toEndOf="@+id/lastUpdate"
+        app:layout_constraintEnd_toStartOf="@+id/guideline"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toEndOf="@+id/location"
         app:layout_constraintTop_toBottomOf="@+id/up"
@@ -144,17 +156,23 @@
         android:id="@+id/commentsCount"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@android:color/white"
         android:drawablePadding="4dp"
         android:gravity="center_vertical"
         android:includeFontPadding="false"
         android:padding="4dp"
-        android:textAllCaps="true"
         android:textSize="12sp"
         android:typeface="monospace"
         app:drawableStartCompat="@drawable/ic_message"
         app:layout_constraintBottom_toBottomOf="@+id/image"
         app:layout_constraintStart_toStartOf="@+id/image"
+        app:textAllCaps="true"
         tools:text="@sample/products.json/data/commentsCount" />
+
+    <androidx.constraintlayout.widget.Guideline
+        android:id="@+id/guideline"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintGuide_end="80dp" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

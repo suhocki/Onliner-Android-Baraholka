@@ -7,7 +7,6 @@ import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
-import kotlin.properties.Delegates
 import kotlinx.android.synthetic.main.item_product.view.*
 import kt.school.starlord.R
 import kt.school.starlord.entity.product.Product
@@ -15,6 +14,7 @@ import kt.school.starlord.entity.product.ProductPrice
 import kt.school.starlord.entity.product.ProductType
 import kt.school.starlord.extension.inflate
 import kt.school.starlord.extension.toRoundedPrice
+import kotlin.properties.Delegates
 
 /**
  * Delegate for product item in recycler view.
@@ -79,15 +79,14 @@ class ProductAdapterDelegate(
                 priceView.visibility = View.VISIBLE
                 priceView.setText(R.string.for_free)
             }
-            else -> priceView.text = itemView.resources.getString(R.string.price, price.amount.toRoundedPrice())
+            else -> {
+                priceView.visibility = View.VISIBLE
+                priceView.text = itemView.resources.getString(R.string.price, price.amount.toRoundedPrice())
+            }
         }
 
         private fun bindBargain(bargainView: TextView, price: ProductPrice) {
-            if (price.amount == 0.0) {
-                bargainView.visibility = View.GONE
-            } else if (price.isBargainAvailable) {
-                bargainView.visibility = View.VISIBLE
-            }
+            bargainView.visibility = if (price.isBargainAvailable) View.VISIBLE else View.GONE
         }
     }
 }
