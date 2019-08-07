@@ -21,7 +21,6 @@ if [[ "$githubBotCommentsCount" -gt 0 ]]; then
     else
     send_msg "
     Code-review time!
-
     Guys, take a moment to review [pull request](https://github.com/${TRAVIS_REPO_SLUG}/pull/${TRAVIS_PULL_REQUEST}) made by @${AUTHOR_NAME}, please.
     "
 fi
