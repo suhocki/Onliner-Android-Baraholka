@@ -138,7 +138,7 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
     fun `show products`() {
         // Given
         mockkConstructor(AppRecyclerAdapter::class)
-        val products: MutableLiveData<List<Product>> = mockRepository.getProducts(anyString())
+        val products: MutableLiveData<List<Product>> = mockRepository.getProductsLiveData(anyString())
         every { viewModel.getProducts() } returns products
         scenario.moveToState(Lifecycle.State.CREATED)
 

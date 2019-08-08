@@ -5,7 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import kt.school.starlord.domain.repository.CategoriesRepository
+import kt.school.starlord.domain.repository.CategoriesCacheRepository
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.domain.system.viewmodel.ErrorEmitter
@@ -22,7 +22,7 @@ class CategoriesViewModel(
     private val progressFeature: ProgressViewModelFeature,
     private val errorFeature: ErrorViewModelFeature,
     private val networkRepository: CategoriesWithSubcategoriesRepository,
-    private val categoriesRepository: CategoriesRepository,
+    private val categoriesRepository: CategoriesCacheRepository,
     private val subcategoriesRepository: SubcategoriesRepository
 ) : ViewModel(), ProgressEmitter by progressFeature, ErrorEmitter by errorFeature {
 

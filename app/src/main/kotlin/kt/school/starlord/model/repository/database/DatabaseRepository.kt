@@ -2,8 +2,8 @@ package kt.school.starlord.model.repository.database
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import kt.school.starlord.domain.repository.CategoriesRepository
-import kt.school.starlord.domain.repository.ProductsRepository
+import kt.school.starlord.domain.repository.CategoriesCacheRepository
+import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.entity.category.Category
 import kt.school.starlord.entity.product.Product
@@ -21,7 +21,8 @@ import kt.school.starlord.model.data.room.entity.RoomSubcategory
 class DatabaseRepository(
     private val daoManager: DaoManager,
     private val mapper: Mapper
-) : CategoriesRepository, SubcategoriesRepository, ProductsRepository {
+) : CategoriesCacheRepository, SubcategoriesRepository,
+    ProductsCacheRepository {
 
     override fun getCategories(): LiveData<List<Category>> {
         return daoManager.categoryDao.getCategories().map { roomCategories ->
@@ -45,7 +46,7 @@ class DatabaseRepository(
         daoManager.subcategoryDao.replaceAll(roomSubcategories)
     }
 
-    override fun getProducts(subcategoryName: String): LiveData<List<Product>> {
+    override fun getProductsLiveData(subcategoryName: String): LiveData<List<Product>> {
         return daoManager.productDao.getProducts(subcategoryName).map { roomProducts ->
             roomProducts.map { mapper.map<Product>(it) }
         }

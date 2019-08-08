@@ -43,7 +43,7 @@ class ProductsScreenshotTest : KoinTest {
     }
 
     @Test
-    fun captureCategoriesScreen() {
+    fun captureProductsScreen() {
         val clickOnFirstCategory = RecyclerViewActions
             .actionOnItemAtPosition<CategoryAdapterDelegate.ViewHolder>(0, ViewActions.click())
         val clickOnFirstSubcategory = RecyclerViewActions

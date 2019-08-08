@@ -4,9 +4,9 @@ import androidx.lifecycle.LiveData
 import kt.school.starlord.entity.category.Category
 
 /**
- * Defines access methods for categories.
+ * Defines access methods for categories that are located in the local cache.
  */
-interface CategoriesRepository {
+interface CategoriesCacheRepository {
 
     /**
      * Loads data that represents categories used by the application.

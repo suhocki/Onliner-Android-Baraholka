@@ -2,8 +2,8 @@ package kt.school.starlord.di
 
 import androidx.room.Room
 import kt.school.starlord.BuildConfig
-import kt.school.starlord.domain.repository.CategoriesRepository
-import kt.school.starlord.domain.repository.ProductsRepository
+import kt.school.starlord.domain.repository.CategoriesCacheRepository
+import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.model.data.room.AppDatabase
 import kt.school.starlord.model.data.room.DaoManager
@@ -36,7 +36,7 @@ val databaseModule = module {
 
     single { DatabaseRepository(get(), get()) } binds arrayOf(
         SubcategoriesRepository::class,
-        CategoriesRepository::class,
-        ProductsRepository::class
+        CategoriesCacheRepository::class,
+        ProductsCacheRepository::class
     )
 }

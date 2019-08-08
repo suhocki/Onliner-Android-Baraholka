@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
-import kt.school.starlord.domain.repository.ProductsListRepository
-import kt.school.starlord.domain.repository.ProductsRepository
+import kt.school.starlord.domain.repository.product.ProductsRepository
+import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.domain.system.viewmodel.ErrorEmitter
 import kt.school.starlord.domain.system.viewmodel.ProgressEmitter
 import kt.school.starlord.entity.product.Product
@@ -20,15 +20,15 @@ import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 class ProductsViewModel(
     private val progressFeature: ProgressViewModelFeature,
     private val errorFeature: ErrorViewModelFeature,
-    private val networkRepository: ProductsListRepository,
-    private val databaseRepository: ProductsRepository,
+    private val networkRepository: ProductsRepository,
+    private val databaseRepository: ProductsCacheRepository,
     private val subcategory: Subcategory
 ) : ViewModel(), ProgressEmitter by progressFeature, ErrorEmitter by errorFeature {
 
     private val products = MutableLiveData<List<Product>>()
 
     init {
-        databaseRepository.getProducts(subcategory.name).observeForever(products::setValue)
+        databaseRepository.getProductsLiveData(subcategory.name).observeForever(products::setValue)
         refreshData()
     }
 

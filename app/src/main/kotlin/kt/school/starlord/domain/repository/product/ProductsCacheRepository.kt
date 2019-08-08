@@ -1,19 +1,17 @@
-package kt.school.starlord.domain.repository
+package kt.school.starlord.domain.repository.product
 
 import androidx.lifecycle.LiveData
 import kt.school.starlord.entity.product.Product
 
 /**
- * Defines access methods for products.
+ * Defines access methods for products that is located in cache.
  */
-interface ProductsRepository {
+interface ProductsCacheRepository {
 
     /**
-     * Loads data that represents products by subcategory name.
-     *
-     * @return products
+     * Loads products live data from cache.
      */
-    fun getProducts(subcategoryName: String): LiveData<List<Product>>
+    fun getProductsLiveData(subcategoryName: String): LiveData<List<Product>>
 
     /**
      * Deletes existing products of selected subcategoryName and puts a new ones.

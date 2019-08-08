@@ -4,7 +4,7 @@ import java.net.URL
 import kotlinx.coroutines.withContext
 import kt.school.starlord.BuildConfig
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
-import kt.school.starlord.domain.repository.ProductsListRepository
+import kt.school.starlord.domain.repository.product.ProductsRepository
 import kt.school.starlord.domain.system.coroutine.CoroutineContextProvider
 import kt.school.starlord.entity.category.CategoriesWithSubcategories
 import kt.school.starlord.entity.product.Product
@@ -18,7 +18,8 @@ import org.jsoup.Jsoup
 class NetworkRepository(
     private val mapper: Mapper,
     private val coroutineContextProvider: CoroutineContextProvider
-) : CategoriesWithSubcategoriesRepository, ProductsListRepository {
+) : CategoriesWithSubcategoriesRepository,
+    ProductsRepository {
 
     override suspend fun getCategoriesWithSubcategories(): CategoriesWithSubcategories =
         withContext(coroutineContextProvider.io) {
