@@ -6,7 +6,7 @@ import io.mockk.coEvery
 import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
-import kt.school.starlord.domain.repository.CategoriesRepository
+import kt.school.starlord.domain.repository.CategoriesCacheRepository
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.entity.category.CategoriesWithSubcategories
@@ -30,7 +30,7 @@ class CategoriesViewModelTest {
     private val errorFeature: ErrorViewModelFeature = mockk(relaxUnitFun = true)
     private val progressFeature: ProgressViewModelFeature = mockk(relaxUnitFun = true)
     private val networkRepository: CategoriesWithSubcategoriesRepository = mockk()
-    private val categoriesRepository: CategoriesRepository = mockk(relaxed = true)
+    private val categoriesRepository: CategoriesCacheRepository = mockk(relaxed = true)
     private val subcategoriesRepository: SubcategoriesRepository = mockk(relaxed = true)
 
     @Test

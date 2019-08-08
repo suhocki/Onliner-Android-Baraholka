@@ -4,9 +4,10 @@ package kt.school.starlord.model.repository.mock
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import kt.school.starlord.domain.repository.CategoriesRepository
+import kt.school.starlord.domain.repository.CategoriesCacheRepository
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
-import kt.school.starlord.domain.repository.ProductsRepository
+import kt.school.starlord.domain.repository.product.ProductsRepository
+import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.entity.category.CategoriesWithSubcategories
 import kt.school.starlord.entity.category.Category
@@ -20,10 +21,88 @@ import kt.school.starlord.entity.subcategory.Subcategory
  * Repository that contains fake (mocked) data from all application data sources.
  */
 /* ktlint-disable */
-class MockRepository : CategoriesRepository,
+class MockRepository : CategoriesCacheRepository,
     SubcategoriesRepository,
     CategoriesWithSubcategoriesRepository,
-    ProductsRepository {
+    ProductsRepository,
+    ProductsCacheRepository {
+
+    private val products = listOf(
+        Product(
+            22175010,
+            "Куплю компактный диван",
+            "Куплю компактный диван. Например, как Ikea Свэнста, но более надежный и не разъезжающийся. Можно не раскладывающийся. Ваша доставка в район метро Партизанская.",
+            ProductType.BUY,
+            "Минск",
+            "file:///android_asset/products/1.jpg",
+            ProductOwner("xrystal", 1524248),
+            ProductPrice(150.0),
+            "1 час назад",
+            1,
+            true
+        ),
+        Product(
+            22684921,
+            "Диван-кровать Лагуна",
+            "Продаем в связи с переездом. 8029593****. Самовывоз с ул.Кольцова.",
+            ProductType.SELL,
+            "Минск",
+            "file:///android_asset/products/2.jpeg",
+            ProductOwner("angel_1988", 1813103),
+            ProductPrice(0.0),
+            "33 минуты назад",
+            4
+        ),
+        Product(
+            23028259,
+            "Кресло-качалка из ротанга",
+            "Обмен кресла-качалки из ротанга. Состояние нового. 8-029-113-**-** Лена",
+            ProductType.EXCHANGE,
+            "Минск",
+            "file:///android_asset/products/3.jpg",
+            ProductOwner("angel_1988", 1813103),
+            ProductPrice(200.0, true),
+            "2 минуты назад",
+            0
+        ),
+        Product(
+            23082929,
+            "Покос травы, стрижка газона",
+            "Покос травы, бурьяна, стрижка газона. Быстро и качественно. Покос травы от 5р. Стрижка от 4р. Примеры работ:",
+            ProductType.SERVICE,
+            "Минск",
+            "file:///android_asset/products/4.jpg",
+            ProductOwner("BMW888IK5", 717419),
+            ProductPrice(),
+            "3 часа назад",
+            2
+        ),
+        Product(
+            22917475,
+            "iPhone 5S 16Gb Grey сост отл, не рев, хор комплект",
+            "iPhone 5S 16Gb Grey сост отличное, без Touch Id, не рев. Телефон сзади под пленкой, спереди ни единой царапины, батарея держит отлично. В комплекте отдаю оригинальный кубик м переходником, ориг провод и ориг наушники. Из облака вышел. 8-025-934-**-**",
+            ProductType.RENT,
+            "Минск",
+            "file:///android_asset/products/5.webp",
+            ProductOwner("greendors", 76882),
+            ProductPrice(160.0),
+            "7 часов назад",
+            1
+        ),
+        Product(
+            22917475,
+            "Офисное кресло",
+            "Продам офисное кожаное кресло. б.у. Неполадки с механизмом качается назад-вперёд, влево-вправо - без фиксации. Нужно разбираться с механизмом! 8029-566-**-** (МТС)",
+            ProductType.CLOSED,
+            "Минск",
+            "file:///android_asset/products/6.jpg",
+            ProductOwner("Ta6aK", 442157),
+            ProductPrice(30.0),
+            "32 минуты назад",
+            0
+        )
+    )
+
     override fun getCategories(): LiveData<List<Category>> = MutableLiveData(
         listOf(
             Category("Мобильные телефоны"),
@@ -93,83 +172,9 @@ class MockRepository : CategoriesRepository,
     override suspend fun getCategoriesWithSubcategories() =
         CategoriesWithSubcategories(emptyList(), emptyList())
 
-    override fun getProducts(subcategoryName: String) = MutableLiveData(
-        listOf(
-            Product(
-                22175010,
-                "Куплю компактный диван",
-                "Куплю компактный диван. Например, как Ikea Свэнста, но более надежный и не разъезжающийся. Можно не раскладывающийся. Ваша доставка в район метро Партизанская.",
-                ProductType.BUY,
-                "Минск",
-                "file:///android_asset/products/1.jpg",
-                ProductOwner("xrystal", 1524248),
-                ProductPrice(150.0),
-                "1 час назад",
-                1,
-                true
-            ),
-            Product(
-                22684921,
-                "Диван-кровать Лагуна",
-                "Продаем в связи с переездом. 8029593****. Самовывоз с ул.Кольцова.",
-                ProductType.SELL,
-                "Минск",
-                "file:///android_asset/products/2.jpeg",
-                ProductOwner("angel_1988", 1813103),
-                ProductPrice(0.0),
-                "33 минуты назад",
-                4
-            ),
-            Product(
-                23028259,
-                "Кресло-качалка из ротанга",
-                "Обмен кресла-качалки из ротанга. Состояние нового. 8-029-113-**-** Лена",
-                ProductType.EXCHANGE,
-                "Минск",
-                "file:///android_asset/products/3.jpg",
-                ProductOwner("angel_1988", 1813103),
-                ProductPrice(200.0, true),
-                "2 минуты назад",
-                0
-            ),
-            Product(
-                23082929,
-                "Покос травы, стрижка газона",
-                "Покос травы, бурьяна, стрижка газона. Быстро и качественно. Покос травы от 5р. Стрижка от 4р. Примеры работ:",
-                ProductType.SERVICE,
-                "Минск",
-                "file:///android_asset/products/4.jpg",
-                ProductOwner("BMW888IK5", 717419),
-                ProductPrice(),
-                "3 часа назад",
-                2
-            ),
-            Product(
-                22917475,
-                "iPhone 5S 16Gb Grey сост отл, не рев, хор комплект",
-                "iPhone 5S 16Gb Grey сост отличное, без Touch Id, не рев. Телефон сзади под пленкой, спереди ни единой царапины, батарея держит отлично. В комплекте отдаю оригинальный кубик м переходником, ориг провод и ориг наушники. Из облака вышел. 8-025-934-**-**",
-                ProductType.RENT,
-                "Минск",
-                "file:///android_asset/products/5.webp",
-                ProductOwner("greendors", 76882),
-                ProductPrice(160.0),
-                "7 часов назад",
-                1
-            ),
-            Product(
-                22917475,
-                "Офисное кресло",
-                "Продам офисное кожаное кресло. б.у. Неполадки с механизмом качается назад-вперёд, влево-вправо - без фиксации. Нужно разбираться с механизмом! 8029-566-**-** (МТС)",
-                ProductType.CLOSED,
-                "Минск",
-                "file:///android_asset/products/6.jpg",
-                ProductOwner("Ta6aK", 442157),
-                ProductPrice(30.0),
-                "32 минуты назад",
-                0
-            )
-        )
-    )
+    override fun getProductsLiveData(subcategoryName: String) = MutableLiveData(products)
 
     override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {}
+
+    override suspend fun getProducts(link: String): List<Product> = products
 }

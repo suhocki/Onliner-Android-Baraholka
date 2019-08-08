@@ -5,8 +5,8 @@ import androidx.lifecycle.MutableLiveData
 import io.mockk.coEvery
 import io.mockk.coVerifyOrder
 import io.mockk.mockk
-import kt.school.starlord.domain.repository.ProductsListRepository
-import kt.school.starlord.domain.repository.ProductsRepository
+import kt.school.starlord.domain.repository.product.ProductsRepository
+import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.entity.product.Product
 import kt.school.starlord.entity.subcategory.Subcategory
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
@@ -28,15 +28,15 @@ class ProductsViewModelTest {
     private val subcategory = Subcategory(subcategoryName, "", 0, link)
     private val errorFeature: ErrorViewModelFeature = mockk(relaxUnitFun = true)
     private val progressFeature: ProgressViewModelFeature = mockk(relaxUnitFun = true)
-    private val productsListRepository: ProductsListRepository = mockk()
-    private val productsRepository: ProductsRepository = mockk(relaxUnitFun = true)
+    private val productsListRepository: ProductsRepository = mockk()
+    private val productsRepository: ProductsCacheRepository = mockk(relaxUnitFun = true)
 
     @Test
     fun `refresh data by network successfully`() = testCoroutineRule.runBlockingTest {
         // Given
         val products: List<Product> = mockk()
 
-        coEvery { productsRepository.getProducts(subcategoryName) }.coAnswers { MutableLiveData(products) }
+        coEvery { productsRepository.getProductsLiveData(subcategoryName) }.coAnswers { MutableLiveData(products) }
         coEvery { productsListRepository.getProducts(link) }.coAnswers { products }
 
         // When
@@ -56,7 +56,7 @@ class ProductsViewModelTest {
         val error = Throwable()
         val products: List<Product> = mockk()
 
-        coEvery { productsRepository.getProducts(subcategoryName) }.coAnswers { MutableLiveData(products) }
+        coEvery { productsRepository.getProductsLiveData(subcategoryName) }.coAnswers { MutableLiveData(products) }
         coEvery { productsListRepository.getProducts(any()) }.throws(error)
 
         // When
@@ -75,7 +75,7 @@ class ProductsViewModelTest {
         // Given
         val products: List<Product> = mockk()
 
-        coEvery { productsRepository.getProducts(subcategoryName) }.coAnswers { MutableLiveData(products) }
+        coEvery { productsRepository.getProductsLiveData(subcategoryName) }.coAnswers { MutableLiveData(products) }
         coEvery { productsListRepository.getProducts(link) }.coAnswers { products }
 
         // When
