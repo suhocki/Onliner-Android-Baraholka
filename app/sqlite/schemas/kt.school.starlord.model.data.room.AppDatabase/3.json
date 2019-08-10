@@ -1,8 +1,8 @@
 {
   "formatVersion": 1,
   "database": {
-    "version": 2,
-    "identityHash": "50928386463a2d53fec5882befe6ea68",
+    "version": 3,
+    "identityHash": "7435eae8ae9ccef077b3f0873d4e800c",
     "entities": [
       {
         "tableName": "Categories",
@@ -170,12 +170,12 @@
             "createSql": "CREATE  INDEX `index_Products_subcategoryName` ON `${TABLE_NAME}` (`subcategoryName`)"
           },
           {
-            "name": "index_Products_subcategoryName",
+            "name": "index_Products_position",
             "unique": false,
             "columnNames": [
-              "subcategoryName"
+              "position"
             ],
-            "createSql": "CREATE  INDEX `index_Products_subcategoryName` ON `${TABLE_NAME}` (`subcategoryName`)"
+            "createSql": "CREATE  INDEX `index_Products_position` ON `${TABLE_NAME}` (`position`)"
           }
         ],
         "foreignKeys": []
@@ -184,7 +184,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '50928386463a2d53fec5882befe6ea68')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '7435eae8ae9ccef077b3f0873d4e800c')"
     ]
   }
 }

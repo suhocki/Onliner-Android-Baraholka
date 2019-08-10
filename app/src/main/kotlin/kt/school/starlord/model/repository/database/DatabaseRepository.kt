@@ -2,12 +2,13 @@ package kt.school.starlord.model.repository.database
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
+import kt.school.starlord.BuildConfig
 import kt.school.starlord.domain.repository.CategoriesCacheRepository
-import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
+import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.entity.category.Category
 import kt.school.starlord.entity.product.Product
-import kt.school.starlord.entity.product.ProductWithSubcategoryName
+import kt.school.starlord.entity.product.ProductWithMetadata
 import kt.school.starlord.entity.subcategory.Subcategory
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.room.DaoManager
@@ -21,10 +22,9 @@ import kt.school.starlord.model.data.room.entity.RoomSubcategory
 class DatabaseRepository(
     private val daoManager: DaoManager,
     private val mapper: Mapper
-) : CategoriesCacheRepository, SubcategoriesRepository,
-    ProductsCacheRepository {
+) : CategoriesCacheRepository, SubcategoriesRepository, ProductsCacheRepository {
 
-    override fun getCategories(): LiveData<List<Category>> {
+    override fun getCategoriesLiveData(): LiveData<List<Category>> {
         return daoManager.categoryDao.getCategories().map { roomCategories ->
             roomCategories.map { mapper.map<Category>(it) }
         }
@@ -47,14 +47,15 @@ class DatabaseRepository(
     }
 
     override fun getProductsLiveData(subcategoryName: String): LiveData<List<Product>> {
-        return daoManager.productDao.getProducts(subcategoryName).map { roomProducts ->
+        return daoManager.productDao.getProducts(subcategoryName, BuildConfig.PAGE_SIZE).map { roomProducts ->
             roomProducts.map { mapper.map<Product>(it) }
         }
     }
 
     override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {
-        val roomProducts = products.map {
-            mapper.map<RoomProduct>(ProductWithSubcategoryName(it, subcategoryName))
+        val roomProducts = products.mapIndexed { position, product ->
+            val productWithMetadata = ProductWithMetadata(product, subcategoryName, position)
+            mapper.map<RoomProduct>(productWithMetadata)
         }
         daoManager.productDao.replaceAll(subcategoryName, roomProducts)
     }

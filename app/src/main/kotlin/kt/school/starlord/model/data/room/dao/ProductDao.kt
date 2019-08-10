@@ -17,8 +17,8 @@ abstract class ProductDao {
      * @param subcategoryName name of selected subcategory.
      * @return all products for selected subcategory by subcategoryName.
      */
-    @Query("SELECT * FROM Products WHERE subcategoryName=:subcategoryName")
-    abstract fun getProducts(subcategoryName: String): LiveData<List<RoomProduct>>
+    @Query("SELECT * FROM Products WHERE subcategoryName=:subcategoryName ORDER BY position LIMIT :pageSize")
+    abstract fun getProducts(subcategoryName: String, pageSize: Int): LiveData<List<RoomProduct>>
 
     /**
      * Replaces old products with a new ones. Previous products with provided subcategoryName will be dropped.

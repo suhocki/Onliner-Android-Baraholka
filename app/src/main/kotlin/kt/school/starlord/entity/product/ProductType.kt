@@ -12,5 +12,6 @@ enum class ProductType(@ColorRes val color: Int) {
     EXCHANGE(R.color.colorPurple),
     SERVICE(R.color.colorBlue),
     RENT(R.color.colorOrange),
-    CLOSED(R.color.colorGray);
+    CLOSED(R.color.colorGray),
+    WARNING(R.color.colorBurgundy);
 }

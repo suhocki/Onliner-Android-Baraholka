@@ -103,7 +103,7 @@ class MockRepository : CategoriesCacheRepository,
         )
     )
 
-    override fun getCategories(): LiveData<List<Category>> = MutableLiveData(
+    override fun getCategoriesLiveData(): LiveData<List<Category>> = MutableLiveData(
         listOf(
             Category("Мобильные телефоны"),
             Category("Компьютеры"),

@@ -11,9 +11,9 @@
         android:id="@+id/image"
         android:layout_width="100dp"
         android:layout_height="0dp"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/commentsCount"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/type"
         tools:ignore="ContentDescription"
         tools:src="@tools:sample/backgrounds/scenic" />
 
@@ -44,7 +44,7 @@
         android:textSize="12sp"
         android:typeface="monospace"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/image"
+        app:layout_constraintTop_toTopOf="parent"
         tools:text="@sample/products.json/data/type" />
 
     <TextView
@@ -163,8 +163,8 @@
         android:textSize="12sp"
         android:typeface="monospace"
         app:drawableStartCompat="@drawable/ic_message"
-        app:layout_constraintBottom_toBottomOf="@+id/image"
-        app:layout_constraintStart_toStartOf="@+id/image"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:textAllCaps="true"
         tools:text="@sample/products.json/data/commentsCount" />
 

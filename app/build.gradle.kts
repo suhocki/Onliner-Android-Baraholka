@@ -194,7 +194,7 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-RC")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0-RC")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${KotlinCompilerVersion.VERSION}")
-    implementation("androidx.core:core-ktx:1.2.0-alpha02")
+    implementation("androidx.core:core-ktx:1.2.0-alpha03")
     implementation("androidx.appcompat:appcompat:$appcompatVersion")
     implementation("com.google.android.material:material:1.1.0-alpha09")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta2")
