@@ -60,7 +60,7 @@ class DatabaseRepositoryTest : AutoCloseKoinTest() {
         every { daoManager.categoryDao.getCategories() } returns MutableLiveData(roomData)
 
         // When
-        val categories: LiveData<List<Category>> = roomRepository.getCategories()
+        val categories: LiveData<List<Category>> = roomRepository.getCategoriesLiveData()
 
         // Then
         categories.observeForTesting { answer ->
@@ -74,7 +74,7 @@ class DatabaseRepositoryTest : AutoCloseKoinTest() {
     @Test
     fun `update categories`() = testCoroutineRule.runBlockingTest {
         // Given
-        val categories = mockRepository.getCategories().value!!
+        val categories = mockRepository.getCategoriesLiveData().value!!
         val roomCategories = slot<List<RoomCategory>>()
         coEvery { daoManager.categoryDao.replaceAll(capture(roomCategories)) } coAnswers { Unit }
 
@@ -150,7 +150,7 @@ class DatabaseRepositoryTest : AutoCloseKoinTest() {
             mockk(relaxed = true)
         )
 
-        every { daoManager.productDao.getProducts(subcategoryName) } returns MutableLiveData(
+        every { daoManager.productDao.getProducts(subcategoryName, any()) } returns MutableLiveData(
             roomProducts
         )
 

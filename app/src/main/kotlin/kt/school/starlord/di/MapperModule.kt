@@ -2,7 +2,7 @@ package kt.school.starlord.di
 
 import kt.school.starlord.entity.category.Category
 import kt.school.starlord.entity.product.Product
-import kt.school.starlord.entity.product.ProductWithSubcategoryName
+import kt.school.starlord.entity.product.ProductWithMetadata
 import kt.school.starlord.entity.subcategory.Subcategory
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.mapper.converter.DocumentToCategoriesWithSubcategoriesConverter
@@ -59,11 +59,11 @@ val mapperModule = module {
                         isPaid = value.isPaid
                     )
             },
-            object : BaseConverter<ProductWithSubcategoryName, RoomProduct>(
-                ProductWithSubcategoryName::class.java,
+            object : BaseConverter<ProductWithMetadata, RoomProduct>(
+                ProductWithMetadata::class.java,
                 RoomProduct::class.java
             ) {
-                override fun convert(value: ProductWithSubcategoryName): RoomProduct {
+                override fun convert(value: ProductWithMetadata): RoomProduct {
                     val product = value.product
                     return RoomProduct(
                         id = product.id,
@@ -77,7 +77,8 @@ val mapperModule = module {
                         price = product.price,
                         lastUpdate = product.lastUpdate,
                         commentsCount = product.commentsCount,
-                        isPaid = product.isPaid
+                        isPaid = product.isPaid,
+                        position = value.position
                     )
                 }
             }

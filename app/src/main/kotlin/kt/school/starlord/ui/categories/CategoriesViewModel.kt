@@ -29,7 +29,7 @@ class CategoriesViewModel(
     private val categories = MutableLiveData<List<Category>>()
 
     init {
-        categoriesRepository.getCategories().observeForever(categories::setValue)
+        categoriesRepository.getCategoriesLiveData().observeForever(categories::setValue)
         refreshData()
     }
 

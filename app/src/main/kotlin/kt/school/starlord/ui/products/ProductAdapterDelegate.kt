@@ -69,7 +69,7 @@ class ProductAdapterDelegate(
                 commentsView.visibility = View.VISIBLE
                 commentsView.text = product.commentsCount.toString()
             } else {
-                commentsView.visibility = View.GONE
+                commentsView.visibility = View.INVISIBLE
             }
         }
 

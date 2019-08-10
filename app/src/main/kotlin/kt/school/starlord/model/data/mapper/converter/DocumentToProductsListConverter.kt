@@ -18,101 +18,104 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
     Document::class.java, ProductsList::class.java
 ) {
     override fun convert(value: Document): ProductsList = ProductsList(
-        HashSet<Product>().apply {
-            value.getElementsByClass(TABLE).forEach { table ->
-                table.getElementsByTag(TR).forEach { product ->
-                    val signature = product.getElementsByClass(SIGNATURE).first()
-                    val title = product.getElementsByClass(TITLE)
-                    val cost = product.getElementsByClass(COST).first()
-                    if (title.hasText() && signature != null && cost != null) add(
-                        Product(
-                            id = getId(title),
-                            title = title.text(),
-                            description = getDescription(product),
-                            image = getImgLink(product),
-                            price = getProductPrice(cost),
-                            location = getLocation(signature),
-                            commentsCount = getCommentsCount(product),
-                            type = getProductType(product),
-                            owner = getProductOwner(signature),
-                            isPaid = product.hasClass(M_IMP),
-                            lastUpdate = product.getElementsByClass(LAST_UPDATE).first().text()
-                                .replaceFirst(UP, "", true)
-                                .replaceIndent()
-                        )
-                    )
-                }
-            }
-        }.toList()
+        value.getElementsByClass(Tags.TABLE)
+            .flatMap { it.getElementsByTag(Tags.TR) }
+            .filter(::isSuitableElement)
+            .map(::createProduct)
+            .toList()
     )
 
-    private fun getProductOwner(signature: Element) =
-        signature.let {
-            val owner = it.getElementsByTag(A).first()
-            ProductOwner(
-                id = owner.attr(LINK).split(SEPARATOR).last().toLong(),
-                name = owner.text()
-            )
-        }
+    private fun createProduct(element: Element): Product {
+        val (signatures, cost, title) = extractDocumentData(element)
+        val description = element.getElementsByClass(Tags.DESCRIPTION)
+        val comments = element.getElementsByClass(Tags.COMMENTS)
+        val signature = signatures.first()
+        return Product(
+            id = title.first().getElementsByTag(Tags.A).attr(LINK).split("=").last().toLong(),
+            title = title.text(),
+            description = if (description.isNotEmpty()) description.text() else "",
+            image = element.getElementsByClass(Tags.IMAGE)
+                .first()
+                .getElementsByTag(Tags.IMG)
+                .first()
+                .attr(Tags.SRC),
+            price = getProductPrice(cost.first()),
+            location = if (signature.hasText()) signature.getElementsByTag(Tags.STRONG).first().text() else "",
+            commentsCount = if (comments.isNotEmpty()) comments.text().toLong() else 0L,
+            type = getProductType(element.getElementsByClass(ProductDocumentType.TYPE)),
+            owner = getProductOwner(signature),
+            isPaid = element.hasClass(Tags.M_IMP),
+            lastUpdate = element.getElementsByClass(Tags.LAST_UPDATE).first().text()
+                .replaceFirst(Tags.UP, "", true)
+                .replaceIndent()
+        )
+    }
 
-    private fun getProductType(product: Element) =
-        product.getElementsByClass(TYPE).let {
-            when {
-                it.hasClass(SELL) -> ProductType.SELL
-                it.hasClass(BUY) -> ProductType.BUY
-                it.hasClass(RENT) -> ProductType.RENT
-                it.hasClass(EXCHANGE) -> ProductType.EXCHANGE
-                it.hasClass(SERVICE) -> ProductType.SERVICE
-                it.hasClass(CLOSED) -> ProductType.CLOSED
-                else -> error("Unknown product type.")
-            }
-        }
+    private fun isSuitableElement(element: Element): Boolean {
+        val (signature, cost, title) = extractDocumentData(element)
+        return title.hasText() && signature.first() != null && cost.first() != null
+    }
 
-    private fun getCommentsCount(product: Element): Long =
-        if (product.getElementsByClass(COMMENTS).isNotEmpty()) {
-            product.getElementsByClass(COMMENTS).text().toLong()
-        } else {
-            0L
-        }
+    private fun extractDocumentData(element: Element) = ProductElements(
+        signature = element.getElementsByClass(Tags.SIGNATURE),
+        cost = element.getElementsByClass(Tags.COST),
+        title = element.getElementsByClass(Tags.TITLE)
+    )
 
-    private fun getLocation(signature: Element): String =
-        if (signature.hasText()) {
-            signature.getElementsByTag(STRONG).first().text()
-        } else {
-            ""
+    private fun getProductOwner(signature: Element): ProductOwner {
+        val owner = signature.getElementsByTag(Tags.A).first()
+        return ProductOwner(
+            id = owner.attr(LINK).split(Tags.SEPARATOR).last().toLong(),
+            name = owner.text()
+        )
+    }
+
+    private fun getProductType(elements: Elements): ProductType {
+        return when {
+            elements.hasClass(ProductDocumentType.SELL) -> ProductType.SELL
+            elements.hasClass(ProductDocumentType.BUY) -> ProductType.BUY
+            elements.hasClass(ProductDocumentType.RENT) -> ProductType.RENT
+            elements.hasClass(ProductDocumentType.EXCHANGE) -> ProductType.EXCHANGE
+            elements.hasClass(ProductDocumentType.SERVICE) -> ProductType.SERVICE
+            elements.hasClass(ProductDocumentType.CLOSED) -> ProductType.CLOSED
+            elements.hasClass(ProductDocumentType.WARNING) -> ProductType.WARNING
+            else -> error("Unknown product type.")
         }
+    }
 
     private fun getProductPrice(cost: Element): ProductPrice {
         val amount = if (cost.hasText()) {
-            cost.getElementsByClass(PRICE).text()
+            cost.getElementsByClass(Tags.PRICE).text()
                 .replace(",", ".")
-                .split(" ")[0]
+                .replace(Tags.REGEX_ONLY_NUMBERS_AND_DOTS, "")
+                .trimEnd('.')
                 .toDoubleOrNull()
         } else {
             null
         }
-        val isBargainAvailable = amount?.let { cost.getElementsByClass(COST_TORG).hasText() } ?: false
+        val isBargainAvailable =
+            amount?.let { cost.getElementsByClass(Tags.COST_TORG).hasText() } ?: false
         return ProductPrice(amount, isBargainAvailable)
     }
 
-    private fun getImgLink(product: Element): String =
-        product.getElementsByClass(IMAGE)
-            .first()
-            .getElementsByTag(IMG)
-            .first()
-            .attr(SRC)
+    private data class ProductElements(
+        val signature: Elements,
+        val cost: Elements,
+        val title: Elements
+    )
 
-    private fun getDescription(product: Element): String =
-        if (product.getElementsByClass(DESCRIPTION).isNotEmpty()) {
-            product.getElementsByClass(DESCRIPTION).text()
-        } else {
-            ""
-        }
+    private object ProductDocumentType {
+        const val TYPE = "ba-label"
+        const val WARNING = "ba-label-1"
+        const val SELL = "ba-label-2"
+        const val BUY = "ba-label-3"
+        const val EXCHANGE = "ba-label-4"
+        const val SERVICE = "ba-label-5"
+        const val RENT = "ba-label-6"
+        const val CLOSED = "ba-label-7"
+    }
 
-    private fun getId(title: Elements) =
-        title.first().getElementsByTag(A).attr(LINK).split("=").last().toLong()
-
-    companion object {
+    private object Tags {
         const val A = "a"
         const val COST = "cost"
         const val COST_TORG = "cost-torg"
@@ -130,13 +133,8 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
         const val LAST_UPDATE = "ba-post-up"
         const val SEPARATOR = "user/"
         const val M_IMP = "m-imp"
-        const val TYPE = "ba-label"
-        const val SELL = "ba-label-2"
-        const val BUY = "ba-label-3"
-        const val EXCHANGE = "ba-label-4"
-        const val SERVICE = "ba-label-5"
-        const val RENT = "ba-label-6"
-        const val CLOSED = "ba-label-7"
+
         const val UP = "UP!"
+        val REGEX_ONLY_NUMBERS_AND_DOTS = "[^\\d|.]".toRegex()
     }
 }

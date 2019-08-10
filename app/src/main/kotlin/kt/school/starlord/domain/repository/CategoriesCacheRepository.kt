@@ -13,7 +13,7 @@ interface CategoriesCacheRepository {
      *
      * @return categories of products and services
      */
-    fun getCategories(): LiveData<List<Category>>
+    fun getCategoriesLiveData(): LiveData<List<Category>>
 
     /**
      * Deletes existing categories and puts new ones.

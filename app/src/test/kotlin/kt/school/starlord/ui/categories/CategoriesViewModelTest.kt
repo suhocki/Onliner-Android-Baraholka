@@ -91,7 +91,7 @@ class CategoriesViewModelTest {
         val categories: List<Category> = mockk()
         val categoriesLiveData = MutableLiveData(categories)
 
-        every { categoriesRepository.getCategories() }.answers { categoriesLiveData }
+        every { categoriesRepository.getCategoriesLiveData() }.answers { categoriesLiveData }
 
         // When
         val viewModel = CategoriesViewModel(
