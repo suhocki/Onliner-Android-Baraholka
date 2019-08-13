@@ -188,6 +188,7 @@ dependencies {
     val espressoVersion = "3.3.0-alpha02"
     val junitVersion = "1.1.2-alpha01"
     val moshiVersion = "1.8.0"
+    val pagingVersion = "2.1.0"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
@@ -209,6 +210,9 @@ dependencies {
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
+    // Paging
+    implementation("androidx.paging:paging-runtime:$pagingVersion")
+
     // Koin
     implementation("org.koin:koin-core:$koinVersion")
     implementation("org.koin:koin-androidx-scope:$koinVersion")
@@ -238,6 +242,7 @@ dependencies {
     testImplementation("androidx.test:runner:$testingVersion")
     testImplementation("androidx.test:rules:$testingVersion")
     testImplementation("androidx.test.ext:junit:$junitVersion")
+    testImplementation("androidx.paging:paging-common:$pagingVersion")
 
     testImplementation("androidx.test:core:$testingVersion")
     implementation("androidx.fragment:fragment-testing:$appcompatVersion") {

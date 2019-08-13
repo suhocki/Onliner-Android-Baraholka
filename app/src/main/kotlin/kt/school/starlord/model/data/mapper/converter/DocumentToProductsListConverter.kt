@@ -12,7 +12,7 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
 /**
- * Contains logic on how to convert Jsoup Docu  ment to CategoriesWithSubcategories entity.
+ * Contains logic on how to convert Jsoup Document to CategoriesWithSubcategories entity.
  */
 class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
     Document::class.java, ProductsList::class.java

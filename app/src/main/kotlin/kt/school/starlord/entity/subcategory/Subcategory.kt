@@ -5,6 +5,8 @@ import kotlinx.android.parcel.Parcelize
 
 /**
  * Entity that appears on subcategories screen.
+ *
+ * @param link unique part of Url for navigation to selected subcategory products
  */
 @Parcelize
 data class Subcategory(
