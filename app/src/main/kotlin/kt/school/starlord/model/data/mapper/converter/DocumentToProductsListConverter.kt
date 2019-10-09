@@ -14,7 +14,9 @@ import org.jsoup.select.Elements
 /**
  * Contains logic on how to convert Jsoup Docu  ment to CategoriesWithSubcategories entity.
  */
-class DocumentToProductsListConverter(val stringToInstant: StringToInstantConverter) : BaseConverter<Document, ProductsList>(
+class DocumentToProductsListConverter(
+    private val stringToInstant: StringToInstantConverter
+) : BaseConverter<Document, ProductsList>(
     Document::class.java, ProductsList::class.java
 ) {
     override fun convert(value: Document): ProductsList = ProductsList(
