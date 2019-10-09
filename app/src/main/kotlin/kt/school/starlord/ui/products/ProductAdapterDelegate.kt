@@ -51,7 +51,7 @@ class ProductAdapterDelegate(
             description.text = product.description
             location.text = product.location
             owner.text = product.owner.name
-            lastUpdate.text = product.lastUpdate
+            lastUpdate.text = product.lastUpdate.toString()
             bindType(type, product.type)
             bindCommentsCount(commentsCount, product.commentsCount)
             bindPrice(price, product.price)

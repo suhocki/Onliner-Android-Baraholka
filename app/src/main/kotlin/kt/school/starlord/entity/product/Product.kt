@@ -15,7 +15,7 @@ data class Product(
     val image: String,
     val owner: ProductOwner,
     val price: ProductPrice,
-    val lastUpdate: String,
+    val lastUpdate: Long,
     val commentsCount: Long,
     val isPaid: Boolean = false
 )

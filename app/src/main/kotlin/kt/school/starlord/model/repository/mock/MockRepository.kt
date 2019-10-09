@@ -37,7 +37,7 @@ class MockRepository : CategoriesCacheRepository,
             "file:///android_asset/products/1.jpg",
             ProductOwner("xrystal", 1524248),
             ProductPrice(150.0),
-            "1 час назад",
+            1,
             1,
             true
         ),
@@ -50,7 +50,7 @@ class MockRepository : CategoriesCacheRepository,
             "file:///android_asset/products/2.jpeg",
             ProductOwner("angel_1988", 1813103),
             ProductPrice(0.0),
-            "33 минуты назад",
+            2,
             4
         ),
         Product(
@@ -62,7 +62,7 @@ class MockRepository : CategoriesCacheRepository,
             "file:///android_asset/products/3.jpg",
             ProductOwner("angel_1988", 1813103),
             ProductPrice(200.0, true),
-            "2 минуты назад",
+            3,
             0
         ),
         Product(
@@ -74,7 +74,7 @@ class MockRepository : CategoriesCacheRepository,
             "file:///android_asset/products/4.jpg",
             ProductOwner("BMW888IK5", 717419),
             ProductPrice(),
-            "3 часа назад",
+            3,
             2
         ),
         Product(
@@ -86,7 +86,7 @@ class MockRepository : CategoriesCacheRepository,
             "file:///android_asset/products/5.webp",
             ProductOwner("greendors", 76882),
             ProductPrice(160.0),
-            "7 часов назад",
+            4,
             1
         ),
         Product(
@@ -98,7 +98,7 @@ class MockRepository : CategoriesCacheRepository,
             "file:///android_asset/products/6.jpg",
             ProductOwner("Ta6aK", 442157),
             ProductPrice(30.0),
-            "32 минуты назад",
+            5,
             0
         )
     )

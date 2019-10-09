@@ -14,7 +14,7 @@ import org.jsoup.select.Elements
 /**
  * Contains logic on how to convert Jsoup Docu  ment to CategoriesWithSubcategories entity.
  */
-class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
+class DocumentToProductsListConverter(val stringToInstant: StringToInstantConverter) : BaseConverter<Document, ProductsList>(
     Document::class.java, ProductsList::class.java
 ) {
     override fun convert(value: Document): ProductsList = ProductsList(
@@ -30,6 +30,10 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
         val description = element.getElementsByClass(Tags.DESCRIPTION)
         val comments = element.getElementsByClass(Tags.COMMENTS)
         val signature = signatures.first()
+        val lastUpdateString = element.getElementsByClass(Tags.LAST_UPDATE).first().text()
+            .replaceFirst(Tags.UP, "", true)
+            .replaceIndent()
+
         return Product(
             id = title.first().getElementsByTag(Tags.A).attr(LINK).split("=").last().toLong(),
             title = title.text(),
@@ -45,9 +49,7 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
             type = getProductType(element.getElementsByClass(ProductDocumentType.TYPE)),
             owner = getProductOwner(signature),
             isPaid = element.hasClass(Tags.M_IMP),
-            lastUpdate = element.getElementsByClass(Tags.LAST_UPDATE).first().text()
-                .replaceFirst(Tags.UP, "", true)
-                .replaceIndent()
+            lastUpdate = stringToInstant.convert(lastUpdateString).epochSecond
         )
     }
 

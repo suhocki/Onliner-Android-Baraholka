@@ -53,8 +53,8 @@ class DatabaseRepository(
     }
 
     override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {
-        val roomProducts = products.mapIndexed { position, product ->
-            val productWithMetadata = ProductWithMetadata(product, subcategoryName, position)
+        val roomProducts = products.map { product ->
+            val productWithMetadata = ProductWithMetadata(product, subcategoryName)
             mapper.map<RoomProduct>(productWithMetadata)
         }
         daoManager.productDao.replaceAll(subcategoryName, roomProducts)

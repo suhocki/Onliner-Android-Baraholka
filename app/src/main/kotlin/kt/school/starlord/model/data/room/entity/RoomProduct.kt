@@ -11,20 +11,16 @@ import kt.school.starlord.model.data.room.AppDatabase
 
 /**
  * Keeps information about product.
- *
- * @param position defines a position of product in the resulted list. When we load products from database
- * there is a big chance that the order of the elements will be not the same as it on the web server.
  */
 @Entity(
     tableName = AppDatabase.Table.PRODUCTS,
     indices = [
         Index(RoomProduct.SUBCATEGORY_NAME),
-        Index(RoomProduct.POSITION)
+        Index(RoomProduct.LAST_UPDATE)
     ]
 )
 data class RoomProduct(
     @PrimaryKey val id: Long,
-    val position: Int,
     @ForeignKey(
         entity = RoomSubcategory::class,
         parentColumns = [RoomSubcategory.NAME],
@@ -38,12 +34,12 @@ data class RoomProduct(
     val image: String,
     val owner: ProductOwner,
     val price: ProductPrice,
-    val lastUpdate: String,
+    val lastUpdate: Long,
     val commentsCount: Long,
     val isPaid: Boolean = false
 ) {
     companion object {
         const val SUBCATEGORY_NAME = "subcategoryName"
-        const val POSITION = "position"
+        const val LAST_UPDATE = "lastUpdate"
     }
 }

@@ -5,6 +5,5 @@ package kt.school.starlord.entity.product
  */
 data class ProductWithMetadata(
     val product: Product,
-    val subcategoryName: String,
-    val position: Int
+    val subcategoryName: String
 )
