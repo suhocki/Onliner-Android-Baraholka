@@ -31,7 +31,7 @@ class ProductsFragment : Fragment() {
 
     private val adapter by lazy {
         AppRecyclerAdapter(
-            ProductAdapterDelegate {}
+            UiProductAdapterDelegate {}
         )
     }
 

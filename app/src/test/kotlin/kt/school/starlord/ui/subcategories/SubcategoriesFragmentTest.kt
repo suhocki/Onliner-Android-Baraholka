@@ -17,7 +17,7 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.android.synthetic.main.fragment_subcategories.*
-import kt.school.starlord.entity.subcategory.Subcategory
+import kt.school.starlord.domain.entity.subcategory.Subcategory
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

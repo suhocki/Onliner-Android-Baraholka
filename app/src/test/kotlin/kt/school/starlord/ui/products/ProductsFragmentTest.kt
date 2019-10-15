@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.map
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.every
 import io.mockk.mockk
@@ -12,8 +13,8 @@ import io.mockk.verify
 import kotlinx.android.synthetic.main.fragment_products.*
 import kt.school.starlord.domain.system.view.ErrorSnackbar
 import kt.school.starlord.domain.system.view.ProgressSnackbar
-import kt.school.starlord.entity.product.Product
-import kt.school.starlord.entity.subcategory.Subcategory
+import kt.school.starlord.domain.entity.subcategory.Subcategory
+import kt.school.starlord.model.data.mapper.converter.ProductToUiProductConverter
 import kt.school.starlord.model.repository.mock.MockRepository
 import kt.school.starlord.ui.global.AppRecyclerAdapter
 import org.junit.Before
@@ -30,9 +31,12 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
     private val viewModel: ProductsViewModel = mockk(relaxed = true)
     private val progressSnackbar: ProgressSnackbar = mockk(relaxUnitFun = true)
     private val errorSnackbar: ErrorSnackbar = mockk(relaxUnitFun = true)
-    private val mockRepository = MockRepository()
+    private val productToUiProductConverter = ProductToUiProductConverter(mockk(relaxed = true))
     private val subcategory: Subcategory = mockk()
+
+    private val mockRepository = MockRepository()
     private val arguments = Bundle().apply { putParcelable("subcategory", subcategory) }
+
     private val scenario by lazy {
         FragmentScenario.launchInContainer(ProductsFragment::class.java, arguments)
     }
@@ -138,8 +142,13 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
     fun `show products`() {
         // Given
         mockkConstructor(AppRecyclerAdapter::class)
-        val products: MutableLiveData<List<Product>> = mockRepository.getProductsLiveData(anyString())
+
+        val products = mockRepository.getProductsLiveData(anyString()).map { products ->
+            products.map { productToUiProductConverter.convert(it) }
+        }
+
         every { viewModel.getProducts() } returns products
+
         scenario.moveToState(Lifecycle.State.CREATED)
 
         // When

@@ -11,7 +11,6 @@ import org.threeten.bp.Instant
 class StringToInstantConverterTest {
 
     private val converter = StringToInstantConverter()
-
     private val now = Instant.now()
 
     @BeforeEach
@@ -35,7 +34,8 @@ class StringToInstantConverterTest {
         "1 день назад" to now.minusMillis(MILLIS_IN_DAY),
         "22 дня назад" to now.minusMillis(22 * MILLIS_IN_DAY),
         "55 дней назад" to now.minusMillis(55 * MILLIS_IN_DAY),
-        "89 дней назад" to now.minusMillis(89 * MILLIS_IN_DAY)
+        "89 дней назад" to now.minusMillis(89 * MILLIS_IN_DAY),
+        "более 4 лет назад" to Instant.ofEpochMilli(0)
     ).map { (input, expected) ->
         DynamicTest.dynamicTest("when I convert \"$input\" then I get ${expected.epochSecond}") {
             Assertions.assertEquals(expected.epochSecond, converter.convert(input).epochSecond)

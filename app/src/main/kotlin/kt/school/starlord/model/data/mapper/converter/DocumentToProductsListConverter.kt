@@ -1,10 +1,10 @@
 package kt.school.starlord.model.data.mapper.converter
 
-import kt.school.starlord.entity.product.Product
-import kt.school.starlord.entity.product.ProductOwner
-import kt.school.starlord.entity.product.ProductPrice
-import kt.school.starlord.entity.product.ProductType
-import kt.school.starlord.entity.product.ProductsList
+import kt.school.starlord.domain.entity.product.Product
+import kt.school.starlord.domain.entity.product.ProductOwner
+import kt.school.starlord.domain.entity.product.ProductPrice
+import kt.school.starlord.domain.entity.product.ProductType
+import kt.school.starlord.domain.entity.product.ProductsList
 import kt.school.starlord.model.data.mapper.converter.DocumentToCategoriesWithSubcategoriesConverter.Companion.LINK
 import kt.school.starlord.model.data.mapper.entity.BaseConverter
 import org.jsoup.nodes.Document
@@ -12,7 +12,7 @@ import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
 /**
- * Contains logic on how to convert Jsoup Docu  ment to CategoriesWithSubcategories entity.
+ * Contains logic on how to convert Jsoup Document to CategoriesWithSubcategories entity.
  */
 class DocumentToProductsListConverter(
     private val stringToInstant: StringToInstantConverter
@@ -51,7 +51,7 @@ class DocumentToProductsListConverter(
             type = getProductType(element.getElementsByClass(ProductDocumentType.TYPE)),
             owner = getProductOwner(signature),
             isPaid = element.hasClass(Tags.M_IMP),
-            lastUpdate = stringToInstant.convert(lastUpdateString).epochSecond
+            lastUpdate = stringToInstant.convert(lastUpdateString).toEpochMilli()
         )
     }
 

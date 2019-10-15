@@ -9,9 +9,9 @@ import io.mockk.mockk
 import kt.school.starlord.domain.repository.CategoriesCacheRepository
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
-import kt.school.starlord.entity.category.CategoriesWithSubcategories
-import kt.school.starlord.entity.category.Category
-import kt.school.starlord.entity.subcategory.Subcategory
+import kt.school.starlord.domain.entity.category.CategoriesWithSubcategories
+import kt.school.starlord.domain.entity.category.Category
+import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 import kt.school.starlord.ui.TestCoroutineRule

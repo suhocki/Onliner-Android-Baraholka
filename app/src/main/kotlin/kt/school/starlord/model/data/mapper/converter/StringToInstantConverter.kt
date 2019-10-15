@@ -10,21 +10,20 @@ import org.threeten.bp.Instant
 class StringToInstantConverter : BaseConverter<String, Instant>(
     String::class.java, Instant::class.java
 ) {
-    override fun convert(value: String): Instant {
-        val now = Instant.now()
+    override fun convert(value: String): Instant = when {
+        value.startsWith(TimeType.SECONDS.identifier) -> Instant.now()
+        value.startsWith(TimeType.MAX.identifier) -> Instant.ofEpochMilli(0)
+        else -> Instant.now().minusMillis(getDelta(value))
+    }
 
-        if (value.startsWith(TimeType.SECONDS.identifier)) {
-            return now
-        }
-
+    private fun getDelta(value: String): Long {
         val parsed = REGEX_DATA.find(value)?.groupValues ?: error("Cannot parse Date from $value")
 
         if (parsed.size < MIN_PARTS_COUNT) error("Cannot parse Date from $value")
 
-        val (number, timeType) = parsed[INDEX_OF_NUMBER].toLong() to
-                TimeType.values().first { it.identifier == parsed[INDEX_OF_TIME_TYPE] }
-
-        return now.minusMillis(number * timeType.timeFactor)
+        val number = parsed[INDEX_OF_NUMBER].toLong()
+        val timeType = TimeType.values().first { it.identifier == parsed[INDEX_OF_TIME_TYPE] }
+        return number * timeType.timeFactor
     }
 
     companion object {
@@ -44,6 +43,7 @@ class StringToInstantConverter : BaseConverter<String, Instant>(
         SECONDS("меньше", MILLIS_IN_SEC),
         MINUTES("м", SECONDS_IN_MINUTE * SECONDS.timeFactor),
         HOURS("ч", MINUTES_IN_HOUR * MINUTES.timeFactor),
-        DAYS("д", HOURS_IN_DAY * HOURS.timeFactor)
+        DAYS("д", HOURS_IN_DAY * HOURS.timeFactor),
+        MAX("более", -1)
     }
 }

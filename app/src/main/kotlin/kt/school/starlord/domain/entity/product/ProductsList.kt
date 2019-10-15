@@ -1,4 +1,4 @@
-package kt.school.starlord.entity.product
+package kt.school.starlord.domain.entity.product
 
 /**
 * Entity for ProductListRepository implemented on NetworkRepository.
