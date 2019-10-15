@@ -1,9 +1,11 @@
 <resources>
     <string name="app_name">StarLord</string>
-    <string name="bargain">Торг</string>
+    <string name="bargain">Bargain</string>
     <string name="up">Up!</string>
-    <string name="for_free">Даром</string>
+    <string name="for_free">For free</string>
     <string name="price">%1$s р.</string>
     <string name="updating">Updating…</string>
     <string name="ok">OK</string>
+    <string name="more_than_month_ago">More than a month ago</string>
+    <string name="less_than_minute_ago">Less than a minute ago</string>
 </resources>

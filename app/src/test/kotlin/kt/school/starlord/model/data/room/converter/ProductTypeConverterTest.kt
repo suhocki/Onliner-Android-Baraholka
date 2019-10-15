@@ -1,6 +1,6 @@
 package kt.school.starlord.model.data.room.converter
 
-import kt.school.starlord.entity.product.ProductType
+import kt.school.starlord.domain.entity.product.ProductType
 import org.junit.Test
 
 class ProductTypeConverterTest {

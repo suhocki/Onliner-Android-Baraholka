@@ -1,4 +1,4 @@
-package kt.school.starlord.entity.product
+package kt.school.starlord.domain.entity.product
 
 import com.squareup.moshi.JsonClass
 
@@ -7,6 +7,6 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 data class ProductPrice(
-    val amount: Double? = null,
-    val isBargainAvailable: Boolean = false
+    val amount: Double?,
+    val isBargainAvailable: Boolean
 )

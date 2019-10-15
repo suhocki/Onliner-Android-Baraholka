@@ -1,10 +1,9 @@
-package kt.school.starlord.entity.product
+package kt.school.starlord.domain.entity.product
 
 /**
  * Created to store product together with subcategory name.
  */
 data class ProductWithMetadata(
     val product: Product,
-    val subcategoryName: String,
-    val position: Int
+    val subcategoryName: String
 )

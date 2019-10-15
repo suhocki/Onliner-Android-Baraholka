@@ -5,7 +5,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.mockkStatic
 import io.mockk.verify
-import kt.school.starlord.extension.fixIMMLeak
+import kt.school.starlord.ui.global.extension.fixIMMLeak
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.test.AutoCloseKoinTest
@@ -18,7 +18,7 @@ class AppActivityTest : AutoCloseKoinTest() {
 
     @Test
     fun `remove input method manager`() {
-        mockkStatic("kt.school.starlord.extension.AndroidExtensionsKt")
+        mockkStatic("kt.school.starlord.ui.global.extension.AndroidExtensionsKt")
 
         scenario.onActivity {
             scenario.moveToState(Lifecycle.State.DESTROYED)

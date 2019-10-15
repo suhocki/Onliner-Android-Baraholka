@@ -1,4 +1,4 @@
-package kt.school.starlord.entity.product
+package kt.school.starlord.domain.entity.product
 
 /**
  * Entity for RecyclerView at ProductsFragment.
@@ -15,7 +15,7 @@ data class Product(
     val image: String,
     val owner: ProductOwner,
     val price: ProductPrice,
-    val lastUpdate: String,
+    val lastUpdate: Long,
     val commentsCount: Long,
     val isPaid: Boolean = false
 )

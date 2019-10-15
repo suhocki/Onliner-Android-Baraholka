@@ -6,10 +6,10 @@ import kt.school.starlord.BuildConfig
 import kt.school.starlord.domain.repository.CategoriesCacheRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.domain.repository.product.ProductsCacheRepository
-import kt.school.starlord.entity.category.Category
-import kt.school.starlord.entity.product.Product
-import kt.school.starlord.entity.product.ProductWithMetadata
-import kt.school.starlord.entity.subcategory.Subcategory
+import kt.school.starlord.domain.entity.category.Category
+import kt.school.starlord.domain.entity.product.Product
+import kt.school.starlord.domain.entity.product.ProductWithMetadata
+import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.data.room.entity.RoomCategory
@@ -53,8 +53,8 @@ class DatabaseRepository(
     }
 
     override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {
-        val roomProducts = products.mapIndexed { position, product ->
-            val productWithMetadata = ProductWithMetadata(product, subcategoryName, position)
+        val roomProducts = products.map { product ->
+            val productWithMetadata = ProductWithMetadata(product, subcategoryName)
             mapper.map<RoomProduct>(productWithMetadata)
         }
         daoManager.productDao.replaceAll(subcategoryName, roomProducts)
