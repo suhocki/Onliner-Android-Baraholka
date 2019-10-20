@@ -3,7 +3,7 @@ package kt.school.starlord.model.data.room.converter
 import androidx.room.TypeConverter
 import com.squareup.moshi.Moshi
 import kt.school.starlord.domain.data.room.RoomConverter
-import kt.school.starlord.entity.product.ProductOwner
+import kt.school.starlord.domain.entity.product.ProductOwner
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 

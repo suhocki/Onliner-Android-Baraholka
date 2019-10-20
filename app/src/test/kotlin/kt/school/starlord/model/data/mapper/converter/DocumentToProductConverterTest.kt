@@ -10,7 +10,7 @@ import org.koin.test.AutoCloseKoinTest
 @RunWith(AndroidJUnit4::class)
 class DocumentToProductConverterTest : AutoCloseKoinTest() {
 
-    private val converter = DocumentToProductsListConverter()
+    private val converter = DocumentToProductsListConverter(StringToInstantConverter())
 
     @Test
     fun `convert document to products`() {

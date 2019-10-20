@@ -1,4 +1,4 @@
-package kt.school.starlord.entity.subcategory
+package kt.school.starlord.domain.entity.subcategory
 
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize

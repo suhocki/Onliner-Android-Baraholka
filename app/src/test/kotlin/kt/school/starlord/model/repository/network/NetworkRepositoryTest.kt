@@ -8,8 +8,8 @@ import java.net.URL
 import kt.school.starlord.BuildConfig
 import kt.school.starlord.TestContextProvider
 import kt.school.starlord.domain.data.mapper.Converter
-import kt.school.starlord.entity.category.CategoriesWithSubcategories
-import kt.school.starlord.entity.product.ProductsList
+import kt.school.starlord.domain.entity.category.CategoriesWithSubcategories
+import kt.school.starlord.domain.entity.product.ProductsList
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.mapper.converter.StringToUrlConverter
 import kt.school.starlord.model.data.mapper.entity.BaseConverter

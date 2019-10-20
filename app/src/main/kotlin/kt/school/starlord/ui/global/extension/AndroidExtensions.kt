@@ -1,4 +1,4 @@
-package kt.school.starlord.extension
+package kt.school.starlord.ui.global.extension
 
 import android.app.Activity
 import android.content.Context

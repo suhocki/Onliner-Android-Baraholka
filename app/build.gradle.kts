@@ -74,6 +74,7 @@ android {
                 isMinifyEnabled = false
                 versionNameSuffix = "-debug"
                 applicationIdSuffix = ".debug"
+                multiDexEnabled = true
             }
             getByName("release") {
                 isMinifyEnabled = true
@@ -188,15 +189,17 @@ dependencies {
     val espressoVersion = "3.3.0-alpha02"
     val junitVersion = "1.1.2-alpha01"
     val moshiVersion = "1.8.0"
+    val pagingVersion = "2.1.0"
+    val adapterDelegatesVersion = "4.2.0"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-RC")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0-RC")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${KotlinCompilerVersion.VERSION}")
-    implementation("androidx.core:core-ktx:1.2.0-alpha03")
+    implementation("androidx.core:core-ktx:1.2.0-alpha04")
     implementation("androidx.appcompat:appcompat:$appcompatVersion")
-    implementation("com.google.android.material:material:1.1.0-alpha09")
+    implementation("com.google.android.material:material:1.1.0-beta01")
     implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta2")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
@@ -209,12 +212,17 @@ dependencies {
     // Navigation
     implementation("androidx.navigation:navigation-fragment-ktx:$navigationVersion")
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
+    // Paging
+    implementation("androidx.paging:paging-runtime:$pagingVersion")
+
     // Koin
     implementation("org.koin:koin-core:$koinVersion")
     implementation("org.koin:koin-androidx-scope:$koinVersion")
     implementation("org.koin:koin-androidx-viewmodel:$koinVersion")
     // Adapter simplify
-    implementation("com.hannesdorfmann:adapterdelegates4:4.0.0")
+    implementation("com.hannesdorfmann:adapterdelegates4:$adapterDelegatesVersion")
+    implementation("com.hannesdorfmann:adapterdelegates4-kotlin-dsl-layoutcontainer:$adapterDelegatesVersion")
+    implementation("com.hannesdorfmann:adapterdelegates4-pagination:$adapterDelegatesVersion")
     // Log
     implementation("com.jakewharton.timber:timber:4.7.1")
     // Parsing
@@ -222,18 +230,21 @@ dependencies {
     implementation("org.jsoup:jsoup:1.12.1")
 
     implementation("com.github.bumptech.glide:glide:$glideVersion")
+    // Time
+    implementation("com.jakewharton.threetenabp:threetenabp:1.2.1")
 
     // Find memory leaks
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
 
     // Testing
-    testImplementation("junit:junit:4.12")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-android:$mockkVersion")
     testImplementation("org.koin:koin-test:$koinVersion")
     testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-test:1.2.1")
     testImplementation("org.robolectric:robolectric:4.3")
-    testImplementation("androidx.arch.core:core-testing:2.1.0-rc01")
+    testImplementation("androidx.arch.core:core-testing:2.1.0")
     testImplementation("androidx.room:room-testing:$roomVersion")
     testImplementation("androidx.test:runner:$testingVersion")
     testImplementation("androidx.test:rules:$testingVersion")

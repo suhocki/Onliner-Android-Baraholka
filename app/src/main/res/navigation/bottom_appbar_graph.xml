@@ -41,6 +41,6 @@
 
         <argument
             android:name="subcategory"
-            app:argType="kt.school.starlord.entity.subcategory.Subcategory" />
+            app:argType="kt.school.starlord.domain.entity.subcategory.Subcategory" />
     </fragment>
 </navigation>

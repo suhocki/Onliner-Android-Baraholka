@@ -1,4 +1,4 @@
-package kt.school.starlord.extension
+package kt.school.starlord.ui.global.extension
 
 import android.app.Activity
 import android.content.Context
@@ -23,7 +23,7 @@ class AndroidExtensionsKtTest {
         val declaredField: Field = mockk(relaxUnitFun = true)
         val view: View = mockk()
 
-        mockkStatic("kt.school.starlord.extension.ReflectExtensionsKt")
+        mockkStatic("kt.school.starlord.ui.global.extension.ReflectExtensionsKt")
 
         every { activity.getSystemService(Context.INPUT_METHOD_SERVICE) } returns inputMethodManager
         every { inputMethodManager.getClassDeclaredFields() } returns arrayOf(declaredField)
@@ -46,7 +46,7 @@ class AndroidExtensionsKtTest {
         val activity: Activity = mockk()
         val error = Throwable()
 
-        mockkStatic("kt.school.starlord.extension.ReflectExtensionsKt")
+        mockkStatic("kt.school.starlord.ui.global.extension.ReflectExtensionsKt")
         mockkStatic(Timber::class)
 
         every { activity.getSystemService(Context.INPUT_METHOD_SERVICE) } throws error

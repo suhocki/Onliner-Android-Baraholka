@@ -2,6 +2,7 @@ package kt.school.starlord
 
 import android.annotation.SuppressLint
 import android.app.Application
+import com.jakewharton.threetenabp.AndroidThreeTen
 import kt.school.starlord.di.appModule
 import kt.school.starlord.di.databaseModule
 import kt.school.starlord.di.mapperModule
@@ -20,6 +21,7 @@ open class App : Application() {
     override fun onCreate() {
         super.onCreate()
         initKoin()
+        AndroidThreeTen.init(this)
     }
 
     private fun initKoin() {
