@@ -17,7 +17,7 @@ abstract class ProductDao {
      * @param subcategoryName name of selected subcategory.
      * @return all products for selected subcategory by subcategoryName.
      */
-    @Query("SELECT * FROM Products WHERE subcategoryName=:subcategoryName ORDER BY position LIMIT :pageSize")
+    @Query("SELECT * FROM Products WHERE subcategoryName=:subcategoryName ORDER BY lastUpdate DESC LIMIT :pageSize")
     abstract fun getProducts(subcategoryName: String, pageSize: Int): LiveData<List<RoomProduct>>
 
     /**

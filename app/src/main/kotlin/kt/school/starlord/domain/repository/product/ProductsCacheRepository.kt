@@ -1,7 +1,7 @@
 package kt.school.starlord.domain.repository.product
 
 import androidx.lifecycle.LiveData
-import kt.school.starlord.entity.product.Product
+import kt.school.starlord.domain.entity.product.Product
 
 /**
  * Defines access methods for products that is located in cache.

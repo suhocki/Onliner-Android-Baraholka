@@ -1,12 +1,14 @@
 package kt.school.starlord.di
 
-import kt.school.starlord.entity.category.Category
-import kt.school.starlord.entity.product.Product
-import kt.school.starlord.entity.product.ProductWithMetadata
-import kt.school.starlord.entity.subcategory.Subcategory
+import kt.school.starlord.domain.entity.category.Category
+import kt.school.starlord.domain.entity.product.Product
+import kt.school.starlord.domain.entity.product.ProductWithMetadata
+import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.mapper.converter.DocumentToCategoriesWithSubcategoriesConverter
 import kt.school.starlord.model.data.mapper.converter.DocumentToProductsListConverter
+import kt.school.starlord.model.data.mapper.converter.ProductToUiProductConverter
+import kt.school.starlord.model.data.mapper.converter.StringToInstantConverter
 import kt.school.starlord.model.data.mapper.converter.StringToUrlConverter
 import kt.school.starlord.model.data.mapper.entity.BaseConverter
 import kt.school.starlord.model.data.room.entity.RoomCategory
@@ -20,8 +22,9 @@ import org.koin.dsl.module
 val mapperModule = module {
     single {
         val converters = setOf(
+            ProductToUiProductConverter(get()),
             DocumentToCategoriesWithSubcategoriesConverter(),
-            DocumentToProductsListConverter(),
+            DocumentToProductsListConverter(StringToInstantConverter()),
             StringToUrlConverter(),
             object : BaseConverter<RoomCategory, Category>(RoomCategory::class.java, Category::class.java) {
                 override fun convert(value: RoomCategory) = Category(value.name)
@@ -77,8 +80,7 @@ val mapperModule = module {
                         price = product.price,
                         lastUpdate = product.lastUpdate,
                         commentsCount = product.commentsCount,
-                        isPaid = product.isPaid,
-                        position = value.position
+                        isPaid = product.isPaid
                     )
                 }
             }

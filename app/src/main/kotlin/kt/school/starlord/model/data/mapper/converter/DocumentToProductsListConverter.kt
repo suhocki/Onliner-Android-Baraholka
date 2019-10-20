@@ -1,10 +1,10 @@
 package kt.school.starlord.model.data.mapper.converter
 
-import kt.school.starlord.entity.product.Product
-import kt.school.starlord.entity.product.ProductOwner
-import kt.school.starlord.entity.product.ProductPrice
-import kt.school.starlord.entity.product.ProductType
-import kt.school.starlord.entity.product.ProductsList
+import kt.school.starlord.domain.entity.product.Product
+import kt.school.starlord.domain.entity.product.ProductOwner
+import kt.school.starlord.domain.entity.product.ProductPrice
+import kt.school.starlord.domain.entity.product.ProductType
+import kt.school.starlord.domain.entity.product.ProductsList
 import kt.school.starlord.model.data.mapper.converter.DocumentToCategoriesWithSubcategoriesConverter.Companion.LINK
 import kt.school.starlord.model.data.mapper.entity.BaseConverter
 import org.jsoup.nodes.Document
@@ -14,7 +14,9 @@ import org.jsoup.select.Elements
 /**
  * Contains logic on how to convert Jsoup Document to CategoriesWithSubcategories entity.
  */
-class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
+class DocumentToProductsListConverter(
+    private val stringToInstant: StringToInstantConverter
+) : BaseConverter<Document, ProductsList>(
     Document::class.java, ProductsList::class.java
 ) {
     override fun convert(value: Document): ProductsList = ProductsList(
@@ -30,6 +32,10 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
         val description = element.getElementsByClass(Tags.DESCRIPTION)
         val comments = element.getElementsByClass(Tags.COMMENTS)
         val signature = signatures.first()
+        val lastUpdateString = element.getElementsByClass(Tags.LAST_UPDATE).first().text()
+            .replaceFirst(Tags.UP, "", true)
+            .replaceIndent()
+
         return Product(
             id = title.first().getElementsByTag(Tags.A).attr(LINK).split("=").last().toLong(),
             title = title.text(),
@@ -45,9 +51,7 @@ class DocumentToProductsListConverter : BaseConverter<Document, ProductsList>(
             type = getProductType(element.getElementsByClass(ProductDocumentType.TYPE)),
             owner = getProductOwner(signature),
             isPaid = element.hasClass(Tags.M_IMP),
-            lastUpdate = element.getElementsByClass(Tags.LAST_UPDATE).first().text()
-                .replaceFirst(Tags.UP, "", true)
-                .replaceIndent()
+            lastUpdate = stringToInstant.convert(lastUpdateString).toEpochMilli()
         )
     }
 

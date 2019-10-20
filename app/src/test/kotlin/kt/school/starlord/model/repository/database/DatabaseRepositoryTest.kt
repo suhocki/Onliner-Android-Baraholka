@@ -9,8 +9,8 @@ import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
 import kt.school.starlord.di.mapperModule
-import kt.school.starlord.entity.category.Category
-import kt.school.starlord.entity.product.Product
+import kt.school.starlord.domain.entity.category.Category
+import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.data.room.entity.RoomCategory

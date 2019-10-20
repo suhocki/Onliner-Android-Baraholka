@@ -5,14 +5,14 @@ codecov:
 coverage:
   precision: 2
   round: down
-  range: "70...100"
+  range: "50...70"
 
   status:
     project:
       default:
         target: auto
-        threshold: 0.5%
-    patch: yes
+        threshold: 2%
+    patch: no
     changes: no
 
 parsers:
@@ -23,10 +23,7 @@ parsers:
       method: no
       macro: no
 
-comment:
-  layout: "header, diff"
-  behavior: default
-  require_changes: no
+comment: false
 
 ignore:
   - "Mock*.kt"

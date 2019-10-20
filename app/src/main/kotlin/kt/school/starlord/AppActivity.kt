@@ -2,7 +2,7 @@ package kt.school.starlord
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import kt.school.starlord.extension.fixIMMLeak
+import kt.school.starlord.ui.global.extension.fixIMMLeak
 
 /**
  * The only activity class for this application.

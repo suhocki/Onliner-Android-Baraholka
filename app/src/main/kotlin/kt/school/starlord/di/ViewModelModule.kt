@@ -1,6 +1,6 @@
 package kt.school.starlord.di
 
-import kt.school.starlord.entity.subcategory.Subcategory
+import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 import kt.school.starlord.ui.categories.CategoriesViewModel
@@ -22,5 +22,5 @@ val viewModelModule = module {
 
     viewModel { (categoryName: String) -> SubcategoriesViewModel(get(), categoryName) }
 
-    viewModel { (subcategory: Subcategory) -> ProductsViewModel(get(), get(), get(), get(), subcategory) }
+    viewModel { (subcategory: Subcategory) -> ProductsViewModel(get(), get(), get(), get(), get(), subcategory) }
 }

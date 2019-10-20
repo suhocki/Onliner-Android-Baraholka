@@ -1,4 +1,4 @@
-package kt.school.starlord.entity.product
+package kt.school.starlord.domain.entity.product
 
 import androidx.annotation.ColorRes
 import kt.school.starlord.R

@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import io.mockk.every
 import io.mockk.mockk
-import kt.school.starlord.entity.product.ProductPrice
+import kt.school.starlord.domain.entity.product.ProductPrice
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith

@@ -6,9 +6,9 @@ import kt.school.starlord.BuildConfig
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
 import kt.school.starlord.domain.repository.product.ProductsRepository
 import kt.school.starlord.domain.system.coroutine.CoroutineContextProvider
-import kt.school.starlord.entity.category.CategoriesWithSubcategories
-import kt.school.starlord.entity.product.Product
-import kt.school.starlord.entity.product.ProductsList
+import kt.school.starlord.domain.entity.category.CategoriesWithSubcategories
+import kt.school.starlord.domain.entity.product.Product
+import kt.school.starlord.domain.entity.product.ProductsList
 import kt.school.starlord.model.data.mapper.Mapper
 import org.jsoup.Jsoup
 

@@ -4,18 +4,18 @@ package kt.school.starlord.model.repository.mock
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import kt.school.starlord.domain.entity.category.CategoriesWithSubcategories
+import kt.school.starlord.domain.entity.category.Category
+import kt.school.starlord.domain.entity.product.Product
+import kt.school.starlord.domain.entity.product.ProductOwner
+import kt.school.starlord.domain.entity.product.ProductPrice
+import kt.school.starlord.domain.entity.product.ProductType
+import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.domain.repository.CategoriesCacheRepository
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
-import kt.school.starlord.domain.repository.product.ProductsRepository
-import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
-import kt.school.starlord.entity.category.CategoriesWithSubcategories
-import kt.school.starlord.entity.category.Category
-import kt.school.starlord.entity.product.Product
-import kt.school.starlord.entity.product.ProductOwner
-import kt.school.starlord.entity.product.ProductPrice
-import kt.school.starlord.entity.product.ProductType
-import kt.school.starlord.entity.subcategory.Subcategory
+import kt.school.starlord.domain.repository.product.ProductsCacheRepository
+import kt.school.starlord.domain.repository.product.ProductsRepository
 
 /**
  * Repository that contains fake (mocked) data from all application data sources.
@@ -27,7 +27,7 @@ class MockRepository : CategoriesCacheRepository,
     ProductsRepository,
     ProductsCacheRepository {
 
-    private val products = listOf(
+    val products = listOf(
         Product(
             22175010,
             "Куплю компактный диван",
@@ -36,8 +36,8 @@ class MockRepository : CategoriesCacheRepository,
             "Минск",
             "file:///android_asset/products/1.jpg",
             ProductOwner("xrystal", 1524248),
-            ProductPrice(150.0),
-            "1 час назад",
+            ProductPrice(150.0, false),
+            1,
             1,
             true
         ),
@@ -49,8 +49,8 @@ class MockRepository : CategoriesCacheRepository,
             "Минск",
             "file:///android_asset/products/2.jpeg",
             ProductOwner("angel_1988", 1813103),
-            ProductPrice(0.0),
-            "33 минуты назад",
+            ProductPrice(0.0, false),
+            2,
             4
         ),
         Product(
@@ -62,7 +62,7 @@ class MockRepository : CategoriesCacheRepository,
             "file:///android_asset/products/3.jpg",
             ProductOwner("angel_1988", 1813103),
             ProductPrice(200.0, true),
-            "2 минуты назад",
+            3,
             0
         ),
         Product(
@@ -73,8 +73,8 @@ class MockRepository : CategoriesCacheRepository,
             "Минск",
             "file:///android_asset/products/4.jpg",
             ProductOwner("BMW888IK5", 717419),
-            ProductPrice(),
-            "3 часа назад",
+            ProductPrice(null, false),
+            3,
             2
         ),
         Product(
@@ -85,8 +85,8 @@ class MockRepository : CategoriesCacheRepository,
             "Минск",
             "file:///android_asset/products/5.webp",
             ProductOwner("greendors", 76882),
-            ProductPrice(160.0),
-            "7 часов назад",
+            ProductPrice(160.0, false),
+            4,
             1
         ),
         Product(
@@ -97,8 +97,8 @@ class MockRepository : CategoriesCacheRepository,
             "Минск",
             "file:///android_asset/products/6.jpg",
             ProductOwner("Ta6aK", 442157),
-            ProductPrice(30.0),
-            "32 минуты назад",
+            ProductPrice(30.0, false),
+            5,
             0
         )
     )
