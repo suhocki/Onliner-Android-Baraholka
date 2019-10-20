@@ -6,12 +6,14 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.paging.PagedList
 import androidx.recyclerview.widget.LinearLayoutManager
 import kotlinx.android.synthetic.main.fragment_products.*
 import kt.school.starlord.R
 import kt.school.starlord.domain.system.view.ErrorSnackbar
 import kt.school.starlord.domain.system.view.ProgressSnackbar
-import kt.school.starlord.ui.global.AppRecyclerAdapter
+import kt.school.starlord.ui.global.AppPagedRecyclerAdapter
+import kt.school.starlord.ui.global.UiEntity
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -29,11 +31,9 @@ class ProductsFragment : Fragment() {
     private val progressSnackbar: ProgressSnackbar by inject(parameters = { parametersOf(requireActivity()) })
     private val errorSnackbar: ErrorSnackbar by inject(parameters = { parametersOf(requireActivity()) })
 
-    private val adapter by lazy {
-        AppRecyclerAdapter(
-            UiProductAdapterDelegate {}
-        )
-    }
+    private val adapter = AppPagedRecyclerAdapter(
+        ProductAdapterDelegate {}
+    )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
         inflater.inflate(R.layout.fragment_products, container, false)
@@ -44,7 +44,9 @@ class ProductsFragment : Fragment() {
         recyclerView.setHasFixedSize(true)
         recyclerView.adapter = adapter
 
-        viewModel.getProducts().observe(viewLifecycleOwner, Observer(adapter::setData))
+        viewModel.getProducts().observe(viewLifecycleOwner, Observer {
+            adapter.submitList(it as PagedList<UiEntity>)
+        })
         viewModel.getProgress().observe(viewLifecycleOwner, Observer(progressSnackbar::setVisibility))
         viewModel.getError().observe(viewLifecycleOwner, Observer(errorSnackbar::show))
     }

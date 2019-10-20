@@ -4,6 +4,7 @@ package kt.school.starlord.model.repository.mock
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.paging.DataSource
 import kt.school.starlord.domain.entity.category.CategoriesWithSubcategories
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.entity.product.Product
@@ -172,7 +173,9 @@ class MockRepository : CategoriesCacheRepository,
     override suspend fun getCategoriesWithSubcategories() =
         CategoriesWithSubcategories(emptyList(), emptyList())
 
-    override fun getProductsLiveData(subcategoryName: String) = MutableLiveData(products)
+    override fun getProductsLiveData(subcategoryName: String): DataSource.Factory<Int, Product> {
+        TODO()
+    }
 
     override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {}
 

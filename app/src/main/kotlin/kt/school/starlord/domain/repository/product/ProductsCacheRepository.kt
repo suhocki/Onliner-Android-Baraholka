@@ -1,6 +1,6 @@
 package kt.school.starlord.domain.repository.product
 
-import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import kt.school.starlord.domain.entity.product.Product
 
 /**
@@ -11,7 +11,7 @@ interface ProductsCacheRepository {
     /**
      * Loads products live data from cache.
      */
-    fun getProductsLiveData(subcategoryName: String): LiveData<List<Product>>
+    fun getProductsLiveData(subcategoryName: String): DataSource.Factory<Int, Product>
 
     /**
      * Deletes existing products of selected subcategoryName and puts a new ones.

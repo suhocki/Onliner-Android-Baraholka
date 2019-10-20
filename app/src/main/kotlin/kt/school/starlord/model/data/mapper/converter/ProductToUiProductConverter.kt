@@ -25,6 +25,7 @@ class ProductToUiProductConverter(private val resources: ResourceManager) :
         val price = convertPrice(value.price)
 
         return UiProduct(
+            id = value.id,
             title = value.title,
             description = value.description,
             type = value.type.name,

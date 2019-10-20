@@ -2,6 +2,7 @@ package kt.school.starlord.model.repository.database
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
+import androidx.paging.DataSource
 import kt.school.starlord.BuildConfig
 import kt.school.starlord.domain.repository.CategoriesCacheRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
@@ -46,17 +47,16 @@ class DatabaseRepository(
         daoManager.subcategoryDao.replaceAll(roomSubcategories)
     }
 
-    override fun getProductsLiveData(subcategoryName: String): LiveData<List<Product>> {
-        return daoManager.productDao.getProducts(subcategoryName, BuildConfig.PAGE_SIZE).map { roomProducts ->
-            roomProducts.map { mapper.map<Product>(it) }
-        }
-    }
+    override fun getProductsLiveData(subcategoryName: String): DataSource.Factory<Int, Product> =
+        daoManager.productDao
+            .getProducts(subcategoryName, BuildConfig.PAGE_SIZE)
+            .map { mapper.map<Product>(it) }
 
     override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {
         val roomProducts = products.map { product ->
             val productWithMetadata = ProductWithMetadata(product, subcategoryName)
             mapper.map<RoomProduct>(productWithMetadata)
         }
-        daoManager.productDao.replaceAll(subcategoryName, roomProducts)
+        daoManager.productDao.putProducts(roomProducts)
     }
 }

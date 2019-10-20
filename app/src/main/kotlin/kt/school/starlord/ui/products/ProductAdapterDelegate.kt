@@ -7,6 +7,7 @@ import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import kotlinx.android.synthetic.main.item_product.view.*
 import kt.school.starlord.R
+import kt.school.starlord.ui.global.UiEntity
 import kt.school.starlord.ui.global.extension.inflate
 import kt.school.starlord.ui.products.entity.UiProduct
 import kotlin.properties.Delegates
@@ -15,13 +16,14 @@ import kotlin.properties.Delegates
  * Delegate for product item in recycler view.
  * @param clickListener listener for clicks on product item.
  */
-class UiProductAdapterDelegate(
+class ProductAdapterDelegate(
     private val clickListener: (UiProduct) -> Unit
-) : AbsListItemAdapterDelegate<UiProduct, Any, UiProductAdapterDelegate.ViewHolder>() {
+) : AbsListItemAdapterDelegate<UiProduct, UiEntity, ProductAdapterDelegate.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup) = ViewHolder(parent.inflate(R.layout.item_product))
 
-    override fun isForViewType(item: Any, items: MutableList<Any>, position: Int) = items[position] is UiProduct
+    override fun isForViewType(item: UiEntity, items: MutableList<UiEntity>, position: Int) =
+        items[position] is UiProduct
 
     override fun onBindViewHolder(item: UiProduct, holder: ViewHolder, payloads: MutableList<Any>) = holder.bind(item)
 
