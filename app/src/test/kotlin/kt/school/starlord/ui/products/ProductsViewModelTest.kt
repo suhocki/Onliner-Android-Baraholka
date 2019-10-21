@@ -10,7 +10,7 @@ import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.model.data.mapper.Mapper
-import kt.school.starlord.model.data.mapper.converter.ProductToUiProductConverter
+import kt.school.starlord.model.data.mapper.converter.ProductToUiEntityConverter
 import kt.school.starlord.model.repository.mock.MockRepository
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
@@ -33,7 +33,7 @@ class ProductsViewModelTest {
     private val errorFeature: ErrorViewModelFeature = mockk(relaxUnitFun = true)
     private val progressFeature: ProgressViewModelFeature = mockk(relaxUnitFun = true)
     private val productsListRepository: ProductsRepository = mockk()
-    private val mapper = Mapper(setOf(ProductToUiProductConverter(mockk(relaxed = true))))
+    private val mapper = Mapper(setOf(ProductToUiEntityConverter(mockk(relaxed = true))))
     private val productsRepository: ProductsCacheRepository = mockk(relaxUnitFun = true)
     private val mockRepository = MockRepository()
 

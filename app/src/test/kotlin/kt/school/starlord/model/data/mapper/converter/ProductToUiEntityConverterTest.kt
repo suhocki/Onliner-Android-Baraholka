@@ -17,10 +17,10 @@ import org.mockito.ArgumentMatchers.anyDouble
 import org.mockito.ArgumentMatchers.anyString
 import org.threeten.bp.Instant
 
-class ProductToUiProductConverterTest {
+class ProductToUiEntityConverterTest {
 
     private val resourceManager: ResourceManager = mockk(relaxed = true)
-    private val converter = ProductToUiProductConverter(resourceManager)
+    private val converter = ProductToUiEntityConverter(resourceManager)
     private val now = Instant.now()
     private val millisNow = now.toEpochMilli()
 

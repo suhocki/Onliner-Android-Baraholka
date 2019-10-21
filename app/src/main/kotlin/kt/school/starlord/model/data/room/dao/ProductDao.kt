@@ -16,8 +16,8 @@ interface ProductDao {
      * @param subcategoryName name of selected subcategory.
      * @return all products for selected subcategory by subcategoryName.
      */
-    @Query("SELECT * FROM Products WHERE subcategoryName=:subcategoryName ORDER BY lastUpdate DESC LIMIT :pageSize")
-    fun getProducts(subcategoryName: String, pageSize: Int): DataSource.Factory<Int, RoomProduct>
+    @Query("SELECT * FROM Products WHERE subcategoryName=:subcategoryName ORDER BY lastUpdate DESC")
+    fun getProducts(subcategoryName: String): DataSource.Factory<Int, RoomProduct>
 
     /**
      * Replaces old products with a new ones.

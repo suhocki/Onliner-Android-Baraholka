@@ -49,7 +49,7 @@ class DatabaseRepository(
 
     override fun getProductsLiveData(subcategoryName: String): DataSource.Factory<Int, Product> =
         daoManager.productDao
-            .getProducts(subcategoryName, BuildConfig.PAGE_SIZE)
+            .getProducts(subcategoryName)
             .map { mapper.map<Product>(it) }
 
     override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {

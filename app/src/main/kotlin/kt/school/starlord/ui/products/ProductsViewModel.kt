@@ -15,7 +15,7 @@ import kt.school.starlord.domain.system.viewmodel.ProgressEmitter
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
-import kt.school.starlord.ui.products.entity.UiProduct
+import kt.school.starlord.ui.global.UiEntity
 
 /**
  * Contains logic with fetching products asynchronously.
@@ -29,19 +29,22 @@ class ProductsViewModel(
     private val subcategory: Subcategory
 ) : ViewModel(), ProgressEmitter by progressFeature, ErrorEmitter by errorFeature {
 
-    private val dataSource = databaseRepository.getProductsLiveData(subcategory.name)
-        .map { mapper.map<UiProduct>(it) }
+    private val uiEntityLiveData: LiveData<PagedList<UiEntity>>
 
     init {
+        val factory = databaseRepository
+            .getProductsLiveData(subcategory.name)
+            .map { mapper.map<UiEntity>(it) }
+
+        uiEntityLiveData = LivePagedListBuilder(factory, BuildConfig.PAGE_SIZE).build()
+
         refreshData()
     }
 
     /**
      * Use for observing products.
      */
-    fun getProducts(): LiveData<PagedList<UiProduct>> = LivePagedListBuilder(dataSource, PagedList.Config.Builder().setPrefetchDistance(3)
-        .setPageSize(15).build())
-        .build()
+    fun getProducts() = uiEntityLiveData
 
     private fun refreshData() {
         viewModelScope.launch {

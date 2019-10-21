@@ -6,6 +6,7 @@ import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductPrice
 import kt.school.starlord.model.data.mapper.entity.BaseConverter
 import kt.school.starlord.model.data.resources.ResourceManager
+import kt.school.starlord.ui.global.UiEntity
 import kt.school.starlord.ui.products.entity.UiProduct
 import org.threeten.bp.Duration
 import org.threeten.bp.Instant
@@ -14,9 +15,9 @@ import kotlin.math.roundToLong
 /**
  * Converts domain object to ui.
  */
-class ProductToUiProductConverter(private val resources: ResourceManager) :
-    BaseConverter<Product, UiProduct>(
-        Product::class.java, UiProduct::class.java
+class ProductToUiEntityConverter(private val resources: ResourceManager) :
+    BaseConverter<Product, UiEntity>(
+        Product::class.java, UiEntity::class.java
     ) {
     override fun convert(value: Product): UiProduct {
         val upTime = Instant.now().toEpochMilli() - value.lastUpdate

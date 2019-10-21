@@ -7,7 +7,7 @@ import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.mapper.converter.DocumentToCategoriesWithSubcategoriesConverter
 import kt.school.starlord.model.data.mapper.converter.DocumentToProductsListConverter
-import kt.school.starlord.model.data.mapper.converter.ProductToUiProductConverter
+import kt.school.starlord.model.data.mapper.converter.ProductToUiEntityConverter
 import kt.school.starlord.model.data.mapper.converter.StringToInstantConverter
 import kt.school.starlord.model.data.mapper.converter.StringToUrlConverter
 import kt.school.starlord.model.data.mapper.entity.BaseConverter
@@ -22,7 +22,7 @@ import org.koin.dsl.module
 val mapperModule = module {
     single {
         val converters = setOf(
-            ProductToUiProductConverter(get()),
+            ProductToUiEntityConverter(get()),
             DocumentToCategoriesWithSubcategoriesConverter(),
             DocumentToProductsListConverter(StringToInstantConverter()),
             StringToUrlConverter(),
