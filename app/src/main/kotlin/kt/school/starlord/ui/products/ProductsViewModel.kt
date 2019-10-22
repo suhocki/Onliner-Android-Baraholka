@@ -33,7 +33,7 @@ class ProductsViewModel(
 
     init {
         val factory = databaseRepository
-            .getProductsLiveData(subcategory.name)
+            .getProductsCached(subcategory.name)
             .map { mapper.map<UiEntity>(it) }
 
         uiEntityLiveData = LivePagedListBuilder(factory, BuildConfig.PAGE_SIZE).build()

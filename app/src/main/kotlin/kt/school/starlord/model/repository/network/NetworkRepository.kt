@@ -18,8 +18,7 @@ import org.jsoup.Jsoup
 class NetworkRepository(
     private val mapper: Mapper,
     private val coroutineContextProvider: CoroutineContextProvider
-) : CategoriesWithSubcategoriesRepository,
-    ProductsRepository {
+) : CategoriesWithSubcategoriesRepository, ProductsRepository {
 
     override suspend fun getCategoriesWithSubcategories(): CategoriesWithSubcategories =
         withContext(coroutineContextProvider.io) {

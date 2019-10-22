@@ -42,7 +42,7 @@ class ProductsViewModelTest {
         // Given
         val products: List<Product> = mockRepository.products
 
-        coEvery { productsRepository.getProductsLiveData(subcategoryName) }.coAnswers { MutableLiveData(products) }
+        coEvery { productsRepository.getProductsCached(subcategoryName) }.coAnswers { MutableLiveData(products) }
         coEvery { productsListRepository.getProducts(link) }.coAnswers { products }
 
         // When
@@ -62,7 +62,7 @@ class ProductsViewModelTest {
         val error = Throwable()
         val products: List<Product> = mockRepository.products
 
-        coEvery { productsRepository.getProductsLiveData(subcategoryName) }.coAnswers { MutableLiveData(products) }
+        coEvery { productsRepository.getProductsCached(subcategoryName) }.coAnswers { MutableLiveData(products) }
         coEvery { productsListRepository.getProducts(any()) }.throws(error)
 
         // When
@@ -81,7 +81,7 @@ class ProductsViewModelTest {
         // Given
         val products = mockRepository.products
 
-        coEvery { productsRepository.getProductsLiveData(subcategoryName) }.coAnswers { MutableLiveData(products) }
+        coEvery { productsRepository.getProductsCached(subcategoryName) }.coAnswers { MutableLiveData(products) }
         coEvery { productsListRepository.getProducts(link) }.coAnswers { products }
 
         // When

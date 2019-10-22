@@ -173,7 +173,7 @@ class MockRepository : CategoriesCacheRepository,
     override suspend fun getCategoriesWithSubcategories() =
         CategoriesWithSubcategories(emptyList(), emptyList())
 
-    override fun getProductsLiveData(subcategoryName: String): DataSource.Factory<Int, Product> {
+    override fun getProductsCached(subcategoryName: String): DataSource.Factory<Int, Product> {
         TODO()
     }
 

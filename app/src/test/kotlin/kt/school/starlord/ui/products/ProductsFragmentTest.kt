@@ -142,7 +142,7 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
         // Given
         mockkConstructor(AppRecyclerAdapter::class)
 
-        val products = mockRepository.getProductsLiveData(anyString()).map { products ->
+        val products = mockRepository.getProductsCached(anyString()).map { products ->
             products.map { productToUiProductConverter.convert(it) }
         }
 

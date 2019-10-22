@@ -155,7 +155,7 @@ class DatabaseRepositoryTest : AutoCloseKoinTest() {
         )
 
         // When
-        val liveData = roomRepository.getProductsLiveData(subcategoryName)
+        val liveData = roomRepository.getProductsCached(subcategoryName)
 
         // Then
         liveData.observeForTesting { products ->
