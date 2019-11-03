@@ -50,8 +50,10 @@ class ProductsViewModel(
         viewModelScope.launch {
             progressFeature.showProgress(true)
 
-            runCatching { networkRepository.getProducts(subcategory.link) }
-                .fold({ databaseRepository.updateProducts(subcategory.name, it) }, errorFeature::showError)
+            runCatching {
+                val products = networkRepository.getProducts(subcategory.link)
+                databaseRepository.updateProducts(subcategory.name, products)
+            }.onFailure(errorFeature::showError)
 
             progressFeature.showProgress(false)
         }

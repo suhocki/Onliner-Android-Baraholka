@@ -1,4 +1,4 @@
-package kt.school.starlord.di
+package kt.school.starlord.di.module
 
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
 import kt.school.starlord.domain.repository.product.ProductsRepository

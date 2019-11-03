@@ -5,7 +5,7 @@ import com.squareup.moshi.JsonAdapter
 import com.squareup.moshi.Moshi
 import io.mockk.every
 import io.mockk.mockk
-import kt.school.starlord.domain.entity.product.ProductPrice
+import kt.school.starlord.domain.entity.product.Price
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -14,11 +14,11 @@ import org.koin.test.mock.declare
 import org.mockito.ArgumentMatchers
 
 @RunWith(AndroidJUnit4::class)
-class ProductPriceConverterTest : AutoCloseKoinTest() {
+class PriceConverterTest : AutoCloseKoinTest() {
 
     private val moshi: Moshi = mockk()
-    private val adapter = mockk<JsonAdapter<ProductPrice>>()
-    private val converter by lazy { ProductPriceConverter() }
+    private val adapter = mockk<JsonAdapter<Price>>()
+    private val converter by lazy { PriceConverter() }
 
     @Before
     fun setUp() {
@@ -26,34 +26,34 @@ class ProductPriceConverterTest : AutoCloseKoinTest() {
             single { moshi }
         }
 
-        every { moshi.adapter(ProductPrice::class.java) } returns adapter
+        every { moshi.adapter(Price::class.java) } returns adapter
     }
 
     @Test
     fun `from Room type`() {
         // Given
         val json = ArgumentMatchers.anyString()
-        val productPrice: ProductPrice = mockk()
+        val price: Price = mockk()
 
-        every { adapter.fromJson(json) } returns productPrice
+        every { adapter.fromJson(json) } returns price
 
         // When
         val result = converter.fromRoomType(json)
 
         // Then
-        assert(result == productPrice)
+        assert(result == price)
     }
 
     @Test
     fun `to Room type`() {
         // Given
         val json = ArgumentMatchers.anyString()
-        val productPrice: ProductPrice = mockk()
+        val price: Price = mockk()
 
-        every { adapter.toJson(productPrice) } returns json
+        every { adapter.toJson(price) } returns json
 
         // When
-        val result = converter.toRoomType(productPrice)
+        val result = converter.toRoomType(price)
 
         // Then
         assert(result == json)

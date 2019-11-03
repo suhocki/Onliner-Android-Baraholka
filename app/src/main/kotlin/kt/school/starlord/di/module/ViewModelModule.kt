@@ -1,4 +1,4 @@
-package kt.school.starlord.di
+package kt.school.starlord.di.module
 
 import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature

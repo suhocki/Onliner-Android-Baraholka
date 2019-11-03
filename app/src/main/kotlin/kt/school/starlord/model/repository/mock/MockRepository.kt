@@ -7,8 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import kt.school.starlord.domain.entity.category.CategoriesWithSubcategories
 import kt.school.starlord.domain.entity.category.Category
+import kt.school.starlord.domain.entity.global.EpochMilli
+import kt.school.starlord.domain.entity.global.LocalizedTimePassed
 import kt.school.starlord.domain.entity.global.TimeUnit
 import kt.school.starlord.domain.entity.global.Timestamp
+import kt.school.starlord.domain.entity.product.LastUpdate
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.Price
@@ -41,7 +44,7 @@ class MockRepository : CategoriesCacheRepository,
            image = "file:///android_asset/products/1.jpg",
            owner = ProductOwner("xrystal", 1524248),
            price = Price(150.0, false),
-           timestamp = Timestamp(Instant.now().epochSecond, TimeUnit.DAY),
+           lastUpdate = LastUpdate(EpochMilli(100), LocalizedTimePassed("4 минуты назад")),
            commentsCount = 1
         ),
         Product(
@@ -53,7 +56,7 @@ class MockRepository : CategoriesCacheRepository,
             image = "file:///android_asset/products/2.jpeg",
             owner = ProductOwner("angel_1988", 1813103),
             price = Price(0.0, false),
-            timestamp = Timestamp(Instant.now().epochSecond, TimeUnit.DAY),
+            lastUpdate = LastUpdate(EpochMilli(100), LocalizedTimePassed("4 минуты назад")),
             commentsCount = 4
         ),
         Product(
@@ -65,7 +68,7 @@ class MockRepository : CategoriesCacheRepository,
             image = "file:///android_asset/products/3.jpg",
             owner = ProductOwner("angel_1988", 1813103),
             price = Price(200.0, true),
-            timestamp = Timestamp(Instant.now().epochSecond, TimeUnit.DAY),
+            lastUpdate = LastUpdate(EpochMilli(100), LocalizedTimePassed("4 минуты назад")),
             commentsCount = 0
         ),
         Product(
@@ -77,7 +80,7 @@ class MockRepository : CategoriesCacheRepository,
             image = "file:///android_asset/products/4.jpg",
             owner = ProductOwner("BMW888IK5", 717419),
             price = Price(null, false),
-            timestamp = Timestamp(Instant.now().epochSecond, TimeUnit.DAY),
+            lastUpdate = LastUpdate(EpochMilli(100), LocalizedTimePassed("4 минуты назад")),
             commentsCount = 2
         ),
         Product(
@@ -89,7 +92,7 @@ class MockRepository : CategoriesCacheRepository,
             image = "file:///android_asset/products/5.webp",
             owner = ProductOwner("greendors", 76882),
             price = Price(160.0, false),
-            timestamp = Timestamp(Instant.now().epochSecond, TimeUnit.DAY),
+            lastUpdate = LastUpdate(EpochMilli(100), LocalizedTimePassed("4 минуты назад")),
             commentsCount = 1
         ),
         Product(
@@ -101,7 +104,7 @@ class MockRepository : CategoriesCacheRepository,
             image = "file:///android_asset/products/6.jpg",
             owner = ProductOwner("Ta6aK", 442157),
             price = Price(30.0, false),
-            timestamp = Timestamp(Instant.now().epochSecond, TimeUnit.DAY),
+            lastUpdate = LastUpdate(EpochMilli(100), LocalizedTimePassed("4 минуты назад")),
             commentsCount = 0
         )
     )

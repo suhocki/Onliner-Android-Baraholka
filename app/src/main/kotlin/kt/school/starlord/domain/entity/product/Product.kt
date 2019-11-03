@@ -1,12 +1,10 @@
 package kt.school.starlord.domain.entity.product
 
-import kt.school.starlord.domain.entity.global.Timestamp
-
 /**
- * Entity for RecyclerView at ProductsFragment.
+ * Domain product entity.
  * Can represents not only products but services.
  *
- * @param isPaid product is premium item. Should be located in the top of the list.
+ * @param isPaid if true, the product is premium item and should be located at the top of the list.
  */
 data class Product(
     val id: Long,
@@ -17,7 +15,7 @@ data class Product(
     val image: String,
     val owner: ProductOwner,
     val price: Price,
-    var timestamp: Timestamp,
+    var lastUpdate: LastUpdate,
     val commentsCount: Long,
     val subcategoryName: String = "", // todo. make it nullable
     val isPaid: Boolean = false

@@ -1,4 +1,4 @@
-package kt.school.starlord.model.data.mapper.converter
+package kt.school.starlord.model.data.mapper.converter.localized
 
 import kt.school.starlord.R
 import kt.school.starlord.domain.data.mapper.BaseConverter
@@ -11,10 +11,8 @@ import kotlin.math.roundToLong
  */
 class DoubleToLocalizedMoneyConverter(
     private val resources: ResourceManager
-) : BaseConverter<Double, LocalizedMoney>(
-    Double::class.java,
-    LocalizedMoney::class.java
-) {
+) : BaseConverter<Double, LocalizedMoney>(Double::class.java, LocalizedMoney::class.java) {
+
     override fun convert(value: Double): LocalizedMoney {
         return LocalizedMoney(
             if (value == 0.0) resources.getString(R.string.for_free)

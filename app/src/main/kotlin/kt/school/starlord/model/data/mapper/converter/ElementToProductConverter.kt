@@ -1,11 +1,14 @@
 package kt.school.starlord.model.data.mapper.converter
 
+import kt.school.starlord.domain.data.mapper.BaseConverter
+import kt.school.starlord.domain.entity.global.LocalizedTimePassed
+import kt.school.starlord.domain.entity.product.LastUpdate
+import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
-import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.ProductType
 import kt.school.starlord.model.data.mapper.converter.DocumentToCategoriesWithSubcategoriesConverter.Companion.LINK
-import kt.school.starlord.domain.data.mapper.BaseConverter
+import kt.school.starlord.model.data.mapper.converter.localized.LocalizedTimePassedToEpochMilliConverter
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
@@ -13,19 +16,23 @@ import org.jsoup.select.Elements
  * Contains logic on how to convert Jsoup Element to Product entity.
  */
 class ElementToProductConverter(
-    private val stringToTimestamp: StringToTimestamp
+    private val localizedTimePassedToEpochMilliConverter: LocalizedTimePassedToEpochMilliConverter
 ) : BaseConverter<Element, Product>(
     Element::class.java,
     Product::class.java
 ) {
+
     override fun convert(value: Element): Product {
         val (signatures, cost, title) = extractDocumentData(value)
         val description = value.getElementsByClass(Tags.DESCRIPTION)
         val comments = value.getElementsByClass(Tags.COMMENTS)
         val signature = signatures.first()
-        val lastUpdateString = value.getElementsByClass(Tags.LAST_UPDATE).first().text()
-            .replaceFirst(Tags.UP, "", true)
-            .replaceIndent()
+        val localizedTimePassed = LocalizedTimePassed(
+            value.getElementsByClass(Tags.LAST_UPDATE).first().text()
+                .replaceFirst(Tags.UP, "", true)
+                .replaceIndent()
+        )
+        val epochMilli = localizedTimePassedToEpochMilliConverter.convert(localizedTimePassed)
 
         return Product(
             id = title.first().getElementsByTag(Tags.A).attr(LINK).split("=").last().toLong(),
@@ -42,7 +49,7 @@ class ElementToProductConverter(
             type = getProductType(value.getElementsByClass(ProductDocumentType.TYPE)),
             owner = getProductOwner(signature),
             isPaid = value.hasClass(Tags.M_IMP),
-            timestamp = stringToTimestamp.convert(lastUpdateString)
+            lastUpdate = LastUpdate(epochMilli, localizedTimePassed)
         )
     }
 

@@ -1,0 +1,7 @@
+<resources>
+    <string name="bargain">Торг</string>
+    <string name="for_free">Даром</string>
+    <string name="updating">Обновление…</string>
+    <string name="ok">Хорошо</string>
+    <string name="less_than_minute_ago">меньше минуты назад</string>
+</resources>

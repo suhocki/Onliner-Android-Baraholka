@@ -4,17 +4,14 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
+import kt.school.starlord.domain.entity.global.EpochMilli
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.ProductType
 import kt.school.starlord.model.data.room.AppDatabase
 
 /**
- * Keeps information about product.
- *
- * @param updateInterval determines how much time we should keep lastUpdate field unchanged. It
- * prevents updating of lastUpdate field that leads to reorders in a sorted by lastUpdate value list.
- * When currentTime > lastUpdate + updateInterval, then and only then we can change lastUpdate field.
+ * Keeps information about the product.
  */
 @Entity(
     tableName = AppDatabase.Table.PRODUCTS,
@@ -39,7 +36,6 @@ data class RoomProduct(
     val owner: ProductOwner,
     val price: Price,
     val lastUpdate: Long,
-    val updateInterval: Long,
     val commentsCount: Long,
     val isPaid: Boolean = false
 ) {

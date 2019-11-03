@@ -10,7 +10,7 @@ import org.koin.core.inject
 /**
  * Converts Price to String.
  */
-class ProductPriceConverter : RoomConverter<Price, String>, KoinComponent {
+class PriceConverter : RoomConverter<Price, String>, KoinComponent {
 
     private val moshi: Moshi by inject()
     private val adapter by lazy { moshi.adapter(Price::class.java) }

@@ -3,18 +3,20 @@ package kt.school.starlord.model.repository.database
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import androidx.paging.DataSource
+import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.category.Category
-import kt.school.starlord.domain.entity.global.Timestamp
+import kt.school.starlord.domain.entity.global.EpochMilli
+import kt.school.starlord.domain.entity.global.RussianLocalizedTimePassed
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.domain.repository.CategoriesCacheRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.domain.repository.product.ProductsCacheRepository
-import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomProduct
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
+import org.threeten.bp.Instant
 
 /**
  * Controls Room database.
@@ -53,20 +55,29 @@ class DatabaseRepository(
 
     override suspend fun updateProducts(subcategoryName: String, newProducts: List<Product>) {
         val productDao = daoManager.productDao
+        val epochMilli = Instant.now().toEpochMilli()
+
         val oldProducts = productDao.getProductsByIds(newProducts.map { it.id }, subcategoryName)
 
-        val roomProducts = newProducts.map { newProduct ->
+        val productsToSave = newProducts.map { newProduct ->
 
             oldProducts.find { oldProduct -> oldProduct.id == newProduct.id }?.let { oldProduct ->
-                if (oldProduct.lastUpdate + oldProduct.updateInterval < newProduct.timestamp.time) {
-                    // old update time has been expired, replace with a new one.
-                    newProduct.timestamp = Timestamp(oldProduct.lastUpdate, newProduct.timestamp.interval)
+
+                val oldLocalizedTimePassed =
+                    mapper.map<RussianLocalizedTimePassed>(EpochMilli(epochMilli - oldProduct.lastUpdate))
+                val newLocalizedTimePassed = RussianLocalizedTimePassed(newProduct.lastUpdate.localizedTimePassed.value)
+
+                if (oldProduct.lastUpdate >= newProduct.lastUpdate.epochMilli.value ||
+                    oldLocalizedTimePassed == newLocalizedTimePassed
+                ) {
+                    // old lastUpdate epoch millis should stay unchanged.
+                    newProduct.lastUpdate.epochMilli = EpochMilli(oldProduct.lastUpdate)
                 }
             }
 
             mapper.map<RoomProduct>(newProduct).apply { this.subcategoryName = subcategoryName }
         }
 
-        productDao.insertProducts(roomProducts)
+        productDao.insertProducts(productsToSave)
     }
 }

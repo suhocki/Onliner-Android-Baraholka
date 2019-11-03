@@ -4,7 +4,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import androidx.room.TypeConverters
 import kt.school.starlord.model.data.room.converter.ProductOwnerConverter
-import kt.school.starlord.model.data.room.converter.ProductPriceConverter
+import kt.school.starlord.model.data.room.converter.PriceConverter
 import kt.school.starlord.model.data.room.converter.ProductTypeConverter
 import kt.school.starlord.model.data.room.dao.CategoryDao
 import kt.school.starlord.model.data.room.dao.ProductDao
@@ -27,7 +27,7 @@ import kt.school.starlord.model.data.room.entity.RoomSubcategory
 @TypeConverters(
     ProductTypeConverter::class,
     ProductOwnerConverter::class,
-    ProductPriceConverter::class
+    PriceConverter::class
 )
 abstract class AppDatabase : RoomDatabase() {
     /**
@@ -46,7 +46,7 @@ abstract class AppDatabase : RoomDatabase() {
     abstract fun productDao(): ProductDao
 
     companion object {
-        const val DATABASE_VERSION = 5
+        const val DATABASE_VERSION = 7
     }
 
     /**

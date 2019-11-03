@@ -1,4 +1,4 @@
-package kt.school.starlord.di
+package kt.school.starlord.di.module
 
 import androidx.room.Room
 import kt.school.starlord.BuildConfig
