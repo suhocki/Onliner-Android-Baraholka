@@ -12,10 +12,10 @@ import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.domain.repository.product.ProductsRepository
 import kt.school.starlord.domain.system.viewmodel.ErrorEmitter
 import kt.school.starlord.domain.system.viewmodel.ProgressEmitter
-import kt.school.starlord.model.data.mapper.Mapper
+import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
-import kt.school.starlord.ui.global.UiEntity
+import kt.school.starlord.ui.global.entity.UiEntity
 
 /**
  * Contains logic with fetching products asynchronously.

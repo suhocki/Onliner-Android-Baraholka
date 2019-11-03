@@ -1,13 +1,14 @@
-package kt.school.starlord.model.data.mapper
-
-import kt.school.starlord.domain.data.mapper.Converter
+package kt.school.starlord.domain.data.mapper
 
 /**
  * Designed for mapping objects to different types using converters.
  */
-class Mapper constructor(
-    inline val converters: Set<Converter<*, *>>
-) {
+class Mapper(inline val converters: Set<Converter<*, *>>) {
+
+    init {
+        validateConverters()
+    }
+
     /**
      * Maps input object to specified type.
      *
@@ -24,5 +25,11 @@ class Mapper constructor(
         } ?: throw NoSuchElementException("Cannot find converter from ${input::class.java} to ${To::class.java}")
 
         return (converter as Converter<Any, To>).convert(input)
+    }
+
+    private fun validateConverters() {
+        converters.forEach {
+
+        }
     }
 }

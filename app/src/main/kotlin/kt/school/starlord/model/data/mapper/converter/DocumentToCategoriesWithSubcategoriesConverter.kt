@@ -3,14 +3,15 @@ package kt.school.starlord.model.data.mapper.converter
 import kt.school.starlord.domain.entity.category.CategoriesWithSubcategories
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.entity.subcategory.Subcategory
-import kt.school.starlord.model.data.mapper.entity.BaseConverter
+import kt.school.starlord.domain.data.mapper.BaseConverter
 import org.jsoup.nodes.Document
 
 /**
  * Contains logic on how to convert Jsoup Document to CategoriesWithSubcategories entity.
  */
 class DocumentToCategoriesWithSubcategoriesConverter : BaseConverter<Document, CategoriesWithSubcategories>(
-    Document::class.java, CategoriesWithSubcategories::class.java
+    Document::class.java,
+    CategoriesWithSubcategories::class.java
 ) {
     override fun convert(value: Document): CategoriesWithSubcategories {
         val htmlCategories = value.getElementsByClass(CATEGORIES)

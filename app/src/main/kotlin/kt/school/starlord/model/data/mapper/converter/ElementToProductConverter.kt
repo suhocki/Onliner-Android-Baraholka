@@ -2,37 +2,28 @@ package kt.school.starlord.model.data.mapper.converter
 
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
-import kt.school.starlord.domain.entity.product.ProductPrice
+import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.ProductType
-import kt.school.starlord.domain.entity.product.ProductsList
 import kt.school.starlord.model.data.mapper.converter.DocumentToCategoriesWithSubcategoriesConverter.Companion.LINK
-import kt.school.starlord.model.data.mapper.entity.BaseConverter
-import org.jsoup.nodes.Document
+import kt.school.starlord.domain.data.mapper.BaseConverter
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 
 /**
- * Contains logic on how to convert Jsoup Document to CategoriesWithSubcategories entity.
+ * Contains logic on how to convert Jsoup Element to Product entity.
  */
-class DocumentToProductsListConverter(
-    private val stringToInstant: StringToInstantConverter
-) : BaseConverter<Document, ProductsList>(
-    Document::class.java, ProductsList::class.java
+class ElementToProductConverter(
+    private val stringToTimestamp: StringToTimestamp
+) : BaseConverter<Element, Product>(
+    Element::class.java,
+    Product::class.java
 ) {
-    override fun convert(value: Document): ProductsList = ProductsList(
-        value.getElementsByClass(Tags.TABLE)
-            .flatMap { it.getElementsByTag(Tags.TR) }
-            .filter(::isSuitableElement)
-            .map(::createProduct)
-            .toList()
-    )
-
-    private fun createProduct(element: Element): Product {
-        val (signatures, cost, title) = extractDocumentData(element)
-        val description = element.getElementsByClass(Tags.DESCRIPTION)
-        val comments = element.getElementsByClass(Tags.COMMENTS)
+    override fun convert(value: Element): Product {
+        val (signatures, cost, title) = extractDocumentData(value)
+        val description = value.getElementsByClass(Tags.DESCRIPTION)
+        val comments = value.getElementsByClass(Tags.COMMENTS)
         val signature = signatures.first()
-        val lastUpdateString = element.getElementsByClass(Tags.LAST_UPDATE).first().text()
+        val lastUpdateString = value.getElementsByClass(Tags.LAST_UPDATE).first().text()
             .replaceFirst(Tags.UP, "", true)
             .replaceIndent()
 
@@ -40,7 +31,7 @@ class DocumentToProductsListConverter(
             id = title.first().getElementsByTag(Tags.A).attr(LINK).split("=").last().toLong(),
             title = title.text(),
             description = if (description.isNotEmpty()) description.text() else "",
-            image = element.getElementsByClass(Tags.IMAGE)
+            image = value.getElementsByClass(Tags.IMAGE)
                 .first()
                 .getElementsByTag(Tags.IMG)
                 .first()
@@ -48,16 +39,11 @@ class DocumentToProductsListConverter(
             price = getProductPrice(cost.first()),
             location = if (signature.hasText()) signature.getElementsByTag(Tags.STRONG).first().text() else "",
             commentsCount = if (comments.isNotEmpty()) comments.text().toLong() else 0L,
-            type = getProductType(element.getElementsByClass(ProductDocumentType.TYPE)),
+            type = getProductType(value.getElementsByClass(ProductDocumentType.TYPE)),
             owner = getProductOwner(signature),
-            isPaid = element.hasClass(Tags.M_IMP),
-            lastUpdate = stringToInstant.convert(lastUpdateString).toEpochMilli()
+            isPaid = value.hasClass(Tags.M_IMP),
+            timestamp = stringToTimestamp.convert(lastUpdateString)
         )
-    }
-
-    private fun isSuitableElement(element: Element): Boolean {
-        val (signature, cost, title) = extractDocumentData(element)
-        return title.hasText() && signature.first() != null && cost.first() != null
     }
 
     private fun extractDocumentData(element: Element) = ProductElements(
@@ -87,7 +73,7 @@ class DocumentToProductsListConverter(
         }
     }
 
-    private fun getProductPrice(cost: Element): ProductPrice {
+    private fun getProductPrice(cost: Element): Price {
         val amount = if (cost.hasText()) {
             cost.getElementsByClass(Tags.PRICE).text()
                 .replace(",", ".")
@@ -99,7 +85,7 @@ class DocumentToProductsListConverter(
         }
         val isBargainAvailable =
             amount?.let { cost.getElementsByClass(Tags.COST_TORG).hasText() } ?: false
-        return ProductPrice(amount, isBargainAvailable)
+        return Price(amount, isBargainAvailable)
     }
 
     private data class ProductElements(
@@ -123,8 +109,6 @@ class DocumentToProductsListConverter(
         const val A = "a"
         const val COST = "cost"
         const val COST_TORG = "cost-torg"
-        const val TABLE = "ba-tbl-list__table"
-        const val TR = "tr"
         const val TITLE = "wraptxt"
         const val DESCRIPTION = "ba-description"
         const val PRICE = "price-primary"

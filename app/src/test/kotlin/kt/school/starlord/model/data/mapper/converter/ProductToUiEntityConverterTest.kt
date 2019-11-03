@@ -7,6 +7,7 @@ import io.mockk.mockkStatic
 import kt.school.starlord.R
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductPrice
+import kt.school.starlord.domain.entity.global.TimeUnit
 import kt.school.starlord.model.data.resources.ResourceManager
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -81,31 +82,31 @@ class ProductToUiEntityConverterTest {
     @TestFactory
     fun `convert last update to String`() = mapOf(
         mockProduct().apply {
-            every { lastUpdate } returns millisNow - MILLIS_IN_MONTH
+            every { lastUpdate } returns millisNow - TimeUnit.MONTH.millis
             every { resourceManager.getString(R.string.more_than_month_ago) } returns "more than month ago"
         } to "more than month ago",
         mockProduct().apply {
-            every { lastUpdate } returns millisNow - 3 * MILLIS_IN_DAY
+            every { lastUpdate } returns millisNow - 3 * TimeUnit.DAY.millis
             every { resourceManager.getPlural(R.plurals.days_ago, 3, 3L) } returns "3 day ago"
         } to "3 day ago",
         mockProduct().apply {
-            every { lastUpdate } returns millisNow - MILLIS_IN_DAY
+            every { lastUpdate } returns millisNow - TimeUnit.DAY.millis
             every { resourceManager.getPlural(R.plurals.days_ago, 1, 1L) } returns "1 day ago"
         } to "1 day ago",
         mockProduct().apply {
-            every { lastUpdate } returns millisNow - 3 * MILLIS_IN_HOUR
+            every { lastUpdate } returns millisNow - 3 * TimeUnit.HOUR.millis
             every { resourceManager.getPlural(R.plurals.hours_ago, 3, 3L) } returns "3 hours ago"
         } to "3 hours ago",
         mockProduct().apply {
-            every { lastUpdate } returns millisNow - MILLIS_IN_HOUR
+            every { lastUpdate } returns millisNow - TimeUnit.HOUR.millis
             every { resourceManager.getPlural(R.plurals.hours_ago, 1, 1L) } returns "1 hour ago"
         } to "1 hour ago",
         mockProduct().apply {
-            every { lastUpdate } returns millisNow - 3 * MILLIS_IN_MINUTE
+            every { lastUpdate } returns millisNow - 3 * TimeUnit.MINUTE.millis
             every { resourceManager.getPlural(R.plurals.minutes_ago, 3, 3L) } returns "3 min ago"
         } to "3 min ago",
         mockProduct().apply {
-            every { lastUpdate } returns millisNow - MILLIS_IN_MINUTE
+            every { lastUpdate } returns millisNow - TimeUnit.MINUTE.millis
             every { resourceManager.getPlural(R.plurals.minutes_ago, 1, 1L) } returns "1 min ago"
         } to "1 min ago",
         mockProduct().apply {
@@ -138,13 +139,5 @@ class ProductToUiEntityConverterTest {
         every { image } returns anyString()
         every { owner } returns mockk(relaxed = true)
         every { price } returns mockk(relaxed = true)
-    }
-
-    companion object {
-        private const val MILLIS_IN_SEC = 1000L
-        private const val MILLIS_IN_MINUTE = 60 * MILLIS_IN_SEC
-        private const val MILLIS_IN_HOUR = 60 * MILLIS_IN_MINUTE
-        private const val MILLIS_IN_DAY = 24 * MILLIS_IN_HOUR
-        private const val MILLIS_IN_MONTH = 30 * MILLIS_IN_DAY
     }
 }

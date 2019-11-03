@@ -1,6 +1,4 @@
-package kt.school.starlord.model.data.mapper.entity
-
-import kt.school.starlord.domain.data.mapper.Converter
+package kt.school.starlord.domain.data.mapper
 
 /**
  * Contains constructor with parameters for simplicity.

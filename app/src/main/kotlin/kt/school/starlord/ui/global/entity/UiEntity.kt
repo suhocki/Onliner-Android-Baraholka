@@ -1,4 +1,4 @@
-package kt.school.starlord.ui.global
+package kt.school.starlord.ui.global.entity
 
 /**
  * Use for generic DiffCallback.

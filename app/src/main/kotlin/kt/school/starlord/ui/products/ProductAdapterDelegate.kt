@@ -7,7 +7,7 @@ import com.bumptech.glide.Glide
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import kotlinx.android.synthetic.main.item_product.view.*
 import kt.school.starlord.R
-import kt.school.starlord.ui.global.UiEntity
+import kt.school.starlord.ui.global.entity.UiEntity
 import kt.school.starlord.ui.global.extension.inflate
 import kt.school.starlord.ui.products.entity.UiProduct
 import kotlin.properties.Delegates

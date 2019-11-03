@@ -13,17 +13,28 @@ import kt.school.starlord.model.data.room.entity.RoomProduct
 @Dao
 interface ProductDao {
     /**
+     * Extract all products from the database that are connected with chosen subcategory name.
+     *
      * @param subcategoryName name of selected subcategory.
-     * @return all products for selected subcategory by subcategoryName.
+     * @return all products for selected subcategory.
      */
     @Query("SELECT * FROM Products WHERE subcategoryName=:subcategoryName ORDER BY lastUpdate DESC")
     fun getProducts(subcategoryName: String): DataSource.Factory<Int, RoomProduct>
 
     /**
-     * Replaces old products with a new ones.
+     * New products will be added to the database. Existed products will be replaced.
      *
-     * @param products items that will be saved in database.
+     * @param products items to insert.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun putProducts(products: List<RoomProduct>)
+    suspend fun insertProducts(products: List<RoomProduct>)
+
+    /**
+     * Extract all items where identifier is from the listOfIds.
+     *
+     * @param listOfIds collection of identifiers.
+     * @return all items where identifier is from the listOfIds.
+     */
+    @Query("SELECT * FROM Products WHERE subcategoryName=:subcategoryName AND id IN (:listOfIds)")
+    suspend fun getProductsByIds(listOfIds: List<Long>, subcategoryName: String): List<RoomProduct>
 }

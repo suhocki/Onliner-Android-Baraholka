@@ -8,9 +8,11 @@ import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.slot
+import kt.school.starlord.R
 import kt.school.starlord.di.mapperModule
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.entity.product.Product
+import kt.school.starlord.domain.entity.product.ProductPrice
 import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.data.room.entity.RoomCategory
@@ -22,13 +24,20 @@ import kt.school.starlord.ui.observeForTesting
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.jupiter.api.Assertions
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.DisplayName
+import org.junit.jupiter.api.DynamicTest
+import org.junit.jupiter.api.TestFactory
 import org.junit.runner.RunWith
 import org.koin.core.context.loadKoinModules
 import org.koin.core.context.unloadKoinModules
 import org.koin.test.AutoCloseKoinTest
 import org.koin.test.inject
+import org.mockito.ArgumentMatchers
 import org.mockito.ArgumentMatchers.anyString
 
+@DisplayName("Check correctness of the DataBaseRepository work.")
 @RunWith(AndroidJUnit4::class)
 class DatabaseRepositoryTest : AutoCloseKoinTest() {
     @get:Rule
@@ -43,7 +52,7 @@ class DatabaseRepositoryTest : AutoCloseKoinTest() {
 
     private val roomRepository = DatabaseRepository(daoManager, mapper)
 
-    @Before
+    @BeforeEach
     fun before() {
         unloadKoinModules(listOf(mapperModule))
         loadKoinModules(mapperModule)
@@ -143,73 +152,28 @@ class DatabaseRepositoryTest : AutoCloseKoinTest() {
 
     @Test
     fun `get products`() {
-        // Given
-        val subcategoryName = anyString()
-        val roomProducts = listOf<RoomProduct>(
-            mockk(relaxed = true),
-            mockk(relaxed = true)
-        )
 
-        every { daoManager.productDao.getProducts(subcategoryName, any()) } returns MutableLiveData(
-            roomProducts
-        )
-
-        // When
-        val liveData = roomRepository.getProductsCached(subcategoryName)
-
-        // Then
-        liveData.observeForTesting { products ->
-
-            assert(products.all { actualProduct ->
-                val indexOfProduct = products.indexOf(actualProduct)
-                val product = products[indexOfProduct]
-
-                product.id == actualProduct.id &&
-                        product.title == actualProduct.title &&
-                        product.description == actualProduct.description &&
-                        product.type == actualProduct.type &&
-                        product.location == actualProduct.location &&
-                        product.image == actualProduct.image &&
-                        product.owner == actualProduct.owner &&
-                        product.price == actualProduct.price &&
-                        product.lastUpdate == actualProduct.lastUpdate &&
-                        product.commentsCount == actualProduct.commentsCount &&
-                        product.isPaid == actualProduct.isPaid
-            })
-        }
     }
 
-    @Test
-    fun `update products`() = testCoroutineRule.runBlockingTest {
-        // Given
-        val subcategoryName = anyString()
-        val product1: Product = mockk(relaxed = true)
-        val product2: Product = mockk(relaxed = true)
-        val products = listOf(product1, product2)
-        val slot = slot<List<RoomProduct>>()
-
-        coEvery { daoManager.productDao.replaceAll(subcategoryName, capture(slot)) } coAnswers { Unit }
-
-        // When
-        roomRepository.updateProducts(subcategoryName, products)
-
-        // Then
-        assert(slot.isCaptured)
-        assert(slot.captured.all { roomProduct ->
-            val indexOfRoomProduct = slot.captured.indexOf(roomProduct)
-            val product = products[indexOfRoomProduct]
-
-            roomProduct.subcategoryName == subcategoryName &&
-                    roomProduct.title == product.title &&
-                    roomProduct.description == product.description &&
-                    roomProduct.type == product.type &&
-                    roomProduct.location == product.location &&
-                    roomProduct.image == product.image &&
-                    roomProduct.owner == product.owner &&
-                    roomProduct.price == product.price &&
-                    roomProduct.lastUpdate == product.lastUpdate &&
-                    roomProduct.commentsCount == product.commentsCount &&
-                    roomProduct.isPaid == product.isPaid
-        })
+    @DisplayName("Should update products in the database.")
+    @TestFactory
+    fun updateProducts_() = mapOf(
+        mockProduct().apply {
+            every { price } returns ProductPrice(999.0, ArgumentMatchers.anyBoolean())
+            every { resourceManager.getString(R.string.price, "999") } returns "999р"
+        } to "999р",
+        mockProduct().apply {
+            every { price } returns ProductPrice(null, ArgumentMatchers.anyBoolean())
+        } to "",
+        mockProduct().apply {
+            every { price } returns ProductPrice(0.0, ArgumentMatchers.anyBoolean())
+            every { resourceManager.getString(R.string.for_free) } returns "free"
+        } to "free"
+    ).map { (products, expected) ->
+        DynamicTest.dynamicTest("when I convert \"$input\" then UiProduct.price is $expected") {
+            testCoroutineRule.runBlockingTest {
+                roomRepository.updateProducts(anyString(), products)
+            }
+        }
     }
 }

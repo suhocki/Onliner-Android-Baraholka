@@ -1,5 +1,7 @@
 package kt.school.starlord.domain.entity.product
 
+import kt.school.starlord.domain.entity.global.Timestamp
+
 /**
  * Entity for RecyclerView at ProductsFragment.
  * Can represents not only products but services.
@@ -14,8 +16,9 @@ data class Product(
     val location: String,
     val image: String,
     val owner: ProductOwner,
-    val price: ProductPrice,
-    val lastUpdate: Long,
+    val price: Price,
+    var timestamp: Timestamp,
     val commentsCount: Long,
+    val subcategoryName: String = "", // todo. make it nullable
     val isPaid: Boolean = false
 )

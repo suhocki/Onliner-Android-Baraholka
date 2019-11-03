@@ -3,15 +3,14 @@ package kt.school.starlord.model.repository.database
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
 import androidx.paging.DataSource
-import kt.school.starlord.BuildConfig
+import kt.school.starlord.domain.entity.category.Category
+import kt.school.starlord.domain.entity.global.Timestamp
+import kt.school.starlord.domain.entity.product.Product
+import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.domain.repository.CategoriesCacheRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.domain.repository.product.ProductsCacheRepository
-import kt.school.starlord.domain.entity.category.Category
-import kt.school.starlord.domain.entity.product.Product
-import kt.school.starlord.domain.entity.product.ProductWithMetadata
-import kt.school.starlord.domain.entity.subcategory.Subcategory
-import kt.school.starlord.model.data.mapper.Mapper
+import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomProduct
@@ -52,11 +51,22 @@ class DatabaseRepository(
             .getProducts(subcategoryName)
             .map { mapper.map<Product>(it) }
 
-    override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {
-        val roomProducts = products.map { product ->
-            val productWithMetadata = ProductWithMetadata(product, subcategoryName)
-            mapper.map<RoomProduct>(productWithMetadata)
+    override suspend fun updateProducts(subcategoryName: String, newProducts: List<Product>) {
+        val productDao = daoManager.productDao
+        val oldProducts = productDao.getProductsByIds(newProducts.map { it.id }, subcategoryName)
+
+        val roomProducts = newProducts.map { newProduct ->
+
+            oldProducts.find { oldProduct -> oldProduct.id == newProduct.id }?.let { oldProduct ->
+                if (oldProduct.lastUpdate + oldProduct.updateInterval < newProduct.timestamp.time) {
+                    // old update time has been expired, replace with a new one.
+                    newProduct.timestamp = Timestamp(oldProduct.lastUpdate, newProduct.timestamp.interval)
+                }
+            }
+
+            mapper.map<RoomProduct>(newProduct).apply { this.subcategoryName = subcategoryName }
         }
-        daoManager.productDao.putProducts(roomProducts)
+
+        productDao.insertProducts(roomProducts)
     }
 }

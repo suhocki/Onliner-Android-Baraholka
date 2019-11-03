@@ -7,9 +7,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import kt.school.starlord.domain.entity.category.CategoriesWithSubcategories
 import kt.school.starlord.domain.entity.category.Category
+import kt.school.starlord.domain.entity.global.TimeUnit
+import kt.school.starlord.domain.entity.global.Timestamp
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
-import kt.school.starlord.domain.entity.product.ProductPrice
+import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.ProductType
 import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.domain.repository.CategoriesCacheRepository
@@ -17,6 +19,7 @@ import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepositor
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.domain.repository.product.ProductsRepository
+import java.time.Instant
 
 /**
  * Repository that contains fake (mocked) data from all application data sources.
@@ -30,77 +33,76 @@ class MockRepository : CategoriesCacheRepository,
 
     val products = listOf(
         Product(
-            22175010,
-            "Куплю компактный диван",
-            "Куплю компактный диван. Например, как Ikea Свэнста, но более надежный и не разъезжающийся. Можно не раскладывающийся. Ваша доставка в район метро Партизанская.",
-            ProductType.BUY,
-            "Минск",
-            "file:///android_asset/products/1.jpg",
-            ProductOwner("xrystal", 1524248),
-            ProductPrice(150.0, false),
-            1,
-            1,
-            true
+           id = 22175010,
+           title = "Куплю компактный диван",
+           description = "Куплю компактный диван. Например, как Ikea Свэнста, но более надежный и не разъезжающийся. Можно не раскладывающийся. Ваша доставка в район метро Партизанская.",
+           type = ProductType.BUY,
+           location = "Минск",
+           image = "file:///android_asset/products/1.jpg",
+           owner = ProductOwner("xrystal", 1524248),
+           price = Price(150.0, false),
+           timestamp = Timestamp(Instant.now().epochSecond, TimeUnit.DAY),
+           commentsCount = 1
         ),
         Product(
-            22684921,
-            "Диван-кровать Лагуна",
-            "Продаем в связи с переездом. 8029593****. Самовывоз с ул.Кольцова.",
-            ProductType.SELL,
-            "Минск",
-            "file:///android_asset/products/2.jpeg",
-            ProductOwner("angel_1988", 1813103),
-            ProductPrice(0.0, false),
-            2,
-            4
+            id = 22684921,
+            title = "Диван-кровать Лагуна",
+            description = "Продаем в связи с переездом. 8029593****. Самовывоз с ул.Кольцова.",
+            type = ProductType.SELL,
+            location = "Минск",
+            image = "file:///android_asset/products/2.jpeg",
+            owner = ProductOwner("angel_1988", 1813103),
+            price = Price(0.0, false),
+            timestamp = Timestamp(Instant.now().epochSecond, TimeUnit.DAY),
+            commentsCount = 4
         ),
         Product(
-            23028259,
-            "Кресло-качалка из ротанга",
-            "Обмен кресла-качалки из ротанга. Состояние нового. 8-029-113-**-** Лена",
-            ProductType.EXCHANGE,
-            "Минск",
-            "file:///android_asset/products/3.jpg",
-            ProductOwner("angel_1988", 1813103),
-            ProductPrice(200.0, true),
-            3,
-            0
+            id = 23028259,
+            title = "Кресло-качалка из ротанга",
+            description = "Обмен кресла-качалки из ротанга. Состояние нового. 8-029-113-**-** Лена",
+            type = ProductType.EXCHANGE,
+            location = "Минск",
+            image = "file:///android_asset/products/3.jpg",
+            owner = ProductOwner("angel_1988", 1813103),
+            price = Price(200.0, true),
+            timestamp = Timestamp(Instant.now().epochSecond, TimeUnit.DAY),
+            commentsCount = 0
         ),
         Product(
-            23082929,
-            "Покос травы, стрижка газона",
-            "Покос травы, бурьяна, стрижка газона. Быстро и качественно. Покос травы от 5р. Стрижка от 4р. Примеры работ:",
-            ProductType.SERVICE,
-            "Минск",
-            "file:///android_asset/products/4.jpg",
-            ProductOwner("BMW888IK5", 717419),
-            ProductPrice(null, false),
-            3,
-            2
+            id = 23082929,
+            title = "Покос травы, стрижка газона",
+            description = "Покос травы, бурьяна, стрижка газона. Быстро и качественно. Покос травы от 5р. Стрижка от 4р. Примеры работ:",
+            type = ProductType.SERVICE,
+            location = "Минск",
+            image = "file:///android_asset/products/4.jpg",
+            owner = ProductOwner("BMW888IK5", 717419),
+            price = Price(null, false),
+            timestamp = Timestamp(Instant.now().epochSecond, TimeUnit.DAY),
+            commentsCount = 2
         ),
         Product(
-            22917475,
-            "iPhone 5S 16Gb Grey сост отл, не рев, хор комплект",
-            "iPhone 5S 16Gb Grey сост отличное, без Touch Id, не рев. Телефон сзади под пленкой, спереди ни единой царапины, батарея держит отлично. В комплекте отдаю оригинальный кубик м переходником, ориг провод и ориг наушники. Из облака вышел. 8-025-934-**-**",
-            ProductType.RENT,
-            "Минск",
-            "file:///android_asset/products/5.webp",
-            ProductOwner("greendors", 76882),
-            ProductPrice(160.0, false),
-            4,
-            1
+            id = 22917475,
+            title = "iPhone 5S 16Gb Grey сост отл, не рев, хор комплект",
+            description = "iPhone 5S 16Gb Grey сост отличное, без Touch Id, не рев. Телефон сзади под пленкой, спереди ни единой царапины, батарея держит отлично. В комплекте отдаю оригинальный кубик м переходником, ориг провод и ориг наушники. Из облака вышел. 8-025-934-**-**",
+            type = ProductType.RENT,
+            location = "Минск",
+            image = "file:///android_asset/products/5.webp",
+            owner = ProductOwner("greendors", 76882),
+            price = Price(160.0, false),
+            timestamp = Timestamp(Instant.now().epochSecond, TimeUnit.DAY),
+            commentsCount = 1
         ),
         Product(
-            22917475,
-            "Офисное кресло",
-            "Продам офисное кожаное кресло. б.у. Неполадки с механизмом качается назад-вперёд, влево-вправо - без фиксации. Нужно разбираться с механизмом! 8029-566-**-** (МТС)",
-            ProductType.CLOSED,
-            "Минск",
-            "file:///android_asset/products/6.jpg",
-            ProductOwner("Ta6aK", 442157),
-            ProductPrice(30.0, false),
-            5,
-            0
+            id = 22917475,
+            title = "Офисное кресло",
+            description = "Продам офисное кожаное кресло. б.у. Неполадки с механизмом качается назад-вперёд, влево-вправо - без фиксации. Нужно разбираться с механизмом! 8029-566-**-** (МТС)",
+            type = ProductType.CLOSED,
+            location = "Минск",
+            image = "file:///android_asset/products/6.jpg",
+            owner = ProductOwner("Ta6aK", 442157),
+            price = Price(30.0, false),
+            timestamp = Timestamp(Instant.now().epochSecond, TimeUnit.DAY),
+            commentsCount = 0
         )
     )
 

@@ -1,7 +1,7 @@
 package kt.school.starlord.ui.products.entity
 
 import androidx.annotation.ColorRes
-import kt.school.starlord.ui.global.UiEntity
+import kt.school.starlord.ui.global.entity.UiEntity
 import kt.school.starlord.ui.global.annotation.Visibility
 
 /**
