@@ -3,20 +3,27 @@ package kt.school.starlord.model.data.mapper.converter
 import android.view.View
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.data.mapper.BaseConverter
+import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.global.EpochMilli
+import kt.school.starlord.domain.entity.global.LocalizedTimePassed
 import kt.school.starlord.model.data.mapper.converter.localized.DoubleToLocalizedMoneyConverter
 import kt.school.starlord.model.data.mapper.converter.localized.EpochMilliToLocalizedTimePassedConverter
 import kt.school.starlord.ui.global.entity.UiEntity
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedMoney
 import kt.school.starlord.ui.products.entity.UiProduct
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 import org.threeten.bp.Instant
 
 /**
  * Converts Product entity from domain layer to Product entity from UI layer.
  */
-class ProductToUiEntityConverter(
-    private val epochMilliToLocalizedTimePassedConverter: EpochMilliToLocalizedTimePassedConverter,
-    private val doubleToLocalizedMoneyConverter: DoubleToLocalizedMoneyConverter
-) : BaseConverter<Product, UiEntity>(Product::class.java, UiEntity::class.java) {
+class ProductToUiEntityConverter : BaseConverter<Product, UiEntity>(
+    Product::class.java,
+    UiEntity::class.java
+), KoinComponent {
+
+    private val mapper: Mapper by inject()
 
     override fun convert(value: Product): UiProduct {
         val epochMilliNow = Instant.now().toEpochMilli()
@@ -31,10 +38,10 @@ class ProductToUiEntityConverter(
             location = value.location,
             image = value.image,
             owner = value.owner.name,
-            lastUpdate = epochMilliToLocalizedTimePassedConverter.convert(productEpochMilli).value,
+            lastUpdate = mapper.map<LocalizedTimePassed>(productEpochMilli).value,
             isPaid = value.isPaid,
             comments = value.commentsCount.toString(),
-            price = value.price.amount?.let { doubleToLocalizedMoneyConverter.convert(it).value } ?: "",
+            price = value.price.amount?.let { mapper.map<LocalizedMoney>(it).value } ?: "",
             commentsCountVisibility = if (value.commentsCount > 0) View.VISIBLE else View.GONE,
             priceVisibility = if (value.price.amount != null) View.VISIBLE else View.GONE,
             bargainVisibility = if (value.price.isBargainAvailable) View.VISIBLE else View.GONE

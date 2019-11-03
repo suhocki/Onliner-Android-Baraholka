@@ -10,9 +10,9 @@ import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import kt.school.starlord.AppActivity
 import kt.school.starlord.R
-import kt.school.starlord.di.databaseModule
-import kt.school.starlord.di.mockModule
-import kt.school.starlord.di.networkModule
+import kt.school.starlord.di.module.databaseModule
+import kt.school.starlord.di.module.mockModule
+import kt.school.starlord.di.module.networkModule
 import kt.school.starlord.ui.categories.CategoryAdapterDelegate
 import kt.school.starlord.ui.subcategories.SubcategoryAdapterDelegate
 import kt.school.starlord.ui.takeScreenshot
@@ -32,7 +32,11 @@ class ProductsScreenshotTest : KoinTest {
     @get:Rule
     val activityTestRule = object : ActivityTestRule<AppActivity>(AppActivity::class.java) {
         override fun beforeActivityLaunched() {
-            unloadKoinModules(listOf(databaseModule, networkModule, mockModule))
+            unloadKoinModules(listOf(
+                databaseModule,
+                networkModule,
+                mockModule
+            ))
             loadKoinModules(mockModule)
         }
     }

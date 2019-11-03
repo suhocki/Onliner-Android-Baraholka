@@ -1,68 +1,68 @@
 package kt.school.starlord.model.data.mapper.converter
 
 import kt.school.starlord.domain.data.mapper.BaseConverter
+import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.global.LocalizedTimePassed
 import kt.school.starlord.domain.entity.product.LastUpdate
 import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.ProductType
-import kt.school.starlord.model.data.mapper.converter.DocumentToCategoriesWithSubcategoriesConverter.Companion.LINK
-import kt.school.starlord.model.data.mapper.converter.localized.LocalizedTimePassedToEpochMilliConverter
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
+import org.koin.core.KoinComponent
+import org.koin.core.inject
 
 /**
  * Contains logic on how to convert Jsoup Element to Product entity.
  */
-class ElementToProductConverter(
-    private val localizedTimePassedToEpochMilliConverter: LocalizedTimePassedToEpochMilliConverter
-) : BaseConverter<Element, Product>(
+class ElementToProductConverter : BaseConverter<Element, Product>(
     Element::class.java,
     Product::class.java
-) {
+), KoinComponent {
+
+    private val mapper: Mapper by inject()
 
     override fun convert(value: Element): Product {
         val (signatures, cost, title) = extractDocumentData(value)
-        val description = value.getElementsByClass(Tags.DESCRIPTION)
-        val comments = value.getElementsByClass(Tags.COMMENTS)
+        val description = value.getElementsByClass(DESCRIPTION)
+        val comments = value.getElementsByClass(COMMENTS)
         val signature = signatures.first()
         val localizedTimePassed = LocalizedTimePassed(
-            value.getElementsByClass(Tags.LAST_UPDATE).first().text()
-                .replaceFirst(Tags.UP, "", true)
+            value.getElementsByClass(LAST_UPDATE).first().text()
+                .replaceFirst(UP, "", true)
                 .replaceIndent()
         )
-        val epochMilli = localizedTimePassedToEpochMilliConverter.convert(localizedTimePassed)
 
         return Product(
-            id = title.first().getElementsByTag(Tags.A).attr(LINK).split("=").last().toLong(),
+            id = title.first().getElementsByTag(A).attr(LINK).split("=").last().toLong(),
             title = title.text(),
             description = if (description.isNotEmpty()) description.text() else "",
-            image = value.getElementsByClass(Tags.IMAGE)
+            image = value.getElementsByClass(IMAGE)
                 .first()
-                .getElementsByTag(Tags.IMG)
+                .getElementsByTag(IMG)
                 .first()
-                .attr(Tags.SRC),
+                .attr(SRC),
             price = getProductPrice(cost.first()),
-            location = if (signature.hasText()) signature.getElementsByTag(Tags.STRONG).first().text() else "",
+            location = if (signature.hasText()) signature.getElementsByTag(STRONG).first().text() else "",
             commentsCount = if (comments.isNotEmpty()) comments.text().toLong() else 0L,
             type = getProductType(value.getElementsByClass(ProductDocumentType.TYPE)),
             owner = getProductOwner(signature),
-            isPaid = value.hasClass(Tags.M_IMP),
-            lastUpdate = LastUpdate(epochMilli, localizedTimePassed)
+            isPaid = value.hasClass(M_IMP),
+            lastUpdate = LastUpdate(mapper.map(localizedTimePassed), localizedTimePassed)
         )
     }
 
     private fun extractDocumentData(element: Element) = ProductElements(
-        signature = element.getElementsByClass(Tags.SIGNATURE),
-        cost = element.getElementsByClass(Tags.COST),
-        title = element.getElementsByClass(Tags.TITLE)
+        signature = element.getElementsByClass(SIGNATURE),
+        cost = element.getElementsByClass(COST),
+        title = element.getElementsByClass(TITLE)
     )
 
     private fun getProductOwner(signature: Element): ProductOwner {
-        val owner = signature.getElementsByTag(Tags.A).first()
+        val owner = signature.getElementsByTag(A).first()
         return ProductOwner(
-            id = owner.attr(LINK).split(Tags.SEPARATOR).last().toLong(),
+            id = owner.attr(LINK).split(SEPARATOR).last().toLong(),
             name = owner.text()
         )
     }
@@ -82,16 +82,16 @@ class ElementToProductConverter(
 
     private fun getProductPrice(cost: Element): Price {
         val amount = if (cost.hasText()) {
-            cost.getElementsByClass(Tags.PRICE).text()
+            cost.getElementsByClass(PRICE).text()
                 .replace(",", ".")
-                .replace(Tags.REGEX_ONLY_NUMBERS_AND_DOTS, "")
+                .replace(REGEX_ONLY_NUMBERS_AND_DOTS, "")
                 .trimEnd('.')
                 .toDoubleOrNull()
         } else {
             null
         }
         val isBargainAvailable =
-            amount?.let { cost.getElementsByClass(Tags.COST_TORG).hasText() } ?: false
+            amount?.let { cost.getElementsByClass(COST_TORG).hasText() } ?: false
         return Price(amount, isBargainAvailable)
     }
 
@@ -112,24 +112,25 @@ class ElementToProductConverter(
         const val CLOSED = "ba-label-7"
     }
 
-    private object Tags {
-        const val A = "a"
-        const val COST = "cost"
-        const val COST_TORG = "cost-torg"
-        const val TITLE = "wraptxt"
-        const val DESCRIPTION = "ba-description"
-        const val PRICE = "price-primary"
-        const val IMAGE = "img-va"
-        const val SIGNATURE = "ba-signature"
-        const val COMMENTS = "c-org"
-        const val IMG = "img"
-        const val SRC = "src"
-        const val STRONG = "strong"
-        const val LAST_UPDATE = "ba-post-up"
-        const val SEPARATOR = "user/"
-        const val M_IMP = "m-imp"
+    companion object {
+        private const val LINK = "href"
+        private const val A = "a"
+        private const val COST = "cost"
+        private const val COST_TORG = "cost-torg"
+        private const val TITLE = "wraptxt"
+        private const val DESCRIPTION = "ba-description"
+        private const val PRICE = "price-primary"
+        private const val IMAGE = "img-va"
+        private const val SIGNATURE = "ba-signature"
+        private const val COMMENTS = "c-org"
+        private const val IMG = "img"
+        private const val SRC = "src"
+        private const val STRONG = "strong"
+        private const val LAST_UPDATE = "ba-post-up"
+        private const val SEPARATOR = "user/"
+        private const val M_IMP = "m-imp"
+        private const val UP = "UP!"
 
-        const val UP = "UP!"
-        val REGEX_ONLY_NUMBERS_AND_DOTS = "[^\\d|.]".toRegex()
+        private val REGEX_ONLY_NUMBERS_AND_DOTS = "[^\\d|.]".toRegex()
     }
 }

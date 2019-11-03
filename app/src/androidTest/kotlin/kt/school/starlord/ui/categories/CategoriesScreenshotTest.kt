@@ -5,9 +5,9 @@ import androidx.test.espresso.Espresso.onIdle
 import androidx.test.rule.ActivityTestRule
 import androidx.test.rule.GrantPermissionRule
 import kt.school.starlord.AppActivity
-import kt.school.starlord.di.databaseModule
-import kt.school.starlord.di.mockModule
-import kt.school.starlord.di.networkModule
+import kt.school.starlord.di.module.databaseModule
+import kt.school.starlord.di.module.mockModule
+import kt.school.starlord.di.module.networkModule
 import kt.school.starlord.ui.takeScreenshot
 import org.junit.Before
 import org.junit.Rule
@@ -24,7 +24,11 @@ class CategoriesScreenshotTest : KoinTest {
     @get:Rule
     val activityTestRule = object : ActivityTestRule<AppActivity>(AppActivity::class.java) {
         override fun beforeActivityLaunched() {
-            unloadKoinModules(listOf(databaseModule, networkModule, mockModule))
+            unloadKoinModules(listOf(
+                databaseModule,
+                networkModule,
+                mockModule
+            ))
             loadKoinModules(mockModule)
         }
     }

@@ -6,8 +6,9 @@ import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.subcategory.Subcategory
-import kt.school.starlord.model.data.mapper.converter.DocumentToCategoriesWithSubcategoriesConverter
+import kt.school.starlord.model.data.mapper.converter.ElementToCategoryConverter
 import kt.school.starlord.model.data.mapper.converter.ElementToProductConverter
+import kt.school.starlord.model.data.mapper.converter.ElementToSubcategoryConverter
 import kt.school.starlord.model.data.mapper.converter.ProductToUiEntityConverter
 import kt.school.starlord.model.data.mapper.converter.RoomProductToProductConverter
 import kt.school.starlord.model.data.mapper.converter.StringToUrlConverter
@@ -19,7 +20,6 @@ import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomProduct
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
 import org.koin.core.parameter.parametersOf
-import org.koin.core.qualifier.named
 import org.koin.dsl.module
 import java.util.*
 
@@ -28,24 +28,20 @@ import java.util.*
  */
 val mapperModule = module {
     single {
-        val epochMilliToLocalizedTimePassedConverter = EpochMilliToLocalizedTimePassedConverter(get())
-        val epochMilliToRussianLocalizedTimePassedConverter = EpochMilliToLocalizedTimePassedConverter(
-            get(Qualifier.LOCALIZED) { parametersOf(Locale("ru")) }
-        )
-
         Mapper(
             setOf(
-                EpochMilliToRussianLocalizedTimePassedConverter(epochMilliToRussianLocalizedTimePassedConverter),
-                RoomProductToProductConverter(epochMilliToLocalizedTimePassedConverter),
-                epochMilliToLocalizedTimePassedConverter,
-                ProductToUiEntityConverter(
-                    epochMilliToLocalizedTimePassedConverter,
-                    DoubleToLocalizedMoneyConverter(get())
+                ElementToCategoryConverter(),
+                ElementToSubcategoryConverter(),
+                EpochMilliToLocalizedTimePassedConverter(
+                    get(Qualifier.LOCALIZED) { parametersOf(Locale("ru")) }
                 ),
-                DocumentToCategoriesWithSubcategoriesConverter(),
-                ElementToProductConverter(
-                    LocalizedTimePassedToEpochMilliConverter()
-                ),
+                EpochMilliToRussianLocalizedTimePassedConverter(),
+                RoomProductToProductConverter(),
+                EpochMilliToLocalizedTimePassedConverter(get()),
+                DoubleToLocalizedMoneyConverter(get()),
+                ProductToUiEntityConverter(),
+                LocalizedTimePassedToEpochMilliConverter(),
+                ElementToProductConverter(),
                 StringToUrlConverter(),
                 object : BaseConverter<RoomCategory, Category>(RoomCategory::class.java, Category::class.java) {
                     override fun convert(value: RoomCategory) = Category(value.name)

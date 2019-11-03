@@ -5,16 +5,13 @@ package kt.school.starlord.model.repository.mock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
-import kt.school.starlord.domain.entity.category.CategoriesWithSubcategories
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.entity.global.EpochMilli
 import kt.school.starlord.domain.entity.global.LocalizedTimePassed
-import kt.school.starlord.domain.entity.global.TimeUnit
-import kt.school.starlord.domain.entity.global.Timestamp
 import kt.school.starlord.domain.entity.product.LastUpdate
+import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
-import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.ProductType
 import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.domain.repository.CategoriesCacheRepository
@@ -22,7 +19,6 @@ import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepositor
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.domain.repository.product.ProductsRepository
-import java.time.Instant
 
 /**
  * Repository that contains fake (mocked) data from all application data sources.
@@ -36,16 +32,16 @@ class MockRepository : CategoriesCacheRepository,
 
     val products = listOf(
         Product(
-           id = 22175010,
-           title = "Куплю компактный диван",
-           description = "Куплю компактный диван. Например, как Ikea Свэнста, но более надежный и не разъезжающийся. Можно не раскладывающийся. Ваша доставка в район метро Партизанская.",
-           type = ProductType.BUY,
-           location = "Минск",
-           image = "file:///android_asset/products/1.jpg",
-           owner = ProductOwner("xrystal", 1524248),
-           price = Price(150.0, false),
-           lastUpdate = LastUpdate(EpochMilli(100), LocalizedTimePassed("4 минуты назад")),
-           commentsCount = 1
+            id = 22175010,
+            title = "Куплю компактный диван",
+            description = "Куплю компактный диван. Например, как Ikea Свэнста, но более надежный и не разъезжающийся. Можно не раскладывающийся. Ваша доставка в район метро Партизанская.",
+            type = ProductType.BUY,
+            location = "Минск",
+            image = "file:///android_asset/products/1.jpg",
+            owner = ProductOwner("xrystal", 1524248),
+            price = Price(150.0, false),
+            lastUpdate = LastUpdate(EpochMilli(100), LocalizedTimePassed("4 минуты назад")),
+            commentsCount = 1
         ),
         Product(
             id = 22684921,
@@ -175,8 +171,7 @@ class MockRepository : CategoriesCacheRepository,
 
     override suspend fun updateSubcategories(subcategories: List<Subcategory>) {}
 
-    override suspend fun getCategoriesWithSubcategories() =
-        CategoriesWithSubcategories(emptyList(), emptyList())
+    override suspend fun getCategoriesWithSubcategories(): Map<Category, List<Subcategory>> = mapOf()
 
     override fun getProductsCached(subcategoryName: String): DataSource.Factory<Int, Product> {
         TODO()
