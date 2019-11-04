@@ -2,21 +2,25 @@ package kt.school.starlord.model.data.mapper.converter.localized
 
 import kt.school.starlord.R
 import kt.school.starlord.domain.data.mapper.BaseConverter
+import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.model.data.resources.ResourceManager
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedMoney
 import kotlin.math.roundToLong
 
 /**
- * Converts millis (Long) LocalizedTimePassed entity from UI layer.
+ * Converts Price from domain to LocalizedMoney entity from UI layer.
  */
-class DoubleToLocalizedMoneyConverter(
+class PriceToLocalizedMoneyConverter(
     private val resources: ResourceManager
-) : BaseConverter<Double, LocalizedMoney>(Double::class.java, LocalizedMoney::class.java) {
+) : BaseConverter<Price, LocalizedMoney>(Price::class.java, LocalizedMoney::class.java) {
 
-    override fun convert(value: Double): LocalizedMoney {
+    override fun convert(value: Price): LocalizedMoney {
         return LocalizedMoney(
-            if (value == 0.0) resources.getString(R.string.for_free)
-            else resources.getString(R.string.price, value.toRoundedPrice())
+            when (value.amount) {
+                null -> EMPTY_STRING
+                0.0 -> resources.getString(R.string.for_free)
+                else -> resources.getString(R.string.price, value.amount.toRoundedPrice())
+            }
         )
     }
 

@@ -12,7 +12,7 @@ import kt.school.starlord.model.data.mapper.converter.ElementToSubcategoryConver
 import kt.school.starlord.model.data.mapper.converter.ProductToUiEntityConverter
 import kt.school.starlord.model.data.mapper.converter.RoomProductToProductConverter
 import kt.school.starlord.model.data.mapper.converter.StringToUrlConverter
-import kt.school.starlord.model.data.mapper.converter.localized.DoubleToLocalizedMoneyConverter
+import kt.school.starlord.model.data.mapper.converter.localized.PriceToLocalizedMoneyConverter
 import kt.school.starlord.model.data.mapper.converter.localized.EpochMilliToLocalizedTimePassedConverter
 import kt.school.starlord.model.data.mapper.converter.localized.EpochMilliToRussianLocalizedTimePassedConverter
 import kt.school.starlord.model.data.mapper.converter.localized.LocalizedTimePassedToEpochMilliConverter
@@ -38,7 +38,7 @@ val mapperModule = module {
                 EpochMilliToRussianLocalizedTimePassedConverter(),
                 RoomProductToProductConverter(),
                 EpochMilliToLocalizedTimePassedConverter(get()),
-                DoubleToLocalizedMoneyConverter(get()),
+                PriceToLocalizedMoneyConverter(get()),
                 ProductToUiEntityConverter(),
                 LocalizedTimePassedToEpochMilliConverter(),
                 ElementToProductConverter(),
