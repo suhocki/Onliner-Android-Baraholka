@@ -5,7 +5,6 @@ import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.global.EpochMilli
 import kt.school.starlord.domain.entity.product.LastUpdate
 import kt.school.starlord.domain.entity.product.Product
-import kt.school.starlord.model.data.mapper.converter.localized.EpochMilliToLocalizedTimePassedConverter
 import kt.school.starlord.model.data.room.entity.RoomProduct
 import org.koin.core.KoinComponent
 import org.koin.core.inject

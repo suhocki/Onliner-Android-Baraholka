@@ -11,12 +11,16 @@ import kt.school.starlord.ui.global.entity.UiEntity
 class AppPagedRecyclerAdapter(
     vararg adapterDelegates: AdapterDelegate<MutableList<UiEntity>>
 ) : PagedListDelegationAdapter<UiEntity>(
+
     object : DiffUtil.ItemCallback<UiEntity>() {
         override fun areItemsTheSame(oldItem: UiEntity, newItem: UiEntity) =
             oldItem.isItemTheSame(newItem)
 
         override fun areContentsTheSame(oldItem: UiEntity, newItem: UiEntity) =
             oldItem.isContentTheSame(newItem)
+
+        override fun getChangePayload(oldItem: UiEntity, newItem: UiEntity) =
+            Any()
     },
     *adapterDelegates
 )

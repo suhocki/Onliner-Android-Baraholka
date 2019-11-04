@@ -7,6 +7,7 @@ import com.squareup.moshi.JsonClass
  */
 @JsonClass(generateAdapter = true)
 data class Price(
-    val amount: Double?, // todo: rewrite to nonnull
+    val amount: Double,
+    val hasPrice: Boolean,
     val isBargainAvailable: Boolean
 )

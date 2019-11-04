@@ -41,7 +41,7 @@ class ProductToUiEntityConverter : BaseConverter<Product, UiEntity>(
             comments = value.commentsCount.toString(),
             price = mapper.map<LocalizedMoney>(value.price).value,
             commentsCountVisibility = if (value.commentsCount > 0) View.VISIBLE else View.GONE,
-            priceVisibility = if (value.price.amount != null) View.VISIBLE else View.GONE,
+            priceVisibility = if (value.price.hasPrice) View.VISIBLE else View.GONE,
             bargainVisibility = if (value.price.isBargainAvailable) View.VISIBLE else View.GONE
         )
     }

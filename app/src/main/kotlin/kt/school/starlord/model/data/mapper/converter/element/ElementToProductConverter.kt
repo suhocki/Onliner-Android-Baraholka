@@ -1,10 +1,9 @@
-package kt.school.starlord.model.data.mapper.converter
+package kt.school.starlord.model.data.mapper.converter.element
 
 import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.global.LocalizedTimePassed
 import kt.school.starlord.domain.entity.product.LastUpdate
-import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.ProductType
@@ -43,7 +42,7 @@ class ElementToProductConverter : BaseConverter<Element, Product>(
                 .getElementsByTag(IMG)
                 .first()
                 .attr(SRC),
-            price = getProductPrice(cost.first()),
+            price = mapper.map(cost.first()),
             location = if (signature.hasText()) signature.getElementsByTag(STRONG).first().text() else "",
             commentsCount = if (comments.isNotEmpty()) comments.text().toLong() else 0L,
             type = getProductType(value.getElementsByClass(ProductDocumentType.TYPE)),
@@ -53,16 +52,19 @@ class ElementToProductConverter : BaseConverter<Element, Product>(
         )
     }
 
-    private fun extractDocumentData(element: Element) = ProductElements(
-        signature = element.getElementsByClass(SIGNATURE),
-        cost = element.getElementsByClass(COST),
-        title = element.getElementsByClass(TITLE)
-    )
+    private fun extractDocumentData(element: Element) =
+        ProductElements(
+            signature = element.getElementsByClass(SIGNATURE),
+            cost = element.getElementsByClass(COST),
+            title = element.getElementsByClass(TITLE)
+        )
 
     private fun getProductOwner(signature: Element): ProductOwner {
         val owner = signature.getElementsByTag(A).first()
         return ProductOwner(
-            id = owner.attr(LINK).split(SEPARATOR).last().toLong(),
+            id = owner.attr(LINK).split(
+                SEPARATOR
+            ).last().toLong(),
             name = owner.text()
         )
     }
@@ -78,21 +80,6 @@ class ElementToProductConverter : BaseConverter<Element, Product>(
             elements.hasClass(ProductDocumentType.WARNING) -> ProductType.WARNING
             else -> error("Unknown product type.")
         }
-    }
-
-    private fun getProductPrice(cost: Element): Price {
-        val amount = if (cost.hasText()) {
-            cost.getElementsByClass(PRICE).text()
-                .replace(",", ".")
-                .replace(REGEX_ONLY_NUMBERS_AND_DOTS, "")
-                .trimEnd('.')
-                .toDoubleOrNull()
-        } else {
-            null
-        }
-        val isBargainAvailable =
-            amount?.let { cost.getElementsByClass(COST_TORG).hasText() } ?: false
-        return Price(amount, isBargainAvailable)
     }
 
     private data class ProductElements(
@@ -116,10 +103,8 @@ class ElementToProductConverter : BaseConverter<Element, Product>(
         private const val LINK = "href"
         private const val A = "a"
         private const val COST = "cost"
-        private const val COST_TORG = "cost-torg"
         private const val TITLE = "wraptxt"
         private const val DESCRIPTION = "ba-description"
-        private const val PRICE = "price-primary"
         private const val IMAGE = "img-va"
         private const val SIGNATURE = "ba-signature"
         private const val COMMENTS = "c-org"
@@ -130,7 +115,5 @@ class ElementToProductConverter : BaseConverter<Element, Product>(
         private const val SEPARATOR = "user/"
         private const val M_IMP = "m-imp"
         private const val UP = "UP!"
-
-        private val REGEX_ONLY_NUMBERS_AND_DOTS = "[^\\d|.]".toRegex()
     }
 }

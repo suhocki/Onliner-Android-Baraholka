@@ -1,8 +1,7 @@
-package kt.school.starlord.model.data.mapper.converter
+package kt.school.starlord.model.data.mapper.converter.element
 
 import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.entity.category.Category
-import kt.school.starlord.domain.entity.subcategory.Subcategory
 import org.jsoup.nodes.Element
 
 /**

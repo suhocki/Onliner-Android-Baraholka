@@ -6,16 +6,17 @@ import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.subcategory.Subcategory
-import kt.school.starlord.model.data.mapper.converter.ElementToCategoryConverter
-import kt.school.starlord.model.data.mapper.converter.ElementToProductConverter
-import kt.school.starlord.model.data.mapper.converter.ElementToSubcategoryConverter
+import kt.school.starlord.model.data.mapper.converter.element.ElementToCategoryConverter
+import kt.school.starlord.model.data.mapper.converter.element.ElementToProductConverter
+import kt.school.starlord.model.data.mapper.converter.element.ElementToSubcategoryConverter
 import kt.school.starlord.model.data.mapper.converter.ProductToUiEntityConverter
 import kt.school.starlord.model.data.mapper.converter.RoomProductToProductConverter
 import kt.school.starlord.model.data.mapper.converter.StringToUrlConverter
-import kt.school.starlord.model.data.mapper.converter.localized.PriceToLocalizedMoneyConverter
-import kt.school.starlord.model.data.mapper.converter.localized.EpochMilliToLocalizedTimePassedConverter
-import kt.school.starlord.model.data.mapper.converter.localized.EpochMilliToRussianLocalizedTimePassedConverter
-import kt.school.starlord.model.data.mapper.converter.localized.LocalizedTimePassedToEpochMilliConverter
+import kt.school.starlord.model.data.mapper.converter.element.ElementToPriceConverter
+import kt.school.starlord.model.data.mapper.converter.localization.PriceToLocalizedMoneyConverter
+import kt.school.starlord.model.data.mapper.converter.localization.EpochMilliToLocalizedTimePassedConverter
+import kt.school.starlord.model.data.mapper.converter.localization.EpochMilliToRussianLocalizedTimePassedConverter
+import kt.school.starlord.model.data.mapper.converter.localization.LocalizedTimePassedToEpochMilliConverter
 import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomProduct
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
@@ -30,19 +31,25 @@ val mapperModule = module {
     single {
         Mapper(
             setOf(
+                // elements
                 ElementToCategoryConverter(),
                 ElementToSubcategoryConverter(),
-                EpochMilliToLocalizedTimePassedConverter(
-                    get(Qualifier.LOCALIZED) { parametersOf(Locale("ru")) }
-                ),
-                EpochMilliToRussianLocalizedTimePassedConverter(),
-                RoomProductToProductConverter(),
-                EpochMilliToLocalizedTimePassedConverter(get()),
-                PriceToLocalizedMoneyConverter(get()),
-                ProductToUiEntityConverter(),
-                LocalizedTimePassedToEpochMilliConverter(),
+                ElementToPriceConverter(),
                 ElementToProductConverter(),
+
+                // localization
+                EpochMilliToLocalizedTimePassedConverter(get(Qualifier.LOCALIZED) { parametersOf(Locale("ru")) }),
+                EpochMilliToLocalizedTimePassedConverter(get()),
+                EpochMilliToRussianLocalizedTimePassedConverter(),
+                PriceToLocalizedMoneyConverter(get()),
+                LocalizedTimePassedToEpochMilliConverter(),
+
+                // between layers
+                RoomProductToProductConverter(),
+                ProductToUiEntityConverter(),
+
                 StringToUrlConverter(),
+
                 object : BaseConverter<RoomCategory, Category>(RoomCategory::class.java, Category::class.java) {
                     override fun convert(value: RoomCategory) = Category(value.name)
                 },

@@ -1,4 +1,4 @@
-package kt.school.starlord.model.data.mapper.converter.localized
+package kt.school.starlord.model.data.mapper.converter.localization
 
 import kt.school.starlord.R
 import kt.school.starlord.domain.data.mapper.BaseConverter
@@ -17,7 +17,6 @@ class PriceToLocalizedMoneyConverter(
     override fun convert(value: Price): LocalizedMoney {
         return LocalizedMoney(
             when (value.amount) {
-                null -> EMPTY_STRING
                 0.0 -> resources.getString(R.string.for_free)
                 else -> resources.getString(R.string.price, value.amount.toRoundedPrice())
             }

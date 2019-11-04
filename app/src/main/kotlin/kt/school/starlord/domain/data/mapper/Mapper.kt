@@ -7,10 +7,6 @@ import timber.log.Timber
  */
 class Mapper(inline val converters: Set<Converter<*, *>>) {
 
-    init {
-        validateConverters()
-    }
-
     /**
      * Maps input object to specified type.
      *
@@ -22,17 +18,10 @@ class Mapper(inline val converters: Set<Converter<*, *>>) {
         if (input is To) return input
 
         val converter = converters.find {
-            Timber.d("${it.fromClass} can be converted to ${it.toClass}")
             it.fromClass.isAssignableFrom(input::class.java) &&
                     To::class.java.isAssignableFrom(it.toClass)
         } ?: throw NoSuchElementException("Cannot find converter from ${input::class.java} to ${To::class.java}")
 
         return (converter as Converter<Any, To>).convert(input)
-    }
-
-    private fun validateConverters() {
-        converters.forEach {
-
-        }
     }
 }

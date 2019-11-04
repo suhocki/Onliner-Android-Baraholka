@@ -8,6 +8,7 @@ import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.ProductType
+import kt.school.starlord.model.data.mapper.converter.element.ElementToProductConverter
 import org.jsoup.nodes.Element
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -38,7 +39,6 @@ class ElementToProductConverterTest {
             title = "Мобильные телефоны от пользователей в Каталоге Onliner",
             description = "привычный вид Барахолки с возможностью сортировок и фильтрации",
             image = "https://content.onliner.by/baraholka/icon_large/23252834",
-            timestamp = Timestamp(0, TimeUnit.MONTH),
             commentsCount = 0,
             isPaid = false,
             owner = ProductOwner("Onliner.by", 8250),
