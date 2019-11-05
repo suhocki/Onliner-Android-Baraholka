@@ -3,7 +3,6 @@ package kt.school.starlord.model.data.mapper.converter
 import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.global.EpochMilli
-import kt.school.starlord.domain.entity.product.LastUpdate
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.model.data.room.entity.RoomProduct
 import org.koin.core.KoinComponent
@@ -33,7 +32,8 @@ class RoomProductToProductConverter : BaseConverter<RoomProduct, Product>(
             commentsCount = value.commentsCount,
             isPaid = value.isPaid,
             subcategoryName = value.subcategoryName,
-            lastUpdate = LastUpdate(epochMilli, mapper.map(epochMilli))
+            epochMilli = epochMilli,
+            localizedTimePassed = mapper.map(epochMilli)
         )
     }
 }

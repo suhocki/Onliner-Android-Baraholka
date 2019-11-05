@@ -65,13 +65,13 @@ class DatabaseRepository(
 
                 val oldLocalizedTimePassed =
                     mapper.map<RussianLocalizedTimePassed>(EpochMilli(epochMilli - oldProduct.lastUpdate))
-                val newLocalizedTimePassed = RussianLocalizedTimePassed(newProduct.lastUpdate.localizedTimePassed.value)
+                val newLocalizedTimePassed = RussianLocalizedTimePassed(newProduct.localizedTimePassed.value)
 
-                if (oldProduct.lastUpdate >= newProduct.lastUpdate.epochMilli.value ||
+                if (oldProduct.lastUpdate >= newProduct.epochMilli.value ||
                     oldLocalizedTimePassed == newLocalizedTimePassed
                 ) {
                     // old lastUpdate epoch millis should stay unchanged.
-                    newProduct.lastUpdate.epochMilli = EpochMilli(oldProduct.lastUpdate)
+                    newProduct.epochMilli = EpochMilli(oldProduct.lastUpdate)
                 }
             }
 

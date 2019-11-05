@@ -25,7 +25,7 @@ class ProductToUiEntityConverter : BaseConverter<Product, UiEntity>(
 
     override fun convert(value: Product): UiProduct {
         val epochMilliNow = Instant.now().toEpochMilli()
-        val productEpochMilli = EpochMilli(epochMilliNow - value.lastUpdate.epochMilli.value)
+        val productEpochMilli = EpochMilli(epochMilliNow - value.epochMilli.value)
 
         return UiProduct(
             id = value.id,

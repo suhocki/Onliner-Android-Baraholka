@@ -35,6 +35,14 @@ class LocalizedTimePassedToEpochMilliConverter : BaseConverter<LocalizedTimePass
         })
     }
 
+    private enum class TimeType(val identifier: String, val timeUnit: TimeUnit) {
+        SECONDS("меньше", TimeUnit.SECOND),
+        MINUTES("м", TimeUnit.MINUTE),
+        HOURS("ч", TimeUnit.HOUR),
+        DAYS("д", TimeUnit.DAY),
+        MAX("более", TimeUnit.MONTH)
+    }
+
     companion object {
         private val REGEX_DATA = ("^(\\d+) ([${TimeType.MINUTES.identifier}" +
                 "${TimeType.HOURS.identifier}${TimeType.DAYS.identifier}])").toRegex()
@@ -42,13 +50,5 @@ class LocalizedTimePassedToEpochMilliConverter : BaseConverter<LocalizedTimePass
         private const val MIN_PARTS_COUNT = 3
         private const val INDEX_OF_NUMBER = 1
         private const val INDEX_OF_TIME_TYPE = 2
-    }
-
-    private enum class TimeType(val identifier: String, val timeUnit: TimeUnit) {
-        SECONDS("меньше", TimeUnit.SECOND),
-        MINUTES("м", TimeUnit.MINUTE),
-        HOURS("ч", TimeUnit.HOUR),
-        DAYS("д", TimeUnit.DAY),
-        MAX("более", TimeUnit.MONTH)
     }
 }

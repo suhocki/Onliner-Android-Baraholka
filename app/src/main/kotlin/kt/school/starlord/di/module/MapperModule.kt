@@ -78,7 +78,7 @@ val mapperModule = module {
                             image = value.image,
                             owner = value.owner,
                             price = value.price,
-                            lastUpdate = value.lastUpdate.epochMilli.value,
+                            lastUpdate = value.epochMilli.value,
                             commentsCount = value.commentsCount,
                             isPaid = value.isPaid
                         )

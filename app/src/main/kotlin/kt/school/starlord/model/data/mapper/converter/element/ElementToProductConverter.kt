@@ -3,7 +3,6 @@ package kt.school.starlord.model.data.mapper.converter.element
 import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.global.LocalizedTimePassed
-import kt.school.starlord.domain.entity.product.LastUpdate
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.ProductType
@@ -48,7 +47,8 @@ class ElementToProductConverter : BaseConverter<Element, Product>(
             type = getProductType(value.getElementsByClass(ProductDocumentType.TYPE)),
             owner = getProductOwner(signature),
             isPaid = value.hasClass(M_IMP),
-            lastUpdate = LastUpdate(mapper.map(localizedTimePassed), localizedTimePassed)
+            epochMilli = mapper.map(localizedTimePassed),
+            localizedTimePassed = localizedTimePassed
         )
     }
 
