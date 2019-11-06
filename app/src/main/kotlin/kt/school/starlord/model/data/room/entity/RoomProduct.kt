@@ -4,7 +4,6 @@ import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import kt.school.starlord.domain.entity.global.EpochMilli
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.ProductType

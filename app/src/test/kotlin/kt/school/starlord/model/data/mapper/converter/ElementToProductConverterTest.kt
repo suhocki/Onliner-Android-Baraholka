@@ -2,13 +2,12 @@ package kt.school.starlord.model.data.mapper.converter
 
 import io.mockk.every
 import io.mockk.mockkStatic
-import kt.school.starlord.domain.entity.global.TimeUnit
-import kt.school.starlord.domain.entity.global.Timestamp
 import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.ProductType
 import kt.school.starlord.model.data.mapper.converter.element.ElementToProductConverter
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import org.jsoup.nodes.Element
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
@@ -42,8 +41,10 @@ class ElementToProductConverterTest {
             commentsCount = 0,
             isPaid = false,
             owner = ProductOwner("Onliner.by", 8250),
-            price = Price(null, false),
-            type = ProductType.WARNING
+            price = Price(0.0, hasPrice = false, isBargainAvailable = false),
+            type = ProductType.WARNING,
+            localizedTimePassed = LocalizedTimePassed("более 1 месяца назад"),
+            epochMilli = now.toEpochMilli() -
         ),
         Element("tr").html("""
             <tr class="m-imp">

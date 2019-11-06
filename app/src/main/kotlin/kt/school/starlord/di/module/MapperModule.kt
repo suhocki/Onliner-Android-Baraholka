@@ -14,8 +14,8 @@ import kt.school.starlord.model.data.mapper.converter.RoomProductToProductConver
 import kt.school.starlord.model.data.mapper.converter.StringToUrlConverter
 import kt.school.starlord.model.data.mapper.converter.element.ElementToPriceConverter
 import kt.school.starlord.model.data.mapper.converter.localization.PriceToLocalizedMoneyConverter
-import kt.school.starlord.model.data.mapper.converter.localization.EpochMilliToLocalizedTimePassedConverter
-import kt.school.starlord.model.data.mapper.converter.localization.EpochMilliToRussianLocalizedTimePassedConverter
+import kt.school.starlord.model.data.mapper.converter.localization.LongToLocalizedTimePassedConverter
+import kt.school.starlord.model.data.mapper.converter.localization.LongToRussianLocalizedTimePassedConverter
 import kt.school.starlord.model.data.mapper.converter.localization.LocalizedTimePassedToEpochMilliConverter
 import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomProduct
@@ -38,9 +38,9 @@ val mapperModule = module {
                 ElementToProductConverter(),
 
                 // localization
-                EpochMilliToLocalizedTimePassedConverter(get(Qualifier.LOCALIZED) { parametersOf(Locale("ru")) }),
-                EpochMilliToLocalizedTimePassedConverter(get()),
-                EpochMilliToRussianLocalizedTimePassedConverter(),
+                LongToLocalizedTimePassedConverter(get(Qualifier.LOCALIZED) { parametersOf(Locale("ru")) }),
+                LongToLocalizedTimePassedConverter(get()),
+                LongToRussianLocalizedTimePassedConverter(),
                 PriceToLocalizedMoneyConverter(get()),
                 LocalizedTimePassedToEpochMilliConverter(),
 
@@ -78,7 +78,7 @@ val mapperModule = module {
                             image = value.image,
                             owner = value.owner,
                             price = value.price,
-                            lastUpdate = value.epochMilli.value,
+                            lastUpdate = value.epochMilli,
                             commentsCount = value.commentsCount,
                             isPaid = value.isPaid
                         )

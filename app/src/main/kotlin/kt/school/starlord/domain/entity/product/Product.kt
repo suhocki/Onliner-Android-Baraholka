@@ -1,6 +1,5 @@
 package kt.school.starlord.domain.entity.product
 
-import kt.school.starlord.domain.entity.global.EpochMilli
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 
 /**
@@ -20,7 +19,7 @@ data class Product(
     val image: String,
     val owner: ProductOwner,
     val price: Price,
-    var epochMilli: EpochMilli,
+    var epochMilli: Long,
     val localizedTimePassed: LocalizedTimePassed,
     val commentsCount: Long,
     val subcategoryName: String = "", // todo. make it nullable

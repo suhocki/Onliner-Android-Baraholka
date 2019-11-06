@@ -2,7 +2,6 @@ package kt.school.starlord.model.data.mapper.converter
 
 import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.data.mapper.Mapper
-import kt.school.starlord.domain.entity.global.EpochMilli
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.model.data.room.entity.RoomProduct
 import org.koin.core.KoinComponent
@@ -18,22 +17,19 @@ class RoomProductToProductConverter : BaseConverter<RoomProduct, Product>(
 
     private val mapper: Mapper by inject()
 
-    override fun convert(value: RoomProduct): Product {
-        val epochMilli = EpochMilli(value.lastUpdate)
-        return Product(
-            id = value.id,
-            title = value.title,
-            description = value.description,
-            type = value.type,
-            location = value.location,
-            image = value.image,
-            owner = value.owner,
-            price = value.price,
-            commentsCount = value.commentsCount,
-            isPaid = value.isPaid,
-            subcategoryName = value.subcategoryName,
-            epochMilli = epochMilli,
-            localizedTimePassed = mapper.map(epochMilli)
-        )
-    }
+    override fun convert(value: RoomProduct) = Product(
+        id = value.id,
+        title = value.title,
+        description = value.description,
+        type = value.type,
+        location = value.location,
+        image = value.image,
+        owner = value.owner,
+        price = value.price,
+        commentsCount = value.commentsCount,
+        isPaid = value.isPaid,
+        subcategoryName = value.subcategoryName,
+        epochMilli = value.lastUpdate,
+        localizedTimePassed = mapper.map(value.lastUpdate)
+    )
 }

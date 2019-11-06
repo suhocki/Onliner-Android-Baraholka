@@ -5,7 +5,6 @@ import androidx.lifecycle.map
 import androidx.paging.DataSource
 import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.category.Category
-import kt.school.starlord.domain.entity.global.EpochMilli
 import kt.school.starlord.domain.entity.global.RussianLocalizedTimePassed
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.subcategory.Subcategory
@@ -64,14 +63,14 @@ class DatabaseRepository(
             oldProducts.find { oldProduct -> oldProduct.id == newProduct.id }?.let { oldProduct ->
 
                 val oldLocalizedTimePassed =
-                    mapper.map<RussianLocalizedTimePassed>(EpochMilli(epochMilli - oldProduct.lastUpdate))
+                    mapper.map<RussianLocalizedTimePassed>(epochMilli - oldProduct.lastUpdate)
                 val newLocalizedTimePassed = RussianLocalizedTimePassed(newProduct.localizedTimePassed.value)
 
-                if (oldProduct.lastUpdate >= newProduct.epochMilli.value ||
+                if (oldProduct.lastUpdate >= newProduct.epochMilli ||
                     oldLocalizedTimePassed == newLocalizedTimePassed
                 ) {
                     // old lastUpdate epoch millis should stay unchanged.
-                    newProduct.epochMilli = EpochMilli(oldProduct.lastUpdate)
+                    newProduct.epochMilli = oldProduct.lastUpdate
                 }
             }
 

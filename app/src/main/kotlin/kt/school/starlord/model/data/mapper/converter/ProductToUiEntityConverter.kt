@@ -4,7 +4,6 @@ import android.view.View
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.data.mapper.Mapper
-import kt.school.starlord.domain.entity.global.EpochMilli
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import kt.school.starlord.ui.global.entity.UiEntity
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedMoney
@@ -25,7 +24,6 @@ class ProductToUiEntityConverter : BaseConverter<Product, UiEntity>(
 
     override fun convert(value: Product): UiProduct {
         val epochMilliNow = Instant.now().toEpochMilli()
-        val productEpochMilli = EpochMilli(epochMilliNow - value.epochMilli.value)
 
         return UiProduct(
             id = value.id,
@@ -36,7 +34,7 @@ class ProductToUiEntityConverter : BaseConverter<Product, UiEntity>(
             location = value.location,
             image = value.image,
             owner = value.owner.name,
-            lastUpdate = mapper.map<LocalizedTimePassed>(productEpochMilli).value,
+            lastUpdate = mapper.map<LocalizedTimePassed>(epochMilliNow - value.epochMilli).value,
             isPaid = value.isPaid,
             comments = value.commentsCount.toString(),
             price = mapper.map<LocalizedMoney>(value.price).value,

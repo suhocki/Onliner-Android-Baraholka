@@ -1,24 +1,22 @@
 package kt.school.starlord.model.data.mapper.converter.localization
 
 import kt.school.starlord.domain.data.mapper.BaseConverter
-import kt.school.starlord.domain.entity.global.EpochMilli
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
-import kt.school.starlord.domain.entity.global.TimeUnit
 import org.threeten.bp.Instant
 
 /**
- * Time passed after some action, represented by LocalizedTimePassed, will be converted to EpochMilli.
+ * Time passed after some action, represented by LocalizedTimePassed, will be converted to long.
  * E.g. "5 seconds ago" will become (epochMilli() - 5 seconds)
  */
-class LocalizedTimePassedToEpochMilliConverter : BaseConverter<LocalizedTimePassed, EpochMilli>(
-    LocalizedTimePassed::class.java, EpochMilli::class.java
+class LocalizedTimePassedToEpochMilliConverter : BaseConverter<LocalizedTimePassed, Long>(
+    LocalizedTimePassed::class.java, Long::class.java
 ) {
 
-    override fun convert(value: LocalizedTimePassed): EpochMilli {
+    override fun convert(value: LocalizedTimePassed): Long {
         val string = value.value
         val now = Instant.now()
 
-        return EpochMilli(when {
+        return when {
             string.startsWith(TimeType.SECONDS.identifier) -> now.toEpochMilli()
             string.startsWith(TimeType.MONTH.identifier) -> now.minusMillis(TimeType.MONTH.millis).toEpochMilli()
             else -> {
@@ -28,11 +26,12 @@ class LocalizedTimePassedToEpochMilliConverter : BaseConverter<LocalizedTimePass
                 if (parsed.size < MIN_PARTS_COUNT) error("Cannot parse EpochMilli from $value")
 
                 val number = parsed[INDEX_OF_NUMBER].toLong()
-                val timeType = TimeType.values().first { it.identifier == parsed[INDEX_OF_TIME_TYPE] }
+                val timeType =
+                    TimeType.values().first { it.identifier == parsed[INDEX_OF_TIME_TYPE] }
 
                 now.toEpochMilli() - number * timeType.millis
             }
-        })
+        }
     }
 
     private enum class TimeType(val identifier: String, val millis: Long) {

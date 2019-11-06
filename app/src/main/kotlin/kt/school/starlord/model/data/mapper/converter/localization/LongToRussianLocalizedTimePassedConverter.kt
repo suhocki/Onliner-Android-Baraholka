@@ -2,7 +2,6 @@ package kt.school.starlord.model.data.mapper.converter.localization
 
 import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.data.mapper.Mapper
-import kt.school.starlord.domain.entity.global.EpochMilli
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import kt.school.starlord.domain.entity.global.RussianLocalizedTimePassed
 import org.koin.core.KoinComponent
@@ -10,17 +9,16 @@ import org.koin.core.inject
 
 
 /**
- * Converts EpochMilli to Russian LocalizedTimePassed entity from UI layer.
+ * Converts Long to Russian LocalizedTimePassed entity.
  */
-class EpochMilliToRussianLocalizedTimePassedConverter : BaseConverter<EpochMilli, RussianLocalizedTimePassed>(
-    EpochMilli::class.java,
+class LongToRussianLocalizedTimePassedConverter : BaseConverter<Long, RussianLocalizedTimePassed>(
+    Long::class.java,
     RussianLocalizedTimePassed::class.java
 ), KoinComponent {
 
     private val mapper: Mapper by inject()
 
-    override fun convert(value: EpochMilli): RussianLocalizedTimePassed {
-        val string = mapper.map<LocalizedTimePassed>(value).value
-        return RussianLocalizedTimePassed(string)
+    override fun convert(value: Long): RussianLocalizedTimePassed {
+        return RussianLocalizedTimePassed(mapper.map<LocalizedTimePassed>(value).value)
     }
 }
