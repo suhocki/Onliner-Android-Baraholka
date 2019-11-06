@@ -2,7 +2,7 @@ package kt.school.starlord.model.data.mapper.converter.element
 
 import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.data.mapper.Mapper
-import kt.school.starlord.domain.entity.global.LocalizedTimePassed
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.ProductType

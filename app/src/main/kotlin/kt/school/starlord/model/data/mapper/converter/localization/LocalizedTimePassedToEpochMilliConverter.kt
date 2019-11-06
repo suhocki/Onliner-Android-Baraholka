@@ -2,7 +2,7 @@ package kt.school.starlord.model.data.mapper.converter.localization
 
 import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.entity.global.EpochMilli
-import kt.school.starlord.domain.entity.global.LocalizedTimePassed
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import kt.school.starlord.domain.entity.global.TimeUnit
 import org.threeten.bp.Instant
 
@@ -20,7 +20,7 @@ class LocalizedTimePassedToEpochMilliConverter : BaseConverter<LocalizedTimePass
 
         return EpochMilli(when {
             string.startsWith(TimeType.SECONDS.identifier) -> now.toEpochMilli()
-            string.startsWith(TimeType.MAX.identifier) -> now.minusMillis(TimeUnit.MONTH.millis).toEpochMilli()
+            string.startsWith(TimeType.MONTH.identifier) -> now.minusMillis(TimeType.MONTH.millis).toEpochMilli()
             else -> {
                 val parsed = REGEX_DATA.find(string)?.groupValues
                     ?: error("Cannot parse EpochMilli from $value")
@@ -30,17 +30,17 @@ class LocalizedTimePassedToEpochMilliConverter : BaseConverter<LocalizedTimePass
                 val number = parsed[INDEX_OF_NUMBER].toLong()
                 val timeType = TimeType.values().first { it.identifier == parsed[INDEX_OF_TIME_TYPE] }
 
-                now.toEpochMilli() - number * timeType.timeUnit.millis
+                now.toEpochMilli() - number * timeType.millis
             }
         })
     }
 
-    private enum class TimeType(val identifier: String, val timeUnit: TimeUnit) {
-        SECONDS("меньше", TimeUnit.SECOND),
-        MINUTES("м", TimeUnit.MINUTE),
-        HOURS("ч", TimeUnit.HOUR),
-        DAYS("д", TimeUnit.DAY),
-        MAX("более", TimeUnit.MONTH)
+    private enum class TimeType(val identifier: String, val millis: Long) {
+        SECONDS("меньше", 1000L),
+        MINUTES("м", 60 * SECONDS.millis),
+        HOURS("ч", 60 * MINUTES.millis),
+        DAYS("д", 24 * HOURS.millis),
+        MONTH("более", 30 * DAYS.millis)
     }
 
     companion object {

@@ -1,7 +1,7 @@
 package kt.school.starlord.domain.entity.product
 
 import kt.school.starlord.domain.entity.global.EpochMilli
-import kt.school.starlord.domain.entity.global.LocalizedTimePassed
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 
 /**
  * Domain product entity.

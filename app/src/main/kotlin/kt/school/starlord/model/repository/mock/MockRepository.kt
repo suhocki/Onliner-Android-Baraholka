@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.entity.global.EpochMilli
-import kt.school.starlord.domain.entity.global.LocalizedTimePassed
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner

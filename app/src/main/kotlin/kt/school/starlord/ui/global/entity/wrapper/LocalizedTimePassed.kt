@@ -1,4 +1,4 @@
-package kt.school.starlord.domain.entity.global
+package kt.school.starlord.ui.global.entity.wrapper
 
 /**
  * Wrapper for human-readable time passed after some action.
