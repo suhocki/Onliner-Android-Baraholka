@@ -50,23 +50,23 @@ val mapperModule = module {
 
                 StringToUrlConverter(),
 
-                object : BaseConverter<RoomCategory, Category>(RoomCategory::class.java, Category::class.java) {
+                object : BaseConverter<RoomCategory, Category>(RoomCategory::class, Category::class) {
                     override fun convert(value: RoomCategory) = Category(value.name)
                 },
-                object : BaseConverter<Category, RoomCategory>(Category::class.java, RoomCategory::class.java) {
+                object : BaseConverter<Category, RoomCategory>(Category::class, RoomCategory::class) {
                     override fun convert(value: Category) = RoomCategory(value.name)
                 },
                 object :
-                    BaseConverter<RoomSubcategory, Subcategory>(RoomSubcategory::class.java, Subcategory::class.java) {
+                    BaseConverter<RoomSubcategory, Subcategory>(RoomSubcategory::class, Subcategory::class) {
                     override fun convert(value: RoomSubcategory) =
                         Subcategory(value.name, value.categoryName, value.count, value.link)
                 },
                 object :
-                    BaseConverter<Subcategory, RoomSubcategory>(Subcategory::class.java, RoomSubcategory::class.java) {
+                    BaseConverter<Subcategory, RoomSubcategory>(Subcategory::class, RoomSubcategory::class) {
                     override fun convert(value: Subcategory) =
                         RoomSubcategory(value.name, value.categoryName, value.count, value.link)
                 },
-                object : BaseConverter<Product, RoomProduct>(Product::class.java, RoomProduct::class.java) {
+                object : BaseConverter<Product, RoomProduct>(Product::class, RoomProduct::class) {
                     override fun convert(value: Product): RoomProduct {
                         return RoomProduct(
                             id = value.id,

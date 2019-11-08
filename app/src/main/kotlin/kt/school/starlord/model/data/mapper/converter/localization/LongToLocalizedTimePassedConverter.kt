@@ -11,7 +11,7 @@ import org.threeten.bp.Duration
  */
 open class LongToLocalizedTimePassedConverter(
     private val resources: ResourceManager
-) : BaseConverter<Long, LocalizedTimePassed>(Long::class.java, LocalizedTimePassed::class.java) {
+) : BaseConverter<Long, LocalizedTimePassed>(Long::class, LocalizedTimePassed::class) {
 
     override fun convert(value: Long) = LocalizedTimePassed(
         when {

@@ -11,8 +11,8 @@ import org.koin.core.inject
  * Converts RoomProduct entity from data layer to Product entity from domain layer.
  */
 class RoomProductToProductConverter : BaseConverter<RoomProduct, Product>(
-    RoomProduct::class.java,
-    Product::class.java
+    RoomProduct::class,
+    Product::class
 ), KoinComponent {
 
     private val mapper: Mapper by inject()

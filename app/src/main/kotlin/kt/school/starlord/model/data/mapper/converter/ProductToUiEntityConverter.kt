@@ -16,8 +16,8 @@ import org.threeten.bp.Instant
  * Converts Product entity from domain layer to Product entity from UI layer.
  */
 class ProductToUiEntityConverter : BaseConverter<Product, UiEntity>(
-    Product::class.java,
-    UiEntity::class.java
+    Product::class,
+    UiEntity::class
 ), KoinComponent {
 
     private val mapper: Mapper by inject()

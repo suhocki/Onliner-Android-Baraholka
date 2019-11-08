@@ -15,8 +15,8 @@ import org.koin.core.inject
  * Contains logic on how to convert Jsoup Element to Product entity.
  */
 class ElementToProductConverter : BaseConverter<Element, Product>(
-    Element::class.java,
-    Product::class.java
+    Element::class,
+    Product::class
 ), KoinComponent {
 
     private val mapper: Mapper by inject()
@@ -32,6 +32,7 @@ class ElementToProductConverter : BaseConverter<Element, Product>(
                 .replaceIndent()
         )
 
+        val epochMilli = mapper.map<Long>(localizedTimePassed)
         return Product(
             id = title.first().getElementsByTag(A).attr(LINK).split("=").last().toLong(),
             title = title.text(),
@@ -47,7 +48,7 @@ class ElementToProductConverter : BaseConverter<Element, Product>(
             type = getProductType(value.getElementsByClass(ProductDocumentType.TYPE)),
             owner = getProductOwner(signature),
             isPaid = value.hasClass(M_IMP),
-            epochMilli = mapper.map(localizedTimePassed),
+            epochMilli = epochMilli,
             localizedTimePassed = localizedTimePassed
         )
     }

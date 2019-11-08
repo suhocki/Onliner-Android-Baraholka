@@ -7,7 +7,7 @@ import java.net.URL
 /**
  * Converts String to URL.
  */
-class StringToUrlConverter : BaseConverter<String, URL>(String::class.java, URL::class.java) {
+class StringToUrlConverter : BaseConverter<String, URL>(String::class, URL::class) {
 
     override fun convert(value: String): URL {
         val correctedPath = if (value.startsWith(DOT_SLASH)) {

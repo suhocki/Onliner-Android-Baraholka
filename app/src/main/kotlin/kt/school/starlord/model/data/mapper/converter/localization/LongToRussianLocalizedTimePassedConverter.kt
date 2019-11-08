@@ -12,8 +12,8 @@ import org.koin.core.inject
  * Converts Long to Russian LocalizedTimePassed entity.
  */
 class LongToRussianLocalizedTimePassedConverter : BaseConverter<Long, RussianLocalizedTimePassed>(
-    Long::class.java,
-    RussianLocalizedTimePassed::class.java
+    Long::class,
+    RussianLocalizedTimePassed::class
 ), KoinComponent {
 
     private val mapper: Mapper by inject()

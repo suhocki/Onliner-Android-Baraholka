@@ -9,7 +9,7 @@ import org.threeten.bp.Instant
  * E.g. "5 seconds ago" will become (epochMilli() - 5 seconds)
  */
 class LocalizedTimePassedToEpochMilliConverter : BaseConverter<LocalizedTimePassed, Long>(
-    LocalizedTimePassed::class.java, Long::class.java
+    LocalizedTimePassed::class, Long::class
 ) {
 
     override fun convert(value: LocalizedTimePassed): Long {

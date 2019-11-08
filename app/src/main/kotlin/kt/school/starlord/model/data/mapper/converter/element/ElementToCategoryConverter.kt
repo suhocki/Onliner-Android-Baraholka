@@ -7,7 +7,7 @@ import org.jsoup.nodes.Element
 /**
  * Contains logic on how to convert Jsoup Element to Category entity.
  */
-class ElementToCategoryConverter : BaseConverter<Element, Category>(Element::class.java, Category::class.java) {
+class ElementToCategoryConverter : BaseConverter<Element, Category>(Element::class, Category::class) {
 
     override fun convert(value: Element) = Category(value.select(CATEGORY_NAME).text())
 

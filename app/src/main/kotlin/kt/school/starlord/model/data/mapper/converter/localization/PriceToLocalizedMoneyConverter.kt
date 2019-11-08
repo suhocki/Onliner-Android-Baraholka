@@ -12,7 +12,7 @@ import kotlin.math.roundToLong
  */
 class PriceToLocalizedMoneyConverter(
     private val resources: ResourceManager
-) : BaseConverter<Price, LocalizedMoney>(Price::class.java, LocalizedMoney::class.java) {
+) : BaseConverter<Price, LocalizedMoney>(Price::class, LocalizedMoney::class) {
 
     override fun convert(value: Price): LocalizedMoney {
         return LocalizedMoney(

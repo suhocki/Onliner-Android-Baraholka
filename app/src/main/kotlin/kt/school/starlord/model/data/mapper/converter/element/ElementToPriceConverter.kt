@@ -7,7 +7,7 @@ import org.jsoup.nodes.Element
 /**
  * Contains logic on how to convert Jsoup Element to Price entity.
  */
-class ElementToPriceConverter : BaseConverter<Element, Price>(Element::class.java, Price::class.java) {
+class ElementToPriceConverter : BaseConverter<Element, Price>(Element::class, Price::class) {
 
     override fun convert(value: Element): Price {
         var hasPrice = value.hasText()

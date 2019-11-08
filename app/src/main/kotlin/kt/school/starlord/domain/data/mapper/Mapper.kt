@@ -1,7 +1,5 @@
 package kt.school.starlord.domain.data.mapper
 
-import timber.log.Timber
-
 /**
  * Designed for mapping objects to different types using converters.
  */
@@ -13,15 +11,13 @@ class Mapper(inline val converters: Set<Converter<*, *>>) {
      * @return required type object
      * @throws NoSuchElementException when there is no appropriate converter
      */
-    @Suppress("UNCHECKED_CAST")
-    inline fun <reified To> map(input: Any): To {
+    inline fun <reified To : Any> map(input: Any): To {
         if (input is To) return input
 
-        val converter = converters.find {
-            it.fromClass.isAssignableFrom(input::class.java) &&
-                    To::class.java.isAssignableFrom(it.toClass)
-        } ?: throw NoSuchElementException("Cannot find converter from ${input::class.java} to ${To::class.java}")
+        val converter = converters.find { it.fromClass == input::class && To::class == it.toClass }
+                ?: throw NoSuchElementException("Cannot find converter from ${input::class.java} to ${To::class.java}")
 
+        @Suppress("UNCHECKED_CAST")
         return (converter as Converter<Any, To>).convert(input)
     }
 }
