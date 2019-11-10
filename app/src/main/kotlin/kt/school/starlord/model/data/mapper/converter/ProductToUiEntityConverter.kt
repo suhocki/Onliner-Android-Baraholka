@@ -1,12 +1,12 @@
 package kt.school.starlord.model.data.mapper.converter
 
 import android.view.View
-import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.data.mapper.Mapper
-import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
+import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.ui.global.entity.UiEntity
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedMoney
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import kt.school.starlord.ui.products.entity.UiProduct
 import org.koin.core.KoinComponent
 import org.koin.core.inject
@@ -15,10 +15,7 @@ import org.threeten.bp.Instant
 /**
  * Converts Product entity from domain layer to Product entity from UI layer.
  */
-class ProductToUiEntityConverter : BaseConverter<Product, UiEntity>(
-    Product::class,
-    UiEntity::class
-), KoinComponent {
+class ProductToUiEntityConverter : BaseConverter<Product, UiEntity>(Product::class, UiEntity::class), KoinComponent {
 
     private val mapper: Mapper by inject()
 
@@ -29,8 +26,8 @@ class ProductToUiEntityConverter : BaseConverter<Product, UiEntity>(
             id = value.id,
             title = value.title,
             description = value.description,
-            type = value.type.name,
-            typeColor = value.type.color,
+            type = value.type.stringRes,
+            typeColor = value.type.colorRes,
             location = value.location,
             image = value.image,
             owner = value.owner.name,

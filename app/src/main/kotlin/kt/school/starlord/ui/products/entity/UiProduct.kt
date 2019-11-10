@@ -1,6 +1,7 @@
 package kt.school.starlord.ui.products.entity
 
 import androidx.annotation.ColorRes
+import androidx.annotation.StringRes
 import kt.school.starlord.ui.global.entity.UiEntity
 import kt.school.starlord.ui.global.annotation.Visibility
 
@@ -19,7 +20,7 @@ data class UiProduct(
     val comments: String,
     val price: String,
     val isPaid: Boolean,
-    val type: String,
+    @StringRes val type: Int,
     @ColorRes val typeColor: Int,
     @Visibility val commentsCountVisibility: Int,
     @Visibility val priceVisibility: Int,

@@ -51,7 +51,7 @@ class ProductAdapterDelegate(
             location.text = item.location
             owner.text = item.owner
             type.setBackgroundResource(item.typeColor)
-            type.text = item.type
+            type.setText(item.type)
             commentsCount.text = item.comments
             price.text = item.price
             commentsCount.visibility = item.commentsCountVisibility

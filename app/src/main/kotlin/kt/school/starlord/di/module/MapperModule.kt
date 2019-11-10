@@ -6,17 +6,17 @@ import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.subcategory.Subcategory
-import kt.school.starlord.model.data.mapper.converter.element.ElementToCategoryConverter
-import kt.school.starlord.model.data.mapper.converter.element.ElementToProductConverter
-import kt.school.starlord.model.data.mapper.converter.element.ElementToSubcategoryConverter
 import kt.school.starlord.model.data.mapper.converter.ProductToUiEntityConverter
 import kt.school.starlord.model.data.mapper.converter.RoomProductToProductConverter
 import kt.school.starlord.model.data.mapper.converter.StringToUrlConverter
+import kt.school.starlord.model.data.mapper.converter.element.ElementToCategoryConverter
 import kt.school.starlord.model.data.mapper.converter.element.ElementToPriceConverter
-import kt.school.starlord.model.data.mapper.converter.localization.PriceToLocalizedMoneyConverter
+import kt.school.starlord.model.data.mapper.converter.element.ElementToProductConverter
+import kt.school.starlord.model.data.mapper.converter.element.ElementToSubcategoryConverter
+import kt.school.starlord.model.data.mapper.converter.localization.LocalizedTimePassedToLongConverter
 import kt.school.starlord.model.data.mapper.converter.localization.LongToLocalizedTimePassedConverter
 import kt.school.starlord.model.data.mapper.converter.localization.LongToRussianLocalizedTimePassedConverter
-import kt.school.starlord.model.data.mapper.converter.localization.LocalizedTimePassedToLongConverter
+import kt.school.starlord.model.data.mapper.converter.localization.PriceToLocalizedMoneyConverter
 import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomProduct
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
@@ -38,9 +38,8 @@ val mapperModule = module {
                 ElementToProductConverter(),
 
                 // localization
-                LongToLocalizedTimePassedConverter(get(Qualifier.LOCALIZED) { parametersOf(Locale("ru")) }),
                 LongToLocalizedTimePassedConverter(get()),
-                LongToRussianLocalizedTimePassedConverter(),
+                LongToRussianLocalizedTimePassedConverter(get(Qualifier.LOCALIZED) { parametersOf(Locale("ru")) }),
                 PriceToLocalizedMoneyConverter(get()),
                 LocalizedTimePassedToLongConverter(),
 
@@ -56,13 +55,11 @@ val mapperModule = module {
                 object : BaseConverter<Category, RoomCategory>(Category::class, RoomCategory::class) {
                     override fun convert(value: Category) = RoomCategory(value.name)
                 },
-                object :
-                    BaseConverter<RoomSubcategory, Subcategory>(RoomSubcategory::class, Subcategory::class) {
+                object : BaseConverter<RoomSubcategory, Subcategory>(RoomSubcategory::class, Subcategory::class) {
                     override fun convert(value: RoomSubcategory) =
                         Subcategory(value.name, value.count, value.link, value.categoryName)
                 },
-                object :
-                    BaseConverter<Subcategory, RoomSubcategory>(Subcategory::class, RoomSubcategory::class) {
+                object : BaseConverter<Subcategory, RoomSubcategory>(Subcategory::class, RoomSubcategory::class) {
                     override fun convert(value: Subcategory) =
                         RoomSubcategory(
                             name = value.name,
