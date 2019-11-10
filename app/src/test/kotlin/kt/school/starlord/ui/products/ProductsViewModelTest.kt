@@ -29,7 +29,7 @@ class ProductsViewModelTest {
     private val progressFeature: ProgressViewModelFeature = mockk(relaxUnitFun = true)
     private val productsListRepository: ProductsRepository = mockk()
     private val mapper =
-        Mapper(setOf(ProductToUiEntityConverter(mockk(relaxed = true), mockk(relaxed = true))))
+        Mapper(setOf(ProductToUiEntityConverter()))
     private val productsRepository: ProductsCacheRepository = mockk(relaxUnitFun = true)
     private val mockRepository = MockRepository()
 

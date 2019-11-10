@@ -3,6 +3,7 @@ package kt.school.starlord.model.data.mapper.converter.element
 import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
+import kt.school.starlord.model.data.mapper.converter.localization.LocalizedTimePassedToLongConverter
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.ProductType
@@ -11,13 +12,33 @@ import org.jsoup.select.Elements
 import org.koin.core.KoinComponent
 import org.koin.core.inject
 
+private const val EMPTY_STRING = ""
+private const val EQUALS_STRING = "="
+private const val LINK = "href"
+private const val A = "a"
+private const val COST = "cost"
+private const val TITLE = "wraptxt"
+private const val DESCRIPTION = "ba-description"
+private const val IMAGE = "img-va"
+private const val SIGNATURE = "ba-signature"
+private const val COMMENTS = "c-org"
+private const val IMG = "img"
+private const val SRC = "src"
+private const val STRONG = "strong"
+private const val LAST_UPDATE = "ba-post-up"
+private const val SEPARATOR = "user/"
+private const val M_IMP = "m-imp"
+private const val UP = "UP!"
+
 /**
  * Contains logic on how to convert Jsoup Element to Product entity.
+ * Depends on ElementToPriceConverter and LocalizedTimePassedToLongConverter.
+ *
+ * @see ElementToPriceConverter
+ * @see LocalizedTimePassedToLongConverter
  */
-class ElementToProductConverter : BaseConverter<Element, Product>(
-    Element::class,
-    Product::class
-), KoinComponent {
+class ElementToProductConverter : BaseConverter<Element, Product>(Element::class, Product::class),
+    KoinComponent {
 
     private val mapper: Mapper by inject()
 
@@ -28,27 +49,21 @@ class ElementToProductConverter : BaseConverter<Element, Product>(
         val signature = signatures.first()
         val localizedTimePassed = LocalizedTimePassed(
             value.getElementsByClass(LAST_UPDATE).first().text()
-                .replaceFirst(UP, "", true)
-                .replaceIndent()
+                .replaceFirst(UP, EMPTY_STRING, true).replaceIndent()
         )
 
-        val epochMilli = mapper.map<Long>(localizedTimePassed)
         return Product(
-            id = title.first().getElementsByTag(A).attr(LINK).split("=").last().toLong(),
+            id = title.first().getElementsByTag(A).attr(LINK).split(EQUALS_STRING).last().toLong(),
             title = title.text(),
-            description = if (description.isNotEmpty()) description.text() else "",
-            image = value.getElementsByClass(IMAGE)
-                .first()
-                .getElementsByTag(IMG)
-                .first()
-                .attr(SRC),
+            description = if (description.isNotEmpty()) description.text() else EMPTY_STRING,
+            image = value.getElementsByClass(IMAGE).first().getElementsByTag(IMG).first().attr(SRC),
             price = mapper.map(cost.first()),
-            location = if (signature.hasText()) signature.getElementsByTag(STRONG).first().text() else "",
+            location = if (signature.hasText()) signature.getElementsByTag(STRONG).first().text() else EMPTY_STRING,
             commentsCount = if (comments.isNotEmpty()) comments.text().toLong() else 0L,
             type = getProductType(value.getElementsByClass(ProductDocumentType.TYPE)),
             owner = getProductOwner(signature),
             isPaid = value.hasClass(M_IMP),
-            epochMilli = epochMilli,
+            lastUpdate = mapper.map(localizedTimePassed),
             localizedTimePassed = localizedTimePassed
         )
     }
@@ -63,9 +78,7 @@ class ElementToProductConverter : BaseConverter<Element, Product>(
     private fun getProductOwner(signature: Element): ProductOwner {
         val owner = signature.getElementsByTag(A).first()
         return ProductOwner(
-            id = owner.attr(LINK).split(
-                SEPARATOR
-            ).last().toLong(),
+            id = owner.attr(LINK).split(SEPARATOR).last().toLong(),
             name = owner.text()
         )
     }
@@ -98,23 +111,5 @@ class ElementToProductConverter : BaseConverter<Element, Product>(
         const val SERVICE = "ba-label-5"
         const val RENT = "ba-label-6"
         const val CLOSED = "ba-label-7"
-    }
-
-    companion object {
-        private const val LINK = "href"
-        private const val A = "a"
-        private const val COST = "cost"
-        private const val TITLE = "wraptxt"
-        private const val DESCRIPTION = "ba-description"
-        private const val IMAGE = "img-va"
-        private const val SIGNATURE = "ba-signature"
-        private const val COMMENTS = "c-org"
-        private const val IMG = "img"
-        private const val SRC = "src"
-        private const val STRONG = "strong"
-        private const val LAST_UPDATE = "ba-post-up"
-        private const val SEPARATOR = "user/"
-        private const val M_IMP = "m-imp"
-        private const val UP = "UP!"
     }
 }

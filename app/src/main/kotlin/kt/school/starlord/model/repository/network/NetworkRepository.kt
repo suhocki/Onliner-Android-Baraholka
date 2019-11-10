@@ -38,7 +38,7 @@ class NetworkRepository(
         }
 
     override suspend fun getProducts(link: String) = withContext(coroutineContextProvider.io) {
-        Jsoup.parse(mapper.map<URL>(link), BuildConfig.NETWORK_REQUEST_TIMEOUT_MILLIS)
+        Jsoup.parse(mapper.map(link), BuildConfig.NETWORK_REQUEST_TIMEOUT_MILLIS)
             .getElementsByClass(PRODUCT_CLASS)
             .flatMap { it.getElementsByTag(PRODUCT_TAG) }
             .filter {

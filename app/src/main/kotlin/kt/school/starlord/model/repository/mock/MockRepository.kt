@@ -38,7 +38,7 @@ class MockRepository : CategoriesCacheRepository,
             image = "file:///android_asset/products/1.jpg",
             owner = ProductOwner("xrystal", 1524248),
             price = Price(150.0, hasPrice = true, isBargainAvailable = false),
-            epochMilli = 100,
+            lastUpdate = 100,
             localizedTimePassed = LocalizedTimePassed("4 минуты назад"),
             commentsCount = 1
         ),
@@ -51,7 +51,7 @@ class MockRepository : CategoriesCacheRepository,
             image = "file:///android_asset/products/2.jpeg",
             owner = ProductOwner("angel_1988", 1813103),
             price = Price(0.0, hasPrice = false, isBargainAvailable = false),
-            epochMilli = 100,
+            lastUpdate = 100,
             localizedTimePassed = LocalizedTimePassed("4 минуты назад"),
             commentsCount = 4
         ),
@@ -64,7 +64,7 @@ class MockRepository : CategoriesCacheRepository,
             image = "file:///android_asset/products/3.jpg",
             owner = ProductOwner("angel_1988", 1813103),
             price = Price(200.0, hasPrice = true, isBargainAvailable = false),
-            epochMilli = 100,
+            lastUpdate = 100,
             localizedTimePassed = LocalizedTimePassed("4 минуты назад"),
             commentsCount = 0
         ),
@@ -77,7 +77,7 @@ class MockRepository : CategoriesCacheRepository,
             image = "file:///android_asset/products/4.jpg",
             owner = ProductOwner("BMW888IK5", 717419),
             price = Price(0.0, hasPrice = true, isBargainAvailable = false),
-            epochMilli = 100,
+            lastUpdate = 100,
             localizedTimePassed = LocalizedTimePassed("4 минуты назад"),
             commentsCount = 2
         ),
@@ -90,7 +90,7 @@ class MockRepository : CategoriesCacheRepository,
             image = "file:///android_asset/products/5.webp",
             owner = ProductOwner("greendors", 76882),
             price = Price(160.0, hasPrice = true, isBargainAvailable = false),
-            epochMilli = 100,
+            lastUpdate = 100,
             localizedTimePassed = LocalizedTimePassed("4 минуты назад"),
             commentsCount = 1
         ),
@@ -103,7 +103,7 @@ class MockRepository : CategoriesCacheRepository,
             image = "file:///android_asset/products/6.jpg",
             owner = ProductOwner("Ta6aK", 442157),
             price = Price(30.0, hasPrice = true, isBargainAvailable = false),
-            epochMilli = 100,
+            lastUpdate = 100,
             localizedTimePassed = LocalizedTimePassed("4 минуты назад"),
             commentsCount = 0
         )
@@ -181,7 +181,7 @@ class MockRepository : CategoriesCacheRepository,
         TODO()
     }
 
-    override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {}
+    override suspend fun updateProducts(subcategoryName: String, newProducts: List<Product>) {}
 
     override suspend fun getProducts(link: String): List<Product> = products
 }

@@ -30,7 +30,7 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
     private val viewModel: ProductsViewModel = mockk(relaxed = true)
     private val progressSnackbar: ProgressSnackbar = mockk(relaxUnitFun = true)
     private val errorSnackbar: ErrorSnackbar = mockk(relaxUnitFun = true)
-    private val productToUiProductConverter = ProductToUiEntityConverter(mockk(relaxed = true), mockk(relaxed = true))
+    private val productToUiProductConverter = ProductToUiEntityConverter()
     private val subcategory: Subcategory = mockk()
 
     private val mockRepository = MockRepository()

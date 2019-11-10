@@ -54,29 +54,29 @@ class DatabaseRepository(
 
     override suspend fun updateProducts(subcategoryName: String, newProducts: List<Product>) {
         val productDao = daoManager.productDao
-        val epochMilli = Instant.now().toEpochMilli()
-
         val oldProducts = productDao.getProductsByIds(newProducts.map { it.id }, subcategoryName)
 
-        val productsToSave = newProducts.map { newProduct ->
+        productDao.insertProducts(
+            newProducts.onEach { newProduct ->
+                mergeProductsLastUpdate(oldProducts, newProduct)
+                newProduct.subcategoryName = subcategoryName
+            }.map { mapper.map<RoomProduct>(it) }
+        )
+    }
 
-            oldProducts.find { oldProduct -> oldProduct.id == newProduct.id }?.let { oldProduct ->
+    private fun mergeProductsLastUpdate(oldProducts: List<RoomProduct>, newProduct: Product) {
+        val epochMilli = Instant.now().toEpochMilli()
 
-                val oldLocalizedTimePassed =
-                    mapper.map<RussianLocalizedTimePassed>(epochMilli - oldProduct.lastUpdate)
-                val newLocalizedTimePassed = RussianLocalizedTimePassed(newProduct.localizedTimePassed.value)
+        oldProducts.find { oldProduct -> oldProduct.id == newProduct.id }?.let { oldProduct ->
+            val oldLocalizedTimePassed = mapper.map<RussianLocalizedTimePassed>(epochMilli - oldProduct.lastUpdate)
+            val newLocalizedTimePassed = RussianLocalizedTimePassed(newProduct.localizedTimePassed.value)
 
-                if (oldProduct.lastUpdate >= newProduct.epochMilli ||
-                    oldLocalizedTimePassed == newLocalizedTimePassed
-                ) {
-                    // old lastUpdate epoch millis should stay unchanged.
-                    newProduct.epochMilli = oldProduct.lastUpdate
-                }
+            if (oldProduct.lastUpdate >= newProduct.lastUpdate ||
+                oldLocalizedTimePassed == newLocalizedTimePassed
+            ) {
+                // old lastUpdate epoch millis should stay unchanged.
+                newProduct.lastUpdate = oldProduct.lastUpdate
             }
-
-            mapper.map<RoomProduct>(newProduct).apply { this.subcategoryName = subcategoryName }
         }
-
-        productDao.insertProducts(productsToSave)
     }
 }

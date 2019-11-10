@@ -29,7 +29,7 @@ class RoomProductToProductConverter : BaseConverter<RoomProduct, Product>(
         commentsCount = value.commentsCount,
         isPaid = value.isPaid,
         subcategoryName = value.subcategoryName,
-        epochMilli = value.lastUpdate,
+        lastUpdate = value.lastUpdate,
         localizedTimePassed = mapper.map(value.lastUpdate)
     )
 }

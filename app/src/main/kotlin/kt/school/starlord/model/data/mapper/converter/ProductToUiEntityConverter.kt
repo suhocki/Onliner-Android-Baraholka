@@ -34,7 +34,7 @@ class ProductToUiEntityConverter : BaseConverter<Product, UiEntity>(
             location = value.location,
             image = value.image,
             owner = value.owner.name,
-            lastUpdate = mapper.map<LocalizedTimePassed>(epochMilliNow - value.epochMilli).value,
+            lastUpdate = mapper.map<LocalizedTimePassed>(epochMilliNow - value.lastUpdate).value,
             isPaid = value.isPaid,
             comments = value.commentsCount.toString(),
             price = mapper.map<LocalizedMoney>(value.price).value,

@@ -26,7 +26,7 @@ data class RoomProduct(
         parentColumns = [RoomSubcategory.NAME],
         childColumns = [SUBCATEGORY_NAME]
     )
-    var subcategoryName: String = "",
+    var subcategoryName: String,
     val title: String,
     val description: String,
     val type: ProductType,

@@ -6,9 +6,9 @@ import org.threeten.bp.Instant
 
 /**
  * Time passed after some action, represented by LocalizedTimePassed, will be converted to long.
- * E.g. "5 seconds ago" will become (epochMilli() - 5 seconds)
+ * E.g. "5 seconds ago" will become (lastUpdate() - 5 seconds)
  */
-class LocalizedTimePassedToEpochMilliConverter : BaseConverter<LocalizedTimePassed, Long>(
+class LocalizedTimePassedToLongConverter : BaseConverter<LocalizedTimePassed, Long>(
     LocalizedTimePassed::class, Long::class
 ) {
 
