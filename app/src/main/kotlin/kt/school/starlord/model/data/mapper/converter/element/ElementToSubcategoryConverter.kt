@@ -7,10 +7,7 @@ import org.jsoup.nodes.Element
 /**
  * Contains logic on how to convert Jsoup Element to Subcategory entity.
  */
-class ElementToSubcategoryConverter : BaseConverter<Element, Subcategory>(
-    Element::class,
-    Subcategory::class
-) {
+class ElementToSubcategoryConverter : BaseConverter<Element, Subcategory>(Element::class, Subcategory::class) {
 
     override fun convert(value: Element): Subcategory {
         val subcategoryElements = value.getElementsByAttribute(LINK)

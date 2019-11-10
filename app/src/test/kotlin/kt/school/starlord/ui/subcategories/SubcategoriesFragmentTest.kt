@@ -45,7 +45,7 @@ class SubcategoriesFragmentTest : AutoCloseKoinTest() {
     fun `navigate to products`() {
         // Given
         val subcategoryName = "subcategoryName"
-        val subcategory = Subcategory(subcategoryName, anyString(), 0, anyString())
+        val subcategory = Subcategory(subcategoryName, 0, anyString())
         val navController: NavController = mockk(relaxUnitFun = true)
         mockkStatic(NavHostFragment::class)
 

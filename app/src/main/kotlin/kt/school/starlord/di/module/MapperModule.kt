@@ -59,12 +59,17 @@ val mapperModule = module {
                 object :
                     BaseConverter<RoomSubcategory, Subcategory>(RoomSubcategory::class, Subcategory::class) {
                     override fun convert(value: RoomSubcategory) =
-                        Subcategory(value.name, value.categoryName, value.count, value.link)
+                        Subcategory(value.name, value.count, value.link, value.categoryName)
                 },
                 object :
                     BaseConverter<Subcategory, RoomSubcategory>(Subcategory::class, RoomSubcategory::class) {
                     override fun convert(value: Subcategory) =
-                        RoomSubcategory(value.name, value.categoryName, value.count, value.link)
+                        RoomSubcategory(
+                            name = value.name,
+                            categoryName = value.categoryName ?: TODO("Add a category."),
+                            count = value.count,
+                            link = value.link
+                        )
                 },
                 object : BaseConverter<Product, RoomProduct>(Product::class, RoomProduct::class) {
                     override fun convert(value: Product): RoomProduct {

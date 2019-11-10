@@ -24,7 +24,7 @@ class ProductsViewModelTest {
 
     private val link = "https://baraholka.onliner.by/viewforum.php?f=2"
     private val subcategoryName = "subcategoryName"
-    private val subcategory = Subcategory(subcategoryName, "", 0, link)
+    private val subcategory = Subcategory(subcategoryName, 0, link)
     private val errorFeature: ErrorViewModelFeature = mockk(relaxUnitFun = true)
     private val progressFeature: ProgressViewModelFeature = mockk(relaxUnitFun = true)
     private val productsListRepository: ProductsRepository = mockk()

@@ -11,7 +11,7 @@ import kotlinx.android.parcel.Parcelize
 @Parcelize
 data class Subcategory(
     val name: String,
-    var categoryName: String = "",
     val count: Int,
-    val link: String
+    val link: String,
+    var categoryName: String? = null
 ) : Parcelable
