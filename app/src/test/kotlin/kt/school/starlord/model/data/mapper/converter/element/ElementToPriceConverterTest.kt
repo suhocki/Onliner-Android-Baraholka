@@ -6,9 +6,8 @@ import org.jsoup.parser.Parser
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
-import org.koin.test.AutoCloseKoinTest
 
-internal class ElementToPriceConverterTest : AutoCloseKoinTest() {
+internal class ElementToPriceConverterTest {
 
     private val converter = ElementToPriceConverter()
 
