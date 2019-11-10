@@ -1,4 +1,4 @@
-package kt.school.starlord.model.data.mapper.converter
+package kt.school.starlord.model.data.mapper.converter.element
 
 import io.mockk.mockk
 import kt.school.starlord.domain.data.mapper.BaseConverter
@@ -7,7 +7,6 @@ import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.ProductType
-import kt.school.starlord.model.data.mapper.converter.element.ElementToProductConverter
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
@@ -21,7 +20,7 @@ import org.koin.dsl.module
 import org.koin.test.AutoCloseKoinTest
 import org.mockito.ArgumentMatchers
 
-class ElementToProductConverterTest : AutoCloseKoinTest() {
+internal class ElementToProductConverterTest : AutoCloseKoinTest() {
 
     private val converter by lazy { ElementToProductConverter() }
 

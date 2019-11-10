@@ -24,11 +24,7 @@ class CategoriesScreenshotTest : KoinTest {
     @get:Rule
     val activityTestRule = object : ActivityTestRule<AppActivity>(AppActivity::class.java) {
         override fun beforeActivityLaunched() {
-            unloadKoinModules(listOf(
-                databaseModule,
-                networkModule,
-                mockModule
-            ))
+            unloadKoinModules(listOf(databaseModule, networkModule, mockModule))
             loadKoinModules(mockModule)
         }
     }
