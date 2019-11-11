@@ -22,7 +22,7 @@ internal class LocalizedTimePassedToLongConverterTest{
     }
 
     @TestFactory
-    fun `convert "some time ago" to Date`() = listOf(
+    fun convert() = listOf(
         "меньше минуты назад" to now,
         "1 минуту назад" to now.minusMillis(60 * MILLIS_IN_SECOND),
         "22 минуты назад" to now.minusMillis(22 * MILLIS_IN_MINUTE),

@@ -4,7 +4,6 @@ import android.view.View
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkStatic
-import kt.school.starlord.R
 import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.product.Price
@@ -20,14 +19,14 @@ import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.koin.core.context.startKoin
 import org.koin.dsl.module
-import org.mockito.ArgumentMatchers
+import org.koin.test.AutoCloseKoinTest
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.threeten.bp.Instant
-import java.security.acl.Owner
 
-internal class ProductToUiEntityConverterTest {
+internal class ProductToUiEntityConverterTest : AutoCloseKoinTest() {
 
-    private val converter = ProductToUiEntityConverter()
+    private val converter by lazy { ProductToUiEntityConverter() }
 
     private val now = Instant.now()
     private val lastUpdate = anyString()
@@ -56,140 +55,67 @@ internal class ProductToUiEntityConverterTest {
     fun convert() = mapOf(
         Product(
             id = 123,
-                    title = "title",
-                    description = "description",
-                    type = ProductType.SERVICE,
-                    location = "location",
-                    image = "image",
-                    owner = ProductOwner("owner", 1L),
-                    price = mockk(),
-                    lastUpdate = mockk(),
-                    localizedTimePassed = mockk(),
-                    commentsCount = 123,
-                    isPaid = true
+            title = "title",
+            description = "description",
+            type = ProductType.SERVICE,
+            location = "location",
+            image = "image",
+            owner = ProductOwner("owner", 1L),
+            price = Price(amount = 123.0, hasPrice = true, isBargainAvailable = true),
+            lastUpdate = anyLong(),
+            localizedTimePassed = mockk(),
+            commentsCount = 12,
+            isPaid = true
         ) to UiProduct(
             id = 123,
             lastUpdate = lastUpdate,
-            type = ProductType.SERVICE.name
-        ),
-        mockProduct().apply {
-            every { price } returns ProductPrice(null, ArgumentMatchers.anyBoolean())
-        } to "",
-        mockProduct().apply {
-            every { price } returns ProductPrice(0.0, ArgumentMatchers.anyBoolean())
-            every { resourceManager.getString(R.string.for_free) } returns "free"
-        } to "free"
+            type = ProductType.SERVICE.stringRes,
+            typeColor = ProductType.SERVICE.colorRes,
+            location = "location",
+            image = "image",
+            owner = "owner",
+            title = "title",
+            description = "description",
+            comments = "12",
+            price = price,
+            isPaid = true,
+            bargainVisibility = View.VISIBLE,
+            commentsCountVisibility = View.VISIBLE,
+            priceVisibility = View.VISIBLE
+        ), Product(
+            id = 123,
+            title = "title",
+            description = "description",
+            type = ProductType.BUY,
+            location = "location",
+            image = "image",
+            owner = ProductOwner("owner", 1L),
+            price = Price(amount = 123.0, hasPrice = false, isBargainAvailable = false),
+            lastUpdate = anyLong(),
+            localizedTimePassed = mockk(),
+            commentsCount = 0,
+            isPaid = true
+        ) to UiProduct(
+            id = 123,
+            lastUpdate = lastUpdate,
+            type = ProductType.BUY.stringRes,
+            typeColor = ProductType.BUY.colorRes,
+            location = "location",
+            image = "image",
+            owner = "owner",
+            title = "title",
+            description = "description",
+            comments = "0",
+            price = price,
+            isPaid = true,
+            bargainVisibility = View.GONE,
+            commentsCountVisibility = View.GONE,
+            priceVisibility = View.GONE
+        )
     ).map { (input, expected) ->
-        DynamicTest.dynamicTest("when I convert \"$input\" then UiProduct.price is $expected") {
+        DynamicTest.dynamicTest("Converting domain product to UI") {
             val uiProduct = converter.convert(input)
-            Assertions.assertEquals(expected, uiProduct.price)
+            Assertions.assertEquals(expected, uiProduct)
         }
-    }
-
-    @TestFactory
-    fun `convert price to visibility`() = mapOf(
-        mockProduct().apply {
-            every { price } returns ProductPrice(
-                0.0,
-                ArgumentMatchers.anyBoolean()
-            )
-        } to View.VISIBLE,
-        mockProduct().apply {
-            every { price } returns ProductPrice(
-                100.0,
-                ArgumentMatchers.anyBoolean()
-            )
-        } to View.VISIBLE,
-        mockProduct().apply { every { price } returns ProductPrice(null, ArgumentMatchers.anyBoolean()) } to View.GONE
-    ).map { (input, expected) ->
-        DynamicTest.dynamicTest("when I convert \"$input\" then UiProduct.priceVisibility is $expected") {
-            val uiProduct = converter.convert(input)
-            Assertions.assertEquals(expected, uiProduct.priceVisibility)
-        }
-    }
-
-    @TestFactory
-    fun `convert bargain to visibility`() = mapOf(
-        mockProduct().apply {
-            every { price } returns ProductPrice(ArgumentMatchers.anyDouble(), false)
-        } to View.GONE,
-        mockProduct().apply {
-            every { price } returns ProductPrice(ArgumentMatchers.anyDouble(), true)
-        } to View.VISIBLE
-    ).map { (input, expected) ->
-        DynamicTest.dynamicTest("when I convert \"$input\" then UiProduct.bargainVisibility is $expected") {
-            val uiProduct = converter.convert(input)
-            Assertions.assertEquals(expected, uiProduct.bargainVisibility)
-        }
-    }
-
-    @TestFactory
-    fun `convert last update to String`() = mapOf(
-        mockProduct().apply {
-            every { lastUpdate } returns millisNow - MILLIS_IN_MONTH
-            every { resourceManager.getString(R.string.more_than_month_ago) } returns "more than month ago"
-        } to "more than month ago",
-        mockProduct().apply {
-            every { lastUpdate } returns millisNow - 3 * MILLIS_IN_DAY
-            every { resourceManager.getPlural(R.plurals.days_ago, 3, 3L) } returns "3 day ago"
-        } to "3 day ago",
-        mockProduct().apply {
-            every { lastUpdate } returns millisNow - MILLIS_IN_DAY
-            every { resourceManager.getPlural(R.plurals.days_ago, 1, 1L) } returns "1 day ago"
-        } to "1 day ago",
-        mockProduct().apply {
-            every { lastUpdate } returns millisNow - 3 * MILLIS_IN_HOUR
-            every { resourceManager.getPlural(R.plurals.hours_ago, 3, 3L) } returns "3 hours ago"
-        } to "3 hours ago",
-        mockProduct().apply {
-            every { lastUpdate } returns millisNow - MILLIS_IN_HOUR
-            every { resourceManager.getPlural(R.plurals.hours_ago, 1, 1L) } returns "1 hour ago"
-        } to "1 hour ago",
-        mockProduct().apply {
-            every { lastUpdate } returns millisNow - 3 * MILLIS_IN_MINUTE
-            every { resourceManager.getPlural(R.plurals.minutes_ago, 3, 3L) } returns "3 min ago"
-        } to "3 min ago",
-        mockProduct().apply {
-            every { lastUpdate } returns millisNow - MILLIS_IN_MINUTE
-            every { resourceManager.getPlural(R.plurals.minutes_ago, 1, 1L) } returns "1 min ago"
-        } to "1 min ago",
-        mockProduct().apply {
-            every { lastUpdate } returns millisNow
-            every { resourceManager.getString(R.string.less_than_minute_ago) } returns "less than minute ago"
-        } to "less than minute ago"
-    ).map { (input, expected) ->
-        DynamicTest.dynamicTest("when I convert \"$input\" then UiProduct.lastUpdate is $expected") {
-            val uiProduct = converter.convert(input)
-            Assertions.assertEquals(expected, uiProduct.lastUpdate)
-        }
-    }
-
-    @TestFactory
-    fun `convert comments count to visibility`() = mapOf(
-        mockProduct().apply { every { commentsCount } returns 0 } to View.GONE,
-        mockProduct().apply { every { commentsCount } returns 1 } to View.VISIBLE
-    ).map { (input, expected) ->
-        DynamicTest.dynamicTest("when I convert \"$input\" then UiProduct.commentsCountVisibility is $expected") {
-            val uiProduct = converter.convert(input)
-            Assertions.assertEquals(expected, uiProduct.commentsCountVisibility)
-        }
-    }
-
-    private fun mockProduct() = mockk<Product>(relaxed = true).apply {
-        every { title } returns anyString()
-        every { description } returns anyString()
-        every { type } returns mockk(relaxed = true)
-        every { location } returns anyString()
-        every { image } returns anyString()
-        every { owner } returns mockk(relaxed = true)
-        every { price } returns mockk(relaxed = true)
-    }
-
-    companion object {
-        private const val MILLIS_IN_SEC = 1000L
-        private const val MILLIS_IN_MINUTE = 60 * MILLIS_IN_SEC
-        private const val MILLIS_IN_HOUR = 60 * MILLIS_IN_MINUTE
-        private const val MILLIS_IN_DAY = 24 * MILLIS_IN_HOUR
-        private const val MILLIS_IN_MONTH = 30 * MILLIS_IN_DAY
     }
 }
