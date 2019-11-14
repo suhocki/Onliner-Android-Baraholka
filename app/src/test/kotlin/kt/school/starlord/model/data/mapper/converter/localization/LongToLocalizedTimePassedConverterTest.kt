@@ -21,6 +21,7 @@ internal class LongToLocalizedTimePassedConverterTest {
         every { resourceManager.getPlural(R.plurals.hours_ago, 1, 1L) } returns "1 hour ago"
         every { resourceManager.getPlural(R.plurals.days_ago, 1, 1L) } returns "1 day ago"
         every { resourceManager.getPlural(R.plurals.month_ago, 1, 1L) } returns "1 month ago"
+        every { resourceManager.getPlural(R.plurals.month_ago, 2, 2L) } returns "2 month ago"
     }
 
     @TestFactory
@@ -29,7 +30,8 @@ internal class LongToLocalizedTimePassedConverterTest {
         MILLIS_IN_MINUTE to "1 min ago",
         MILLIS_IN_HOUR to "1 hour ago",
         MILLIS_IN_DAY to "1 day ago",
-        MILLIS_IN_MONTH to "1 month ago"
+        MILLIS_IN_MONTH to "1 month ago",
+        MILLIS_IN_MONTH * 2 to "2 month ago"
     ).map { (input, expected) ->
         DynamicTest.dynamicTest("Converting $input to localized time passed") {
             val actual = converter.convert(input)
