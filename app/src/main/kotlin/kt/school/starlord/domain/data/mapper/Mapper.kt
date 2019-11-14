@@ -15,7 +15,7 @@ class Mapper(inline val converters: Set<Converter<*, *>>) {
         if (input is To) return input
 
         val converter = converters.find { it.fromClass == input::class && To::class == it.toClass }
-                ?: throw NoSuchElementException("Cannot find converter from ${input::class.java} to ${To::class.java}")
+                ?: throw NoSuchElementException("Cannot find converter from ${input::class} to ${To::class}")
 
         @Suppress("UNCHECKED_CAST")
         return (converter as Converter<Any, To>).convert(input)

@@ -28,8 +28,7 @@ class ProductsViewModelTest {
     private val errorFeature: ErrorViewModelFeature = mockk(relaxUnitFun = true)
     private val progressFeature: ProgressViewModelFeature = mockk(relaxUnitFun = true)
     private val productsListRepository: ProductsRepository = mockk()
-    private val mapper =
-        Mapper(setOf(ProductToUiEntityConverter()))
+    private val mapper = Mapper(setOf(ProductToUiEntityConverter()))
     private val productsRepository: ProductsCacheRepository = mockk(relaxUnitFun = true)
     private val mockRepository = MockRepository()
 
@@ -38,7 +37,7 @@ class ProductsViewModelTest {
 //        // Given
 //        val products: List<Product> = mockRepository.products
 //
-//        coEvery { productsRepository.getProductsCached(subcategoryName) }.coAnswers { MutableLiveData(products) }
+//        coEvery { productsRepository.getCachedProducts(subcategoryName) }.coAnswers { MutableLiveData(products) }
 //        coEvery { productsListRepository.getProducts(link) }.coAnswers { products }
 //
 //        // When
@@ -58,7 +57,7 @@ class ProductsViewModelTest {
 //        val error = Throwable()
 //        val products: List<Product> = mockRepository.products
 //
-//        coEvery { productsRepository.getProductsCached(subcategoryName) }.coAnswers { MutableLiveData(products) }
+//        coEvery { productsRepository.getCachedProducts(subcategoryName) }.coAnswers { MutableLiveData(products) }
 //        coEvery { productsListRepository.getProducts(any()) }.throws(error)
 //
 //        // When
@@ -77,7 +76,7 @@ class ProductsViewModelTest {
 //        // Given
 //        val products = mockRepository.products
 //
-//        coEvery { productsRepository.getProductsCached(subcategoryName) }.coAnswers { MutableLiveData(products) }
+//        coEvery { productsRepository.getCachedProducts(subcategoryName) }.coAnswers { MutableLiveData(products) }
 //        coEvery { productsListRepository.getProducts(link) }.coAnswers { products }
 //
 //        // When

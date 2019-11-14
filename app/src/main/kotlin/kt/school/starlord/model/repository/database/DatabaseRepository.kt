@@ -47,7 +47,7 @@ class DatabaseRepository(
         daoManager.subcategoryDao.replaceAll(roomSubcategories)
     }
 
-    override fun getProductsCached(subcategoryName: String): DataSource.Factory<Int, Product> =
+    override fun getCachedProducts(subcategoryName: String): DataSource.Factory<Int, Product> =
         daoManager.productDao
             .getProducts(subcategoryName)
             .map { mapper.map<Product>(it) }

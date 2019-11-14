@@ -5,6 +5,7 @@ package kt.school.starlord.model.repository.mock
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.paging.DataSource
+import androidx.paging.PositionalDataSource
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import kt.school.starlord.domain.entity.product.Price
@@ -132,39 +133,19 @@ class MockRepository : CategoriesCacheRepository,
 
     override fun getSubcategories(categoryName: String) = MutableLiveData(
         listOf(
-            Subcategory(
-                "Шкафы. Комоды. Горки. Секции. Полки",
-                3388,
-                ""
-            ),
+            Subcategory("Шкафы. Комоды. Горки. Секции. Полки", 3388, ""),
             Subcategory("Диваны. Кресла. Мягкая мебель", 8962, ""),
             Subcategory("Столы. Стулья. Тумбы", 2575, ""),
-            Subcategory(
-                "Кровати. Матрасы. Мебель для спальни",
-                2740,
-                ""
-            ),
+            Subcategory("Кровати. Матрасы. Мебель для спальни", 2740, ""),
             Subcategory("Кухни и кухонная мебель", 2976, ""),
             Subcategory("Мебель для детской комнаты", 4059, ""),
             Subcategory("Мебель для ванной", 1904, ""),
             Subcategory("Офисная мебель", 4704, ""),
             Subcategory("Элементы интерьера. Дизайн.", 17044, ""),
-            Subcategory(
-                "Постельное белье и принадлежности",
-                11112,
-                ""
-            ),
-            Subcategory(
-                "Посуда и кухонные принадлежности",
-                638,
-                ""
-            ),
+            Subcategory("Постельное белье и принадлежности", 11112, ""),
+            Subcategory("Посуда и кухонные принадлежности", 638, ""),
             Subcategory("Бытовая техника.", 2842, ""),
-            Subcategory(
-                "Бытовая техника: ремонт, подключение и другие услуги",
-                423,
-                ""
-            )
+            Subcategory("Бытовая техника: ремонт, подключение и другие услуги", 423, "")
         )
     )
 
@@ -172,8 +153,21 @@ class MockRepository : CategoriesCacheRepository,
 
     override suspend fun getCategoriesWithSubcategories(): Map<Category, List<Subcategory>> = mapOf()
 
-    override fun getProductsCached(subcategoryName: String): DataSource.Factory<Int, Product> {
-        TODO()
+    override fun getCachedProducts(subcategoryName: String): DataSource.Factory<Int, Product> {
+        return object : DataSource.Factory<Int, Product>() {
+            override fun create(): DataSource<Int, Product> {
+                return object : PositionalDataSource<Product>() {
+                    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Product>) {
+                        callback.onResult(products)
+                    }
+
+                    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Product>) {
+                        callback.onResult(products, 0, products.count())
+                    }
+
+                }
+            }
+        }
     }
 
     override suspend fun updateProducts(subcategoryName: String, newProducts: List<Product>) {}

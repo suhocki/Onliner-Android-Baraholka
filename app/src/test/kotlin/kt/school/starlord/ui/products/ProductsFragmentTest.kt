@@ -4,18 +4,31 @@ import android.os.Bundle
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
+import androidx.paging.DataSource
+import androidx.paging.PagedList
+import androidx.paging.PositionalDataSource
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.mockkConstructor
 import io.mockk.verify
 import kotlinx.android.synthetic.main.fragment_products.*
+import kt.school.starlord.domain.data.mapper.BaseConverter
+import kt.school.starlord.domain.data.mapper.Mapper
+import kt.school.starlord.domain.entity.product.Price
+import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.system.view.ErrorSnackbar
 import kt.school.starlord.domain.system.view.ProgressSnackbar
 import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.model.data.mapper.converter.ProductToUiEntityConverter
 import kt.school.starlord.model.repository.mock.MockRepository
+import kt.school.starlord.ui.global.AppPagedRecyclerAdapter
 import kt.school.starlord.ui.global.AppRecyclerAdapter
+import kt.school.starlord.ui.global.entity.UiEntity
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedMoney
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
+import kt.school.starlord.ui.products.entity.UiProduct
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -30,10 +43,7 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
     private val viewModel: ProductsViewModel = mockk(relaxed = true)
     private val progressSnackbar: ProgressSnackbar = mockk(relaxUnitFun = true)
     private val errorSnackbar: ErrorSnackbar = mockk(relaxUnitFun = true)
-    private val productToUiProductConverter = ProductToUiEntityConverter()
     private val subcategory: Subcategory = mockk()
-
-    private val mockRepository = MockRepository()
     private val arguments = Bundle().apply { putParcelable("subcategory", subcategory) }
 
     private val scenario by lazy {
@@ -51,7 +61,7 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
 
     // region Testing snackbars
     @Test
-    fun `show snackbar with updating`() {
+    fun progressSnackbar_show() {
         // Given
         val progress = MutableLiveData(false)
 
@@ -62,12 +72,12 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
             progress.value = true
 
             // Then
-            verify { progressSnackbar.setVisibility(false) }
+            verify { progressSnackbar.setVisibility(true) }
         }
     }
 
     @Test
-    fun `hide snackbar with updating`() {
+    fun progressSnackbar_hide() {
         // Given
         val progress = MutableLiveData<Boolean>()
 
@@ -83,7 +93,7 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun `hide snackbar with updating when fragment is gone`() {
+    fun progressSnackbar_hideOnExit() {
         // Given
         val progressLiveData = MutableLiveData<Boolean>()
 
@@ -101,7 +111,7 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun `show snackbar with error`() {
+    fun errorSnackbar_show() {
         // Given
         val error = Throwable(anyString())
         val errorLiveData = MutableLiveData<Throwable>()
@@ -118,7 +128,7 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun `hide snackbar with error when fragment is gone`() {
+    fun errorSnackbar_hideOnExit() {
         // Given
         val error = Throwable(anyString())
         val errorLiveData = MutableLiveData<Throwable>()
@@ -138,29 +148,27 @@ class ProductsFragmentTest : AutoCloseKoinTest() {
     // endregion
 
     @Test
-    fun `show products`() {
-//        // Given
-//        mockkConstructor(AppRecyclerAdapter::class)
-//
-//        val products = mockRepository.getProductsCached(anyString()).map { products ->
-//            products.map { productToUiProductConverter.convert(it) }
-//        }
-//
-//        every { viewModel.getProducts() } returns products
-//
-//        scenario.moveToState(Lifecycle.State.CREATED)
-//
-//        // When
-//        scenario.moveToState(Lifecycle.State.RESUMED)
-//
-//        // Then
-//        scenario.onFragment {
-//            verify { anyConstructed<AppRecyclerAdapter>().setData(products.value!!) }
-//        }
+    fun showProducts() {
+        // Given
+        mockkConstructor(AppPagedRecyclerAdapter::class)
+
+        val pagedList: PagedList<UiEntity> = mockk(relaxed = true)
+
+        every { viewModel.getProducts() } returns MutableLiveData(pagedList)
+
+        scenario.moveToState(Lifecycle.State.CREATED)
+
+        // When
+        scenario.moveToState(Lifecycle.State.RESUMED)
+
+        // Then
+        scenario.onFragment {
+            verify { anyConstructed<AppPagedRecyclerAdapter>().submitList(pagedList) }
+        }
     }
 
     @Test
-    fun `clear adapter in recycler in onDestroy`() {
+    fun clearAdapterOnExit() {
         // Given
         scenario.moveToState(Lifecycle.State.RESUMED)
 
