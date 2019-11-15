@@ -29,6 +29,7 @@ class CategoriesViewModel(
 
     init {
         categoriesRepository.getCategoriesLiveData().observeForever(categories::setValue)
+
         refreshData()
     }
 
