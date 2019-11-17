@@ -7,7 +7,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 
-internal class ElementToSubcategoryConverterTest{
+internal class ElementToSubcategoryConverterTest {
 
     private val converter = ElementToSubcategoryConverter()
 

@@ -11,16 +11,18 @@ import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
 import org.koin.dsl.module
-import org.koin.test.AutoCloseKoinTest
+import org.koin.test.KoinTest
 import org.mockito.ArgumentMatchers
 
-internal class ElementToProductConverterTest : AutoCloseKoinTest() {
+internal class ElementToProductConverterTest : KoinTest {
 
     private val converter by lazy { ElementToProductConverter() }
 
@@ -40,6 +42,11 @@ internal class ElementToProductConverterTest : AutoCloseKoinTest() {
         startKoin {
             modules(module { single { Mapper(converters) } })
         }
+    }
+
+    @AfterEach
+    fun afterEach() {
+        stopKoin()
     }
 
     @TestFactory

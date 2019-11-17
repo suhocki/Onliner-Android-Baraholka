@@ -9,7 +9,7 @@ import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.threeten.bp.Instant
 
-internal class LocalizedTimePassedToLongConverterTest{
+internal class LocalizedTimePassedToLongConverterTest {
 
     private val converter = LocalizedTimePassedToLongConverter()
     private val now = Instant.now()

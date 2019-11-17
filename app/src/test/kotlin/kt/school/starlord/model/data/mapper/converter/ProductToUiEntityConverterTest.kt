@@ -13,18 +13,20 @@ import kt.school.starlord.domain.entity.product.ProductType
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedMoney
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import kt.school.starlord.ui.products.entity.UiProduct
+import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.koin.core.context.startKoin
+import org.koin.core.context.stopKoin
 import org.koin.dsl.module
-import org.koin.test.AutoCloseKoinTest
+import org.koin.test.KoinTest
 import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
 import org.threeten.bp.Instant
 
-internal class ProductToUiEntityConverterTest : AutoCloseKoinTest() {
+internal class ProductToUiEntityConverterTest : KoinTest {
 
     private val converter by lazy { ProductToUiEntityConverter() }
 
@@ -49,6 +51,11 @@ internal class ProductToUiEntityConverterTest : AutoCloseKoinTest() {
         startKoin {
             modules(module { single { Mapper(converters) } })
         }
+    }
+
+    @AfterEach
+    fun afterEach() {
+        stopKoin()
     }
 
     @TestFactory

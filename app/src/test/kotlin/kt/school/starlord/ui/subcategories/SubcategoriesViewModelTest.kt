@@ -23,20 +23,17 @@ class SubcategoriesViewModelTest {
     private val subcategoriesRepository: SubcategoriesRepository = mockk()
 
     @Test
-    fun `load subcategories from database`() = testCoroutineRule.runBlockingTest {
+    fun loadSubcategories_fromCache() = testCoroutineRule.runBlockingTest {
         // Given
         val categoryName = "categoryName"
         val subcategories: List<Subcategory> = mockk()
-        val subcategoriesLiveData = MutableLiveData(subcategories)
-        every { subcategoriesRepository.getSubcategories(categoryName) } answers { subcategoriesLiveData }
+
+        every { subcategoriesRepository.getSubcategories(categoryName) } answers { MutableLiveData(subcategories) }
 
         // When
         val viewModel = SubcategoriesViewModel(subcategoriesRepository, categoryName)
 
         // Then
-        coVerify(exactly = 1) { subcategoriesRepository.getSubcategories(categoryName) }
-        viewModel.getSubcategories().observeForTesting {
-            assert(it == subcategories)
-        }
+        viewModel.getSubcategories().observeForTesting { assert(it == subcategories) }
     }
 }
