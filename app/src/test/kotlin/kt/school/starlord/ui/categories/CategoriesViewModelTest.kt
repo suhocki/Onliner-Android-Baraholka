@@ -38,7 +38,21 @@ class CategoriesViewModelTest {
     )
 
     @Test
-    fun fetchCategoriesWithSubcategories_updateCategories() = testCoroutineRule.runBlockingTest {
+    fun loadCategories_fromCache() = testCoroutineRule.runBlockingTest {
+        // Given
+        val categories: List<Category> = mockk()
+
+        every { categoriesRepository.getCategoriesLiveData() }.answers { MutableLiveData(categories) }
+
+        // When
+        val viewModel = createViewModel(categoriesRepository = categoriesRepository)
+
+        // Then
+        viewModel.getCategories().observeForTesting { assert(it == categories) }
+    }
+
+    @Test
+    fun loadCategories_fromNetwork_updateCache() = testCoroutineRule.runBlockingTest {
         // Given
         coEvery { networkRepository.getCategoriesWithSubcategories() }.coAnswers { categoriesWithSubcategories }
 
@@ -50,7 +64,7 @@ class CategoriesViewModelTest {
     }
 
     @Test
-    fun fetchCategoriesWithSubcategories_updateSubcategories() = testCoroutineRule.runBlockingTest {
+    fun loadSubcategories_fromNetwork_updateCache() = testCoroutineRule.runBlockingTest {
         // Given
         coEvery { networkRepository.getCategoriesWithSubcategories() }.coAnswers { categoriesWithSubcategories }
 
@@ -62,7 +76,7 @@ class CategoriesViewModelTest {
     }
 
     @Test
-    fun fetchCategoriesWithSubcategories_progressFeature() = testCoroutineRule.runBlockingTest {
+    fun loadCategories_fromNetwork_showProgress() = testCoroutineRule.runBlockingTest {
         // When
         createViewModel(progressFeature = progressFeature)
 
@@ -74,7 +88,7 @@ class CategoriesViewModelTest {
     }
 
     @Test
-    fun fetchCategoriesWithSubcategories_showError() = testCoroutineRule.runBlockingTest {
+    fun loadCategories_fromNetwork_showError() = testCoroutineRule.runBlockingTest {
         // Given
         val error = Throwable()
 
@@ -85,21 +99,6 @@ class CategoriesViewModelTest {
 
         // Then
         coVerifyOrder { errorFeature.showError(error) }
-    }
-
-    @Test
-    fun loadCategoriesFromDatabase() = testCoroutineRule.runBlockingTest {
-        // Given
-        val categories: List<Category> = mockk()
-        val categoriesLiveData = MutableLiveData(categories)
-
-        every { categoriesRepository.getCategoriesLiveData() }.answers { categoriesLiveData }
-
-        // When
-        val viewModel = createViewModel(categoriesRepository = categoriesRepository)
-
-        // Then
-        viewModel.getCategories().observeForTesting { assert(it == categories) }
     }
 
     private fun createViewModel(

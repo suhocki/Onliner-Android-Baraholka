@@ -153,20 +153,17 @@ class MockRepository : CategoriesCacheRepository,
 
     override suspend fun getCategoriesWithSubcategories(): Map<Category, List<Subcategory>> = mapOf()
 
-    override fun getCachedProducts(subcategoryName: String): DataSource.Factory<Int, Product> {
-        return object : DataSource.Factory<Int, Product>() {
-            override fun create(): DataSource<Int, Product> {
-                return object : PositionalDataSource<Product>() {
-                    override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<Product>) {
-                        callback.onResult(products)
-                    }
+    override fun getCachedProducts(subcategoryName: String) = object : DataSource.Factory<Int, Product>() {
+        override fun create() = object : PositionalDataSource<Product>() {
+            override fun loadRange(
+                params: LoadRangeParams,
+                callback: LoadRangeCallback<Product>
+            ) = callback.onResult(products)
 
-                    override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<Product>) {
-                        callback.onResult(products, 0, products.count())
-                    }
-
-                }
-            }
+            override fun loadInitial(
+                params: LoadInitialParams,
+                callback: LoadInitialCallback<Product>
+            ) = callback.onResult(products, 0, products.count())
         }
     }
 
