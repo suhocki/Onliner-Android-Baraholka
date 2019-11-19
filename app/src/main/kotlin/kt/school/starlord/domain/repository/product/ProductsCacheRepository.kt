@@ -16,5 +16,5 @@ interface ProductsCacheRepository {
     /**
      * Deletes existing products of selected subcategoryName and puts a new ones.
      */
-    suspend fun updateProducts(subcategoryName: String, newProducts: List<Product>)
+    suspend fun updateProducts(subcategoryName: String, products: List<Product>)
 }

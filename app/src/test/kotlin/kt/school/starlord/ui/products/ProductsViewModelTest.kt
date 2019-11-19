@@ -17,6 +17,8 @@ import kt.school.starlord.domain.repository.product.ProductsRepository
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 import kt.school.starlord.ui.TestCoroutineRule
+import kt.school.starlord.ui.createConverter
+import kt.school.starlord.ui.createDataSource
 import kt.school.starlord.ui.global.entity.UiEntity
 import kt.school.starlord.ui.observeForTesting
 import org.junit.Rule
@@ -110,19 +112,4 @@ class ProductsViewModelTest {
         databaseRepository: ProductsCacheRepository = mockk(relaxed = true),
         subcategory: Subcategory = mockk(relaxed = true)
     ) = ProductsViewModel(mapper, progressFeature, errorFeature, networkRepository, databaseRepository, subcategory)
-
-    private fun <T> createDataSource(items: List<T>) = object : DataSource.Factory<Int, T>() {
-        override fun create() = object : PositionalDataSource<T>() {
-            override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) =
-                callback.onResult(items)
-
-            override fun loadInitial(params: LoadInitialParams, callback: LoadInitialCallback<T>) =
-                callback.onResult(items, 0, items.count())
-        }
-    }
-
-    private inline fun <reified FROM : Any, reified TO : Any> createConverter(map: Map<FROM, TO>) =
-        object : BaseConverter<FROM, TO>(FROM::class, TO::class) {
-            override fun convert(value: FROM) = map[value] ?: error("Could not convert $value.")
-        }
 }

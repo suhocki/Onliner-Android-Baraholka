@@ -110,7 +110,7 @@ class MockRepository : CategoriesCacheRepository,
         )
     )
 
-    override fun getCategoriesLiveData(): LiveData<List<Category>> = MutableLiveData(
+    override fun getCategories(): LiveData<List<Category>> = MutableLiveData(
         listOf(
             Category("Мобильные телефоны"),
             Category("Компьютеры"),
@@ -167,7 +167,7 @@ class MockRepository : CategoriesCacheRepository,
         }
     }
 
-    override suspend fun updateProducts(subcategoryName: String, newProducts: List<Product>) {}
+    override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {}
 
     override suspend fun getProducts(link: String): List<Product> = products
 }

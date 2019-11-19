@@ -16,6 +16,7 @@ import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomProduct
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
 import org.threeten.bp.Instant
+import kotlin.math.max
 
 /**
  * Controls Room database.
@@ -25,7 +26,7 @@ class DatabaseRepository(
     private val mapper: Mapper
 ) : CategoriesCacheRepository, SubcategoriesRepository, ProductsCacheRepository {
 
-    override fun getCategoriesLiveData(): LiveData<List<Category>> {
+    override fun getCategories(): LiveData<List<Category>> {
         return daoManager.categoryDao.getCategories().map { roomCategories ->
             roomCategories.map { mapper.map<Category>(it) }
         }
@@ -52,31 +53,25 @@ class DatabaseRepository(
             .getProducts(subcategoryName)
             .map { mapper.map<Product>(it) }
 
-    override suspend fun updateProducts(subcategoryName: String, newProducts: List<Product>) {
+    override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {
         val productDao = daoManager.productDao
-        val oldProducts = productDao.getProductsByIds(newProducts.map { it.id }, subcategoryName)
-
-        productDao.insertProducts(
-            newProducts.onEach { newProduct ->
-                mergeProductsLastUpdate(oldProducts, newProduct)
-                newProduct.subcategoryName = subcategoryName
-            }.map { mapper.map<RoomProduct>(it) }
-        )
-    }
-
-    private fun mergeProductsLastUpdate(oldProducts: List<RoomProduct>, newProduct: Product) {
+        val cachedProducts = productDao.getProductsByIds(products.map { it.id }, subcategoryName)
         val epochMilli = Instant.now().toEpochMilli()
 
-        oldProducts.find { oldProduct -> oldProduct.id == newProduct.id }?.let { oldProduct ->
-            val oldLocalizedTimePassed = mapper.map<RussianLocalizedTimePassed>(epochMilli - oldProduct.lastUpdate)
-            val newLocalizedTimePassed = RussianLocalizedTimePassed(newProduct.localizedTimePassed.value)
+        productDao.insertProducts(
+            products.onEach { product ->
+                product.subcategoryName = subcategoryName
 
-            if (oldProduct.lastUpdate >= newProduct.lastUpdate ||
-                oldLocalizedTimePassed == newLocalizedTimePassed
-            ) {
-                // old lastUpdate epoch millis should stay unchanged.
-                newProduct.lastUpdate = oldProduct.lastUpdate
-            }
-        }
+                cachedProducts.find { cachedProduct -> cachedProduct.id == product.id }
+                    ?.let { cachedProduct ->
+                        val cachedLocalizedTimePassed = mapper.map<RussianLocalizedTimePassed>(epochMilli - cachedProduct.lastUpdate)
+                        val serverLocalizedTimePassed = RussianLocalizedTimePassed(product.localizedTimePassed.value)
+
+                        if (cachedLocalizedTimePassed == serverLocalizedTimePassed) {
+                            product.lastUpdate = cachedProduct.lastUpdate
+                        }
+                    }
+            }.map { mapper.map<RoomProduct>(it) }
+        )
     }
 }
