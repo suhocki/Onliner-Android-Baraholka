@@ -23,6 +23,11 @@ inline fun <reified FROM : Any, reified TO : Any> createConverter(map: Map<FROM,
         override fun convert(value: FROM) = map[value] ?: error("Could not convert $value.")
     }
 
+inline fun <reified FROM : Any, reified TO : Any> createConverter(pair: Pair<FROM, TO>) =
+    object : BaseConverter<FROM, TO>(FROM::class, TO::class) {
+        override fun convert(value: FROM) = if (pair.first == value) pair.second else error("Could not convert $value.")
+    }
+
 fun <T> createDataSource(items: List<T>) = object : DataSource.Factory<Int, T>() {
     override fun create() = object : PositionalDataSource<T>() {
         override fun loadRange(params: LoadRangeParams, callback: LoadRangeCallback<T>) =
