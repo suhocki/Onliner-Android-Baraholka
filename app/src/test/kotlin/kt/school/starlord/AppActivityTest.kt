@@ -17,7 +17,7 @@ class AppActivityTest : AutoCloseKoinTest() {
     }
 
     @Test
-    fun `remove input method manager`() {
+    fun removeInputMethodManager() {
         mockkStatic("kt.school.starlord.ui.global.extension.AndroidExtensionsKt")
 
         scenario.onActivity {

@@ -5,13 +5,12 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.repository.CategoriesCacheRepository
 import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.domain.system.viewmodel.ErrorEmitter
 import kt.school.starlord.domain.system.viewmodel.ProgressEmitter
-import kt.school.starlord.domain.entity.category.CategoriesWithSubcategories
-import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 
@@ -29,7 +28,8 @@ class CategoriesViewModel(
     private val categories = MutableLiveData<List<Category>>()
 
     init {
-        categoriesRepository.getCategoriesLiveData().observeForever(categories::setValue)
+        categoriesRepository.getCategories().observeForever(categories::setValue)
+
         refreshData()
     }
 
@@ -42,15 +42,14 @@ class CategoriesViewModel(
         viewModelScope.launch {
             progressFeature.showProgress(true)
 
-            runCatching { networkRepository.getCategoriesWithSubcategories() }
-                .fold({ updateDatabase(it) }, errorFeature::showError)
+            runCatching {
+                val data = networkRepository.getCategoriesWithSubcategories()
+
+                categoriesRepository.updateCategories(data.keys.toList())
+                subcategoriesRepository.updateSubcategories(data.values.flatten())
+            }.onFailure(errorFeature::showError)
 
             progressFeature.showProgress(false)
         }
-    }
-
-    private suspend fun updateDatabase(categoriesWithSubcategories: CategoriesWithSubcategories) {
-        categoriesRepository.updateCategories(categoriesWithSubcategories.categories)
-        subcategoriesRepository.updateSubcategories(categoriesWithSubcategories.subcategories)
     }
 }

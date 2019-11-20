@@ -1,11 +1,19 @@
 <resources>
-    <string name="app_name">StarLord</string>
+    <string name="app_name" translatable="false">StarLord</string>
     <string name="bargain">Bargain</string>
-    <string name="up">Up!</string>
+    <string name="up" translatable="false">Up!</string>
     <string name="for_free">For free</string>
-    <string name="price">%1$s р.</string>
+    <string name="price">%1$s r.</string>
     <string name="updating">Updating…</string>
     <string name="ok">OK</string>
-    <string name="more_than_month_ago">More than a month ago</string>
     <string name="less_than_minute_ago">Less than a minute ago</string>
+
+    <!--Product Types-->
+    <string name="sell">Sell</string>
+    <string name="buy">Buy</string>
+    <string name="exchange">Exchange</string>
+    <string name="service">Service</string>
+    <string name="rent">Rent</string>
+    <string name="closed">Closed</string>
+    <string name="warning">Warning</string>
 </resources>

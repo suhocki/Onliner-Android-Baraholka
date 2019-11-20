@@ -1,21 +1,24 @@
 package kt.school.starlord.ui.products
 
+import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import io.mockk.coEvery
+import io.mockk.coVerify
 import io.mockk.coVerifyOrder
+import io.mockk.every
 import io.mockk.mockk
-import kt.school.starlord.domain.repository.product.ProductsRepository
-import kt.school.starlord.domain.repository.product.ProductsCacheRepository
+import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.product.Product
-import kt.school.starlord.domain.entity.subcategory.Subcategory
-import kt.school.starlord.model.data.mapper.Mapper
-import kt.school.starlord.model.data.mapper.converter.ProductToUiProductConverter
-import kt.school.starlord.model.repository.mock.MockRepository
+import kt.school.starlord.domain.repository.product.ProductsCacheRepository
+import kt.school.starlord.domain.repository.product.ProductsRepository
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 import kt.school.starlord.ui.TestCoroutineRule
+import kt.school.starlord.ui.createConverter
+import kt.school.starlord.ui.createDataSource
+import kt.school.starlord.ui.global.entity.UiEntity
 import kt.school.starlord.ui.observeForTesting
+import kt.school.starlord.ui.subcategories.entity.UiSubcategory
 import org.junit.Rule
 import org.junit.Test
 
@@ -28,75 +31,83 @@ class ProductsViewModelTest {
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
     private val link = "https://baraholka.onliner.by/viewforum.php?f=2"
-    private val subcategoryName = "subcategoryName"
-    private val subcategory = Subcategory(subcategoryName, "", 0, link)
+    private val subcategory = UiSubcategory("subcategoryName", "123", link, View.VISIBLE)
     private val errorFeature: ErrorViewModelFeature = mockk(relaxUnitFun = true)
     private val progressFeature: ProgressViewModelFeature = mockk(relaxUnitFun = true)
-    private val productsListRepository: ProductsRepository = mockk()
-    private val mapper = Mapper(setOf(ProductToUiProductConverter(mockk(relaxed = true))))
-    private val productsRepository: ProductsCacheRepository = mockk(relaxUnitFun = true)
-    private val mockRepository = MockRepository()
+    private val networkRepository: ProductsRepository = mockk()
+    private val databaseRepository: ProductsCacheRepository = mockk(relaxed = true)
 
     @Test
-    fun `refresh data by network successfully`() = testCoroutineRule.runBlockingTest {
+    fun loadProducts_fromCache() = testCoroutineRule.runBlockingTest {
         // Given
-        val products: List<Product> = mockRepository.products
+        val products: List<Product> = listOf(mockk(), mockk(), mockk())
+        val expected: Array<UiEntity> = arrayOf(mockk(), mockk(), mockk())
 
-        coEvery { productsRepository.getProductsLiveData(subcategoryName) }.coAnswers { MutableLiveData(products) }
-        coEvery { productsListRepository.getProducts(link) }.coAnswers { products }
+        every { databaseRepository.getCachedProducts(subcategory.name) }.answers { createDataSource(products) }
+
+        val viewModel = createViewModel(
+            mapper = Mapper(setOf(createConverter(products.zip(expected).toMap()))),
+            subcategory = subcategory,
+            databaseRepository = databaseRepository
+        )
 
         // When
-        ProductsViewModel(mapper, progressFeature, errorFeature, productsListRepository, productsRepository, subcategory)
+        val productsLiveData = viewModel.getProducts()
 
         // Then
-        coVerifyOrder {
-            progressFeature.showProgress(true)
-            productsRepository.updateProducts(subcategoryName, products)
-            progressFeature.showProgress(false)
-        }
+        productsLiveData.observeForTesting { assert(expected.contentEquals(it.toTypedArray())) }
     }
 
     @Test
-    fun `refresh data by network failure`() = testCoroutineRule.runBlockingTest {
+    fun loadProducts_fromNetwork_updateCache() = testCoroutineRule.runBlockingTest {
         // Given
-        val error = Throwable()
-        val products: List<Product> = mockRepository.products
+        val fetchedProducts: List<Product> = listOf(mockk())
 
-        coEvery { productsRepository.getProductsLiveData(subcategoryName) }.coAnswers { MutableLiveData(products) }
-        coEvery { productsListRepository.getProducts(any()) }.throws(error)
+        coEvery { networkRepository.getProducts(link) }.coAnswers { fetchedProducts }
 
         // When
-        ProductsViewModel(mapper, progressFeature, errorFeature, productsListRepository, productsRepository, subcategory)
-
-        // Then
-        coVerifyOrder {
-            progressFeature.showProgress(true)
-            errorFeature.showError(error)
-            progressFeature.showProgress(false)
-        }
-    }
-
-    @Test
-    fun `load data from database`() {
-        // Given
-        val products = mockRepository.products
-
-        coEvery { productsRepository.getProductsLiveData(subcategoryName) }.coAnswers { MutableLiveData(products) }
-        coEvery { productsListRepository.getProducts(link) }.coAnswers { products }
-
-        // When
-        val viewModel = ProductsViewModel(
-            mapper,
-            progressFeature,
-            errorFeature,
-            productsListRepository,
-            productsRepository,
-            subcategory
+        createViewModel(
+            subcategory = subcategory,
+            databaseRepository = databaseRepository,
+            networkRepository = networkRepository
         )
 
         // Then
-        viewModel.getProducts().observeForTesting {
-            assert(it.size == products.size)
+        coVerify { databaseRepository.updateProducts(subcategory.name, fetchedProducts) }
+    }
+
+    @Test
+    fun loadProducts_fromNetwork_showError() = testCoroutineRule.runBlockingTest {
+        // Given
+        val error = Throwable()
+
+        coEvery { networkRepository.getProducts(any()) }.throws(error)
+
+        // When
+        createViewModel(errorFeature = errorFeature, networkRepository = networkRepository)
+
+        // Then
+        coVerify { errorFeature.showError(error) }
+    }
+
+    @Test
+    fun loadProducts_fromNetwork_showProgress() = testCoroutineRule.runBlockingTest {
+        // When
+        createViewModel(progressFeature = progressFeature)
+
+        // Then
+        coVerifyOrder {
+            progressFeature.showProgress(true)
+            progressFeature.showProgress(false)
         }
     }
+
+    private fun createViewModel(
+        mapper: Mapper = mockk(relaxed = true),
+        progressFeature: ProgressViewModelFeature = mockk(relaxed = true),
+        errorFeature: ErrorViewModelFeature = mockk(relaxed = true),
+        networkRepository: ProductsRepository = mockk(relaxed = true),
+        databaseRepository: ProductsCacheRepository = mockk(relaxed = true),
+        subcategory: UiSubcategory = mockk(relaxed = true)
+    ) = ProductsViewModel(mapper, progressFeature, errorFeature, networkRepository, databaseRepository, subcategory)
 }

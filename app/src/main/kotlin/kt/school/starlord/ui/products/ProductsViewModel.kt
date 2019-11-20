@@ -1,20 +1,21 @@
 package kt.school.starlord.ui.products
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.map
 import androidx.lifecycle.viewModelScope
+import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import kotlinx.coroutines.launch
-import kt.school.starlord.domain.repository.product.ProductsRepository
+import kt.school.starlord.BuildConfig
+import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.repository.product.ProductsCacheRepository
+import kt.school.starlord.domain.repository.product.ProductsRepository
 import kt.school.starlord.domain.system.viewmodel.ErrorEmitter
 import kt.school.starlord.domain.system.viewmodel.ProgressEmitter
-import kt.school.starlord.domain.entity.subcategory.Subcategory
-import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
-import kt.school.starlord.ui.products.entity.UiProduct
+import kt.school.starlord.ui.global.entity.UiEntity
+import kt.school.starlord.ui.subcategories.entity.UiSubcategory
 
 /**
  * Contains logic with fetching products asynchronously.
@@ -25,15 +26,23 @@ class ProductsViewModel(
     private val errorFeature: ErrorViewModelFeature,
     private val networkRepository: ProductsRepository,
     private val databaseRepository: ProductsCacheRepository,
-    private val subcategory: Subcategory
+    private val subcategory: UiSubcategory
 ) : ViewModel(), ProgressEmitter by progressFeature, ErrorEmitter by errorFeature {
 
-    private val products = MutableLiveData<List<UiProduct>>()
+    private val uiEntityLiveData: LiveData<PagedList<UiEntity>>
 
     init {
-        databaseRepository.getProductsLiveData(subcategory.name)
-            .map { products -> products.map { mapper.map<UiProduct>(it) } }
-            .observeForever(products::setValue)
+        val factory = databaseRepository
+            .getCachedProducts(subcategory.name)
+            .map { mapper.map<UiEntity>(it) }
+
+        val config = PagedList.Config.Builder()
+            .setEnablePlaceholders(false)
+            .setPrefetchDistance(PREFETCH_DISTANCE)
+            .setPageSize(BuildConfig.PAGE_SIZE)
+            .build()
+
+        uiEntityLiveData = LivePagedListBuilder(factory, config).build()
 
         refreshData()
     }
@@ -41,16 +50,22 @@ class ProductsViewModel(
     /**
      * Use for observing products.
      */
-    fun getProducts(): LiveData<List<UiProduct>> = products
+    fun getProducts() = uiEntityLiveData
 
     private fun refreshData() {
         viewModelScope.launch {
             progressFeature.showProgress(true)
 
-            runCatching { networkRepository.getProducts(subcategory.link) }
-                .fold({ databaseRepository.updateProducts(subcategory.name, it) }, errorFeature::showError)
+            runCatching {
+                val products = networkRepository.getProducts(subcategory.link)
+                databaseRepository.updateProducts(subcategory.name, products)
+            }.onFailure(errorFeature::showError)
 
             progressFeature.showProgress(false)
         }
+    }
+
+    companion object {
+        private const val PREFETCH_DISTANCE = 3
     }
 }

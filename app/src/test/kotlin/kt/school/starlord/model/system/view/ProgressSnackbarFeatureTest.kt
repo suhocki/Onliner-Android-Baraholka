@@ -2,7 +2,6 @@ package kt.school.starlord.model.system.view
 
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
-import androidx.test.espresso.NoMatchingViewException
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
@@ -11,16 +10,14 @@ import kt.school.starlord.R
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.koin.test.AutoCloseKoinTest
+import org.mockito.ArgumentMatchers
 
 @RunWith(AndroidJUnit4::class)
 class ProgressSnackbarFeatureTest : AutoCloseKoinTest() {
-    private val scenario by lazy {
-        ActivityScenario.launch(AppActivity::class.java)
-    }
 
     @Test
-    fun `show progress snackbar`() {
-        scenario.onActivity {
+    fun show() {
+        ActivityScenario.launch(AppActivity::class.java).onActivity {
             // Given
             val snackbarFeature = ProgressSnackbarFeature(it)
 
@@ -33,18 +30,19 @@ class ProgressSnackbarFeatureTest : AutoCloseKoinTest() {
         }
     }
 
-    @Test(expected = NoMatchingViewException::class)
-    fun `dismiss progress snackbar`() {
-        scenario.onActivity {
+    @Test(expected = Throwable::class)
+    fun dismiss() {
+        ActivityScenario.launch(AppActivity::class.java).onActivity {
             // Given
-            val snackbarFeature = ProgressSnackbarFeature(it)
+            val error = Throwable(ArgumentMatchers.anyString())
+            val snackbarFeature = ErrorSnackbarFeature(it)
 
-            snackbarFeature.setVisibility(true)
+            snackbarFeature.show(error)
 
             Thread.sleep(1000)
 
             // When
-            snackbarFeature.setVisibility(false)
+            snackbarFeature.dismiss()
 
             // Then
             Espresso.onView(ViewMatchers.withId(com.google.android.material.R.id.snackbar_text))

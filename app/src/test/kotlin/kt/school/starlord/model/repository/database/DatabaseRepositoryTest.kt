@@ -3,213 +3,231 @@ package kt.school.starlord.model.repository.database
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.paging.LivePagedListBuilder
 import io.mockk.coEvery
 import io.mockk.every
 import io.mockk.mockk
+import io.mockk.mockkStatic
 import io.mockk.slot
-import kt.school.starlord.di.mapperModule
+import io.mockk.verify
+import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.category.Category
+import kt.school.starlord.domain.entity.global.RussianLocalizedTimePassed
 import kt.school.starlord.domain.entity.product.Product
-import kt.school.starlord.model.data.mapper.Mapper
+import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomProduct
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
-import kt.school.starlord.model.repository.mock.MockRepository
 import kt.school.starlord.ui.TestCoroutineRule
+import kt.school.starlord.ui.createConverter
+import kt.school.starlord.ui.createDataSource
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import kt.school.starlord.ui.observeForTesting
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
-import org.koin.core.context.loadKoinModules
-import org.koin.core.context.unloadKoinModules
-import org.koin.test.AutoCloseKoinTest
-import org.koin.test.inject
+import org.mockito.ArgumentMatchers.anyLong
 import org.mockito.ArgumentMatchers.anyString
+import org.threeten.bp.Instant
 
-@RunWith(AndroidJUnit4::class)
-class DatabaseRepositoryTest : AutoCloseKoinTest() {
+/* ktlint-disable */
+class DatabaseRepositoryTest {
     @get:Rule
     internal val testCoroutineRule = TestCoroutineRule()
 
     @get:Rule
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val mapper: Mapper by inject()
     private val daoManager: DaoManager = mockk(relaxed = true)
-    private val mockRepository = MockRepository()
-
-    private val roomRepository = DatabaseRepository(daoManager, mapper)
+    private val now = Instant.now()
 
     @Before
-    fun before() {
-        unloadKoinModules(listOf(mapperModule))
-        loadKoinModules(mapperModule)
+    fun setUp() {
+        mockkStatic(Instant::class)
+
+        every { Instant.now() } returns now
     }
 
     @Test
-    fun `get categories`() {
+    fun getCategories() {
         // Given
-        val roomData: List<RoomCategory> = listOf(
-            RoomCategory("category1"),
-            RoomCategory("category2"),
-            RoomCategory("category3")
-        )
-        every { daoManager.categoryDao.getCategories() } returns MutableLiveData(roomData)
+        val roomCategories: List<RoomCategory> = listOf(mockk(), mockk(), mockk())
+        val expected: Array<Category> = arrayOf(mockk(), mockk(), mockk())
+
+        every { daoManager.categoryDao.getCategories() } returns MutableLiveData(roomCategories)
+
+        val repository = createRepository(mapper = Mapper(setOf(createConverter(roomCategories.zip(expected).toMap()))))
 
         // When
-        val categories: LiveData<List<Category>> = roomRepository.getCategoriesLiveData()
+        val categories: LiveData<List<Category>> = repository.getCategories()
 
         // Then
-        categories.observeForTesting { answer ->
-            assert(answer.all {
-                val indexOfCategory = answer.indexOf(it)
-                it.name == roomData[indexOfCategory].name
-            })
-        }
+        categories.observeForTesting { assert(expected.contentEquals(it.toTypedArray())) }
     }
 
     @Test
-    fun `update categories`() = testCoroutineRule.runBlockingTest {
+    fun updateCategories() = testCoroutineRule.runBlockingTest {
         // Given
-        val categories = mockRepository.getCategoriesLiveData().value!!
+        val categories: List<Category> = listOf(mockk(), mockk(), mockk())
+        val expected: Array<RoomCategory> = arrayOf(mockk(), mockk(), mockk())
         val roomCategories = slot<List<RoomCategory>>()
+        val mapper = Mapper(setOf(createConverter(categories.zip(expected).toMap())))
+
         coEvery { daoManager.categoryDao.replaceAll(capture(roomCategories)) } coAnswers { Unit }
 
         // When
-        roomRepository.updateCategories(categories)
+        createRepository(mapper = mapper).updateCategories(categories)
 
         // Then
-        assert(roomCategories.isCaptured)
-        assert(roomCategories.captured.all {
-            val indexOfRoomCategory = roomCategories.captured.indexOf(it)
-
-            it.name == categories[indexOfRoomCategory].name
-        })
+        assert(roomCategories.captured.toTypedArray().contentEquals(expected))
     }
 
     @Test
-    fun `get subcategories`() {
+    fun getSubcategories() {
         // Given
         val categoryName = "name"
-        val roomData: List<RoomSubcategory> = listOf(
-            RoomSubcategory("category1", "name", 1, "link1"),
-            RoomSubcategory("category2", "name", 2, "link2"),
-            RoomSubcategory("category3", "name", 3, "link3")
-        )
-        every { daoManager.subcategoryDao.getSubcategories(categoryName) }
-            .returns(MutableLiveData(roomData))
+        val roomSubcategories: List<RoomSubcategory> = listOf(mockk(), mockk(), mockk())
+        val expected: Array<Subcategory> = arrayOf(mockk(), mockk(), mockk())
+        val mapper = Mapper(setOf(createConverter(roomSubcategories.zip(expected).toMap())))
+
+        every { daoManager.subcategoryDao.getSubcategories(categoryName) }.returns(MutableLiveData(roomSubcategories))
 
         // When
-        val subcategories = roomRepository.getSubcategories(categoryName)
+        val subcategories = createRepository(mapper = mapper).getSubcategories(categoryName)
 
         // Then
-        subcategories.observeForTesting { answer ->
-            assert(answer.all { subcategory ->
-                val indexOfCategory = answer.indexOf(subcategory)
-                subcategory.name == roomData[indexOfCategory].name &&
-                        subcategory.link == roomData[indexOfCategory].link &&
-                        subcategory.count == roomData[indexOfCategory].count &&
-                        subcategory.categoryName == categoryName
-            })
-        }
+        subcategories.observeForTesting { assert(it.toTypedArray().contentEquals(expected)) }
     }
 
     @Test
-    fun `update subcategories`() = testCoroutineRule.runBlockingTest {
+    fun updateSubcategories() = testCoroutineRule.runBlockingTest {
         // Given
-        val categoryName = "name"
-        val subcategories = mockRepository.getSubcategories(categoryName).value!!
+        val subcategories: List<Subcategory> = listOf(mockk(), mockk(), mockk())
+        val expected: Array<RoomSubcategory> = arrayOf(mockk(), mockk(), mockk())
         val roomSubcategories = slot<List<RoomSubcategory>>()
+        val mapper = Mapper(setOf(createConverter(subcategories.zip(expected).toMap())))
+
         coEvery { daoManager.subcategoryDao.replaceAll(capture(roomSubcategories)) } coAnswers { Unit }
 
         // When
-        roomRepository.updateSubcategories(subcategories)
+        createRepository(mapper = mapper).updateSubcategories(subcategories)
 
         // Then
-        assert(roomSubcategories.isCaptured)
-        assert(roomSubcategories.captured.all { roomSubcategory ->
-            val indexOfRoomSubcategory = roomSubcategories.captured.indexOf(roomSubcategory)
-            val subcategory = subcategories[indexOfRoomSubcategory]
-
-            roomSubcategory.name == subcategory.name &&
-                    roomSubcategory.link == subcategory.link &&
-                    roomSubcategory.count == subcategory.count &&
-                    roomSubcategory.categoryName == categoryName
-        })
+        assert(roomSubcategories.captured.toTypedArray().contentEquals(expected))
     }
 
     @Test
-    fun `get products`() {
+    fun getCachedProducts() {
         // Given
         val subcategoryName = anyString()
-        val roomProducts = listOf<RoomProduct>(
-            mockk(relaxed = true),
-            mockk(relaxed = true)
-        )
+        val roomProducts: List<RoomProduct> = listOf(mockk(), mockk(), mockk())
+        val expected: Array<Product> = arrayOf(mockk(), mockk(), mockk())
+        val mapper = Mapper(setOf(createConverter(roomProducts.zip(expected).toMap())))
 
-        every { daoManager.productDao.getProducts(subcategoryName, any()) } returns MutableLiveData(
-            roomProducts
-        )
+        every { daoManager.productDao.getProducts(subcategoryName) } returns createDataSource(roomProducts)
 
         // When
-        val liveData = roomRepository.getProductsLiveData(subcategoryName)
+        val dataSourceFactory = createRepository(mapper = mapper).getCachedProducts(subcategoryName)
 
         // Then
-        liveData.observeForTesting { products ->
-
-            assert(products.all { actualProduct ->
-                val indexOfProduct = products.indexOf(actualProduct)
-                val product = products[indexOfProduct]
-
-                product.id == actualProduct.id &&
-                        product.title == actualProduct.title &&
-                        product.description == actualProduct.description &&
-                        product.type == actualProduct.type &&
-                        product.location == actualProduct.location &&
-                        product.image == actualProduct.image &&
-                        product.owner == actualProduct.owner &&
-                        product.price == actualProduct.price &&
-                        product.lastUpdate == actualProduct.lastUpdate &&
-                        product.commentsCount == actualProduct.commentsCount &&
-                        product.isPaid == actualProduct.isPaid
-            })
+        LivePagedListBuilder(dataSourceFactory, roomProducts.size).build().observeForTesting {
+            it.toTypedArray().contentEquals(expected)
         }
     }
 
     @Test
-    fun `update products`() = testCoroutineRule.runBlockingTest {
+    fun updateProducts_noCached() = testCoroutineRule.runBlockingTest {
         // Given
         val subcategoryName = anyString()
-        val product1: Product = mockk(relaxed = true)
-        val product2: Product = mockk(relaxed = true)
-        val products = listOf(product1, product2)
-        val slot = slot<List<RoomProduct>>()
+        val serverProducts: List<Product> = listOf(createProduct(1, 1, LocalizedTimePassed("1 hour ago")))
+        val expected: Array<RoomProduct> = arrayOf(mockk())
+        val actual = slot<List<RoomProduct>>()
+        val mapper = Mapper(setOf(createConverter(serverProducts.zip(expected).toMap())))
 
-        coEvery { daoManager.productDao.replaceAll(subcategoryName, capture(slot)) } coAnswers { Unit }
+        coEvery { daoManager.productDao.getProductsByIds(listOf(1), subcategoryName) } coAnswers { emptyList() }
+        coEvery { daoManager.productDao.insertProducts(capture(actual)) } coAnswers { Unit }
 
         // When
-        roomRepository.updateProducts(subcategoryName, products)
+        createRepository(mapper = mapper).updateProducts(subcategoryName, serverProducts)
 
         // Then
-        assert(slot.isCaptured)
-        assert(slot.captured.all { roomProduct ->
-            val indexOfRoomProduct = slot.captured.indexOf(roomProduct)
-            val product = products[indexOfRoomProduct]
+        assert(actual.captured.toTypedArray().contentEquals(expected))
+    }
 
-            roomProduct.subcategoryName == subcategoryName &&
-                    roomProduct.title == product.title &&
-                    roomProduct.description == product.description &&
-                    roomProduct.type == product.type &&
-                    roomProduct.location == product.location &&
-                    roomProduct.image == product.image &&
-                    roomProduct.owner == product.owner &&
-                    roomProduct.price == product.price &&
-                    roomProduct.lastUpdate == product.lastUpdate &&
-                    roomProduct.commentsCount == product.commentsCount &&
-                    roomProduct.isPaid == product.isPaid
-        })
+    @Test
+    fun updateProducts_keepServerLastUpdate() =
+        testCoroutineRule.runBlockingTest {
+            // Given
+            val (mapper, serverProduct) = createUpdateProductsMocks(
+                100L to "5 минут назад",
+                50L to "50 минут назад"
+            )
+
+            // When
+            createRepository(mapper = mapper).updateProducts(anyString(), listOf(serverProduct))
+
+            // Then
+            verify(exactly = 0) { serverProduct.lastUpdate = 50L }
+        }
+
+    @Test
+    fun updateProducts_applyCachedLastUpdate() = testCoroutineRule.runBlockingTest {
+        // Given
+        val (mapper, serverProduct) = createUpdateProductsMocks(
+            50L to "10 минут назад",
+            100L to "10 минут назад"
+        )
+
+        // When
+        createRepository(mapper = mapper).updateProducts(anyString(), listOf(serverProduct))
+
+        // Then
+        verify(exactly = 1) { serverProduct.lastUpdate = 100L }
+    }
+
+    private fun createRepository(
+        daoManager: DaoManager = this.daoManager,
+        mapper: Mapper = mockk(relaxed = true)
+    ) = DatabaseRepository(daoManager, mapper)
+
+    private fun createProduct(
+        id: Long = anyLong(),
+        lastUpdate: Long = anyLong(),
+        localizedTimePassed: LocalizedTimePassed = mockk()
+    ) = mockk<Product>(relaxed = true).apply {
+        every<Long> { this@apply.id } returns id
+        every<Long> { this@apply.lastUpdate } returns lastUpdate
+        every<LocalizedTimePassed> { this@apply.localizedTimePassed } returns localizedTimePassed
+    }
+
+    private fun createRoomProduct(
+        id: Long = anyLong(),
+        lastUpdate: Long = anyLong()
+    ) = mockk<RoomProduct>(relaxed = true).apply {
+        every<Long> { this@apply.id } returns id
+        every<Long> { this@apply.lastUpdate } returns lastUpdate
+    }
+
+    private fun createUpdateProductsMocks(
+        serverLastUpdateToServerLocalized: Pair<Long, String>,
+        cachedLastUpdateToCachedLocalized: Pair<Long, String>
+    ): Pair<Mapper, Product> {
+        val productId = 1L
+        val (serverLastUpdate, serverLocalized) = serverLastUpdateToServerLocalized
+        val (cachedLastUpdate, cachedLocalized) = cachedLastUpdateToCachedLocalized
+
+        val serverProduct = createProduct(productId, serverLastUpdate, LocalizedTimePassed(serverLocalized))
+
+        coEvery { daoManager.productDao.getProductsByIds(listOf(productId), anyString()) } coAnswers {
+            listOf(createRoomProduct(productId, cachedLastUpdate))
+        }
+
+        return Mapper(
+            setOf(
+                createConverter(mapOf(serverProduct to createRoomProduct(productId, serverLastUpdate))),
+                createConverter(mapOf(now.toEpochMilli() - cachedLastUpdate to RussianLocalizedTimePassed(cachedLocalized)))
+            )
+        ) to serverProduct
     }
 }

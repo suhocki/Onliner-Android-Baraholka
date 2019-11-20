@@ -197,10 +197,10 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.3.0-RC")
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.0-RC")
     implementation("org.jetbrains.kotlin:kotlin-reflect:${KotlinCompilerVersion.VERSION}")
-    implementation("androidx.core:core-ktx:1.2.0-alpha04")
+    implementation("androidx.core:core-ktx:1.2.0-rc01")
     implementation("androidx.appcompat:appcompat:$appcompatVersion")
-    implementation("com.google.android.material:material:1.1.0-beta01")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta2")
+    implementation("com.google.android.material:material:1.2.0-alpha02")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta3")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     // Lifecycle
@@ -249,6 +249,7 @@ dependencies {
     testImplementation("androidx.test:runner:$testingVersion")
     testImplementation("androidx.test:rules:$testingVersion")
     testImplementation("androidx.test.ext:junit:$junitVersion")
+    testImplementation("androidx.paging:paging-common:$pagingVersion")
 
     testImplementation("androidx.test:core:$testingVersion")
     implementation("androidx.fragment:fragment-testing:$appcompatVersion") {
@@ -297,6 +298,18 @@ val fetchScreenshotsTask = task("fetchScreenshotsTask", Exec::class) {
 
     doFirst {
         File(reportsDirectory).mkdirs()
+    }
+}
+
+val resolveDependencies = task("resolveDependencies") {
+    description = "Resolves all projects dependencies from the repository."
+    group = "Build Server"
+
+    doLast {
+        rootProject.allprojects {
+            buildscript.configurations.forEach { if (it.isCanBeResolved) it.resolve() }
+            configurations.forEach { if (it.isCanBeResolved) it.resolve() }
+        }
     }
 }
 

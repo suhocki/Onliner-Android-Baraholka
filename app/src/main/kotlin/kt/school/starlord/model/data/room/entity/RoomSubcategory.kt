@@ -23,7 +23,7 @@ data class RoomSubcategory(
         childColumns = [CATEGORY_NAME]
     )
     val categoryName: String,
-    val count: Int,
+    val count: Int?,
     val link: String
 ) {
     companion object {

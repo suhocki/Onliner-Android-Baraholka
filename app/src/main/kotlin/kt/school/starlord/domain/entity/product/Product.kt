@@ -1,10 +1,14 @@
 package kt.school.starlord.domain.entity.product
 
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
+
 /**
- * Entity for RecyclerView at ProductsFragment.
+ * Domain product entity.
  * Can represents not only products but services.
  *
- * @param isPaid product is premium item. Should be located in the top of the list.
+ * @param lastUpdate time when the product was updated.
+ * @param localizedTimePassed localized human-readable time elapsed after the product was updated.
+ * @param isPaid if true, the product is premium item and should be located at the top of the list.
  */
 data class Product(
     val id: Long,
@@ -14,8 +18,10 @@ data class Product(
     val location: String,
     val image: String,
     val owner: ProductOwner,
-    val price: ProductPrice,
-    val lastUpdate: Long,
+    val price: Price,
+    var lastUpdate: Long,
+    val localizedTimePassed: LocalizedTimePassed,
     val commentsCount: Long,
+    var subcategoryName: String? = null,
     val isPaid: Boolean = false
 )

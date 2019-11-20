@@ -1,16 +1,29 @@
 #!/bin/bash
 if [[ "$TRAVIS_PULL_REQUEST" == "false" ]] ; then
-    echo 'count=0' > /home/travis/.android/repositories.cfg # Avoid harmless sdkmanager warning
-    echo y | sdkmanager "platform-tools" >/dev/null
-    echo y | sdkmanager "tools" >/dev/null # A second time per Travis docs, gets latest versions
-    echo y | sdkmanager "build-tools;28.0.3" >/dev/null # Implicit gradle dependency - gradle drives changes
-    echo y | sdkmanager "platforms;android-$API" >/dev/null # We need the API of the emulator we will run
-    echo y | sdkmanager "platforms;android-28" >/dev/null # We need the API of the current compileSdkVersion from gradle.properties
-    echo y | sdkmanager --channel=4 "emulator" # Experiment with canary, specifying 28.0.3 (prior version) did not work
-    echo y | sdkmanager "extras;android;m2repository" >/dev/null
-    echo y | sdkmanager "system-images;android-$API;$EMU_FLAVOR;$ABI" #>/dev/null # install our emulator
-    echo no | avdmanager create avd --force -n test -k "system-images;android-$API;$EMU_FLAVOR;$ABI" -c 10M --device 'Nexus 4' --sdcard 128M
-    emulator -verbose -avd test -skin 768x1280 -no-accel -no-snapshot -no-window $AUDIO -camera-back none -camera-front none -selinux permissive -qemu -m 2048 &
+    sdkmanager "platforms;android-${EMU_API}" | tr '\r' '\n' | uniq
+    sdkmanager emulator | tr '\r' '\n' | uniq
+    sdkmanager "system-images;android-${EMU_API};${EMU_FLAVOR};${EMU_ABI}" | tr '\r' '\n' | uniq
+    # Allow use of KVM
+    sudo adduser $USER libvirt
+    sudo adduser $USER kvm
+    # Create and start emulator as early as possible
+    adb start-server
+    avdmanager create avd --force --name test --package "system-images;android-${EMU_API};${EMU_FLAVOR};${EMU_ABI}" --abi ${EMU_ABI} --device 'Nexus 4' --sdcard 128M
+    sudo -E sudo -u $USER -E bash -c "$ANDROID_HOME/emulator/emulator-headless -avd test -skin 768x1280 -no-audio -no-window -no-boot-anim -no-snapshot -camera-back none -camera-front none -qemu -m 2048 &"
+    sdkmanager 'build-tools;29.0.2' | tr '\r' '\n' | uniq
+    sdkmanager 'platforms;android-28' | tr '\r' '\n' | uniq
+    sdkmanager 'extras;android;m2repository' | tr '\r' '\n' | uniq
+    sdkmanager 'extras;google;m2repository' | tr '\r' '\n' | uniq
+    sdkmanager 'extras;google;google_play_services' | tr '\r' '\n' | uniq
+    # Download the emulator support stuff
+    mkdir -p $HOME/.cache/ci-support
+    curl -L https://github.com/connectbot/ci-support/archive/master.zip -z $HOME/.cache/ci-support/master.zip -o $HOME/.cache/ci-support/master.zip
+    unzip -oq $HOME/.cache/ci-support/master.zip -d $HOME
+    mkdir -p $HOME/bin
+    curl -L https://raw.githubusercontent.com/travis-ci/travis-cookbooks/master/community-cookbooks/android-sdk/files/default/android-wait-for-emulator -o $HOME/bin/android-wait-for-emulator
+    chmod +x $HOME/bin/android-wait-for-emulator
+    # Try to download Gradle deps while Android is booting
+    ./gradlew --parallel -Dorg.gradle.parallel.intra=true resolveDependencies
 
     else echo "Skipping emulator install because the current build is a pull request."
 fi

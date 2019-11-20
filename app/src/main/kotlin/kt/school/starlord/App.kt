@@ -3,11 +3,11 @@ package kt.school.starlord
 import android.annotation.SuppressLint
 import android.app.Application
 import com.jakewharton.threetenabp.AndroidThreeTen
-import kt.school.starlord.di.appModule
-import kt.school.starlord.di.databaseModule
-import kt.school.starlord.di.mapperModule
-import kt.school.starlord.di.networkModule
-import kt.school.starlord.di.viewModelModule
+import kt.school.starlord.di.module.appModule
+import kt.school.starlord.di.module.databaseModule
+import kt.school.starlord.di.module.mapperModule
+import kt.school.starlord.di.module.networkModule
+import kt.school.starlord.di.module.viewModelModule
 import org.koin.android.ext.koin.androidContext
 import org.koin.android.ext.koin.androidLogger
 import org.koin.core.context.startKoin
@@ -20,11 +20,9 @@ open class App : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        initKoin()
-        AndroidThreeTen.init(this)
-    }
 
-    private fun initKoin() {
+        AndroidThreeTen.init(this)
+
         startKoin {
             androidLogger()
             androidContext(this@App)

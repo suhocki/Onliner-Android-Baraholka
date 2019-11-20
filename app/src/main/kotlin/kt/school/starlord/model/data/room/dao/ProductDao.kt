@@ -1,40 +1,40 @@
 package kt.school.starlord.model.data.room.dao
 
-import androidx.lifecycle.LiveData
+import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import androidx.room.Transaction
 import kt.school.starlord.model.data.room.entity.RoomProduct
 
 /**
  * Defines queries for working with products in database.
  */
 @Dao
-abstract class ProductDao {
+interface ProductDao {
     /**
-     * @param subcategoryName name of selected subcategory.
-     * @return all products for selected subcategory by subcategoryName.
-     */
-    @Query("SELECT * FROM Products WHERE subcategoryName=:subcategoryName ORDER BY lastUpdate DESC LIMIT :pageSize")
-    abstract fun getProducts(subcategoryName: String, pageSize: Int): LiveData<List<RoomProduct>>
-
-    /**
-     * Replaces old products with a new ones. Previous products with provided subcategoryName will be dropped.
+     * Extract all products from the database that are connected with chosen subcategory name.
      *
      * @param subcategoryName name of selected subcategory.
-     * @param products items that will be saved in database.
+     * @return all products for selected subcategory.
      */
-    @Transaction
-    open suspend fun replaceAll(subcategoryName: String, products: List<RoomProduct>) {
-        deleteAll(subcategoryName)
-        putProducts(products)
-    }
+    @Query("SELECT * FROM Products WHERE subcategoryName=:subcategoryName ORDER BY lastUpdate DESC")
+    fun getProducts(subcategoryName: String): DataSource.Factory<Int, RoomProduct>
 
+    /**
+     * New products will be added to the database. Existed products will be replaced.
+     *
+     * @param products items to insert.
+     */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    protected abstract suspend fun putProducts(products: List<RoomProduct>)
+    suspend fun insertProducts(products: List<RoomProduct>)
 
-    @Query("DELETE FROM Products WHERE subcategoryName=:subcategoryName")
-    protected abstract suspend fun deleteAll(subcategoryName: String)
+    /**
+     * Extract all items where identifier is from the listOfIds.
+     *
+     * @param listOfIds collection of identifiers.
+     * @return all items where identifier is from the listOfIds.
+     */
+    @Query("SELECT * FROM Products WHERE subcategoryName=:subcategoryName AND id IN (:listOfIds)")
+    suspend fun getProductsByIds(listOfIds: List<Long>, subcategoryName: String): List<RoomProduct>
 }

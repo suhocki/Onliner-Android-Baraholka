@@ -2,19 +2,20 @@ package kt.school.starlord.model.repository.database
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.map
-import kt.school.starlord.BuildConfig
+import androidx.paging.DataSource
+import kt.school.starlord.domain.data.mapper.Mapper
+import kt.school.starlord.domain.entity.category.Category
+import kt.school.starlord.domain.entity.global.RussianLocalizedTimePassed
+import kt.school.starlord.domain.entity.product.Product
+import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.domain.repository.CategoriesCacheRepository
 import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.domain.repository.product.ProductsCacheRepository
-import kt.school.starlord.domain.entity.category.Category
-import kt.school.starlord.domain.entity.product.Product
-import kt.school.starlord.domain.entity.product.ProductWithMetadata
-import kt.school.starlord.domain.entity.subcategory.Subcategory
-import kt.school.starlord.model.data.mapper.Mapper
 import kt.school.starlord.model.data.room.DaoManager
 import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomProduct
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
+import org.threeten.bp.Instant
 
 /**
  * Controls Room database.
@@ -24,7 +25,7 @@ class DatabaseRepository(
     private val mapper: Mapper
 ) : CategoriesCacheRepository, SubcategoriesRepository, ProductsCacheRepository {
 
-    override fun getCategoriesLiveData(): LiveData<List<Category>> {
+    override fun getCategories(): LiveData<List<Category>> {
         return daoManager.categoryDao.getCategories().map { roomCategories ->
             roomCategories.map { mapper.map<Category>(it) }
         }
@@ -46,17 +47,29 @@ class DatabaseRepository(
         daoManager.subcategoryDao.replaceAll(roomSubcategories)
     }
 
-    override fun getProductsLiveData(subcategoryName: String): LiveData<List<Product>> {
-        return daoManager.productDao.getProducts(subcategoryName, BuildConfig.PAGE_SIZE).map { roomProducts ->
-            roomProducts.map { mapper.map<Product>(it) }
-        }
-    }
+    override fun getCachedProducts(subcategoryName: String): DataSource.Factory<Int, Product> =
+        daoManager.productDao
+            .getProducts(subcategoryName)
+            .map { mapper.map<Product>(it) }
 
     override suspend fun updateProducts(subcategoryName: String, products: List<Product>) {
-        val roomProducts = products.map { product ->
-            val productWithMetadata = ProductWithMetadata(product, subcategoryName)
-            mapper.map<RoomProduct>(productWithMetadata)
-        }
-        daoManager.productDao.replaceAll(subcategoryName, roomProducts)
+        val productDao = daoManager.productDao
+        val cachedProducts = productDao.getProductsByIds(products.map { it.id }, subcategoryName)
+        val epochMilli = Instant.now().toEpochMilli()
+
+        productDao.insertProducts(
+            products.onEach { product ->
+                product.subcategoryName = subcategoryName
+
+                cachedProducts.find { cachedProduct -> cachedProduct.id == product.id }
+                    ?.let { cachedProduct ->
+                        if (mapper.map<RussianLocalizedTimePassed>(epochMilli - cachedProduct.lastUpdate) ==
+                            RussianLocalizedTimePassed(product.localizedTimePassed.value)
+                        ) {
+                            product.lastUpdate = cachedProduct.lastUpdate
+                        }
+                    }
+            }.map { mapper.map<RoomProduct>(it) }
+        )
     }
 }

@@ -1,21 +1,29 @@
-language: android
-sudo: required
-dist: trusty
-jdk: oraclejdk8
+language: minimal
+os: linux
+dist: bionic
+sudo: true  # For the 7.5GB limit
 
 env:
   global:
-    - ADB_INSTALL_TIMEOUT=8
-    - ABI=armeabi-v7a
+    - EMU_ABI=x86_64
+    - EMU_API=28
     - EMU_FLAVOR=default
-    - ANDROID_API_LEVEL=28
-    - ANDROID_BUILD_TOOLS_VERSION=28.0.3
-    - ANDROID_HOME=/usr/local/android-sdk
-    - TOOLS=${ANDROID_HOME}/tools
-    - PATH=${ANDROID_HOME}:${ANDROID_HOME}/emulator:${TOOLS}:${TOOLS}/bin:${ANDROID_HOME}/platform-tools:${PATH}
+    - ANDROID_TOOLS_URL="https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip"
+    - ANDROID_HOME="$HOME/android-sdk-linux"
+    - JAVA_HOME=/usr/lib/jvm/java-8-openjdk-amd64
+    - PATH="$JAVA_HOME/bin:$HOME/bin:$ANDROID_HOME/emulator:$ANDROID_HOME/tools/bin:$ANDROID_HOME/platform-tools:$PATH"
+    - TERM=dumb
     - GITHUB_BOT_ID=49678291
-  matrix:
-    - API=22 ABI=x86_64
+
+addons:
+  apt:
+    packages:
+      - jq  # for parsing JSON
+      - openjdk-8-jdk-headless  # for building
+      - qemu-kvm  # for emulator
+      - libvirt-bin  # for emulator
+      - ubuntu-vm-builder  # for emulator
+      - bridge-utils  # for emulator
 
 android:
   components:
@@ -30,20 +38,12 @@ android:
 
 before_install:
   - sudo chmod 755 -R scripts
-  - touch $HOME/.android/repositories.cfg
-  - yes | sdkmanager "platforms;android-28"
-  - yes | sdkmanager "build-tools;28.0.3"
   - git remote rm origin
   - git remote add origin https://github.com/suhocki/starlord.git
   - git fetch origin
   - openssl aes-256-cbc -K $encrypted_d9066dcd8080_key -iv $encrypted_d9066dcd8080_iv
     -in keys/secrets.tar.enc -out keys/secrets.tar -d
   - tar xvf keys/secrets.tar -C keys
-  - yes | sdkmanager "platforms;android-28"
-  - sudo apt-get install jq
-
-install:
-  - ./scripts/start_emulator.sh
 
 before_cache:
   - rm -f  $HOME/.gradle/caches/modules-2/modules-2.lock
@@ -58,9 +58,24 @@ cache:
 before_script:
   - export COMMITTER_EMAIL="$(git log -1 $TRAVIS_COMMIT --pretty="%cE")"
   - export AUTHOR_NAME="$(curl -H "Authorization:token ${github_comment_bot_api_key}" -X GET "https://api.github.com/repos/${TRAVIS_REPO_SLUG}/issues/${TRAVIS_PULL_REQUEST}" | jq .user.login | cut -d '"' -f2)"
+  # Install Android stuff
+  - curl -L $ANDROID_TOOLS_URL -o $HOME/tools.zip
+  - unzip -oq $HOME/tools.zip -d $ANDROID_HOME
+  - yes | sdkmanager --licenses
+  - sdkmanager tools | tr '\r' '\n' | uniq
+  - sdkmanager platform-tools | tr '\r' '\n' | uniq
+  - ./scripts/start_emulator.sh
+  # For the lint checking mechanism
+  - mkdir -p $HOME/.cache/lint
 
 script:
-  - ./gradlew ktlintCheck detekt assembleDebug assembleRelease testDebug jacocoTestReport
+  # Split up to reduce memory requirements
+  - ./gradlew --stacktrace ktlintCheck
+  - ./gradlew --stacktrace detekt
+  - ./gradlew --stacktrace assembleDebug
+  - ./gradlew --stacktrace assembleRelease
+  - ./gradlew --stacktrace testDebug
+  - ./gradlew --stacktrace jacocoTestReport
 
 after_success:
   - bash <(curl -s https://codecov.io/bash)
@@ -76,9 +91,8 @@ branches:
     - develop
 
 before_deploy:
-  - ./scripts/get_whats_new.sh
-  - ./scripts/configure_emulator.sh
   - ./gradlew connectedDebugAndroidTest
+  - ./scripts/get_whats_new.sh
   - ./gradlew publish
   - ./scripts/telegram_notify_on_google_play_publish.sh
   - git tag $(scripts/versionizer/versionizer.sh name)

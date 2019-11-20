@@ -1,11 +1,13 @@
 package kt.school.starlord.domain.data.mapper
 
+import kotlin.reflect.KClass
+
 /**
  * Converter helps us to convert different objects to necessary types.
  */
-interface Converter<FROM, TO> {
-    val fromClass: Class<FROM>
-    val toClass: Class<TO>
+interface Converter<FROM : Any, TO : Any> {
+    val fromClass: KClass<FROM>
+    val toClass: KClass<TO>
 
     /**
      * Converts input value to specified class.

@@ -1,0 +1,17 @@
+<resources>
+    <string name="bargain">Торг</string>
+    <string name="for_free">Даром</string>
+    <string name="updating">Обновление…</string>
+    <string name="ok">Хорошо</string>
+    <string name="less_than_minute_ago">меньше минуты назад</string>
+    <string name="price">%1$s р.</string>
+
+    <!--Product Types-->
+    <string name="sell">Продам</string>
+    <string name="buy">Куплю</string>
+    <string name="exchange">Обмен</string>
+    <string name="service">Услуга</string>
+    <string name="rent">Аренда</string>
+    <string name="closed">Закрыто</string>
+    <string name="warning">Внимание</string>
+</resources>

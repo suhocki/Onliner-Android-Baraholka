@@ -1,6 +1,7 @@
 package kt.school.starlord.ui.subcategories
 
 import android.os.Bundle
+import android.view.View
 import androidx.fragment.app.testing.FragmentScenario
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.MutableLiveData
@@ -17,7 +18,7 @@ import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
 import kotlinx.android.synthetic.main.fragment_subcategories.*
-import kt.school.starlord.domain.entity.subcategory.Subcategory
+import kt.school.starlord.ui.subcategories.entity.UiSubcategory
 import org.junit.Before
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -45,7 +46,7 @@ class SubcategoriesFragmentTest : AutoCloseKoinTest() {
     fun `navigate to products`() {
         // Given
         val subcategoryName = "subcategoryName"
-        val subcategory = Subcategory(subcategoryName, anyString(), 0, anyString())
+        val subcategory = UiSubcategory(subcategoryName, "123", anyString(), View.VISIBLE)
         val navController: NavController = mockk(relaxUnitFun = true)
         mockkStatic(NavHostFragment::class)
 
@@ -65,7 +66,7 @@ class SubcategoriesFragmentTest : AutoCloseKoinTest() {
 
             val arguments = direction.captured.arguments
             val keys = arguments.keySet()
-            assert(keys.any { arguments.getParcelable<Subcategory>(it) == subcategory })
+            assert(keys.any { arguments.getParcelable<UiSubcategory>(it) == subcategory })
         }
     }
 

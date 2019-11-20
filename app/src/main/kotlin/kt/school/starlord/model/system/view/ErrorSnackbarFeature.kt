@@ -6,8 +6,6 @@ import kotlinx.android.synthetic.main.fragment_appbar.*
 import kt.school.starlord.R
 import kt.school.starlord.domain.system.view.ErrorSnackbar
 
-private const val EMPTY_STRING = ""
-
 /**
  * Implementation of ErrorSnackbar interface.
  */
@@ -29,5 +27,9 @@ class ErrorSnackbarFeature(activity: Activity) : ErrorSnackbar {
 
     override fun dismiss() {
         snackbar.dismiss()
+    }
+
+    companion object {
+        private const val EMPTY_STRING = ""
     }
 }
