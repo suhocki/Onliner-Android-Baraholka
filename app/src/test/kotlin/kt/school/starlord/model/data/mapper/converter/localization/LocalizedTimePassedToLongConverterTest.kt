@@ -3,12 +3,13 @@ package kt.school.starlord.model.data.mapper.converter.localization
 import io.mockk.every
 import io.mockk.mockkStatic
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
-import org.junit.jupiter.api.Assertions.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.threeten.bp.Instant
 
+/* ktlint-disable */
 internal class LocalizedTimePassedToLongConverterTest {
 
     private val converter = LocalizedTimePassedToLongConverter()

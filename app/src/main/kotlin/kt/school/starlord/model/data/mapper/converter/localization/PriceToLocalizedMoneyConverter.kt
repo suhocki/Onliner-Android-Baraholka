@@ -6,7 +6,6 @@ import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.model.data.resources.ResourceManager
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedMoney
 import java.text.DecimalFormat
-import kotlin.math.roundToLong
 
 /**
  * Converts Price from domain to LocalizedMoney entity from UI layer.

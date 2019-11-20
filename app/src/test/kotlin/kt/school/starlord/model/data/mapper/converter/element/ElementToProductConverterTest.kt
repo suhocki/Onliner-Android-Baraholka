@@ -22,6 +22,7 @@ import org.koin.dsl.module
 import org.koin.test.KoinTest
 import org.mockito.ArgumentMatchers
 
+/* ktlint-disable */
 internal class ElementToProductConverterTest : KoinTest {
 
     private val converter by lazy { ElementToProductConverter() }
@@ -108,5 +109,4 @@ internal class ElementToProductConverterTest : KoinTest {
 
     private fun createElement(htmlPart: String) =
         Jsoup.parse(htmlPart, "", Parser.xmlParser()).select("tr").first()
-
 }

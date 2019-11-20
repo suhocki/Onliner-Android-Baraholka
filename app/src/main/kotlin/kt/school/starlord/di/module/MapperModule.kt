@@ -22,7 +22,7 @@ import kt.school.starlord.model.data.room.entity.RoomProduct
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
 import org.koin.core.parameter.parametersOf
 import org.koin.dsl.module
-import java.util.*
+import java.util.Locale
 
 /**
  * Contains instructions of how to instantiate Mapper.

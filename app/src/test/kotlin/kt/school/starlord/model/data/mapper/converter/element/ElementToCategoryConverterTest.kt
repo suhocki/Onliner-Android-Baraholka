@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 
+/* ktlint-disable */
 internal class ElementToCategoryConverterTest {
 
     private val converter = ElementToCategoryConverter()

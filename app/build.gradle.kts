@@ -4,7 +4,6 @@ import com.android.build.gradle.internal.dsl.TestOptions
 import io.gitlab.arturbosch.detekt.detekt
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
-import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
     id("com.android.application")

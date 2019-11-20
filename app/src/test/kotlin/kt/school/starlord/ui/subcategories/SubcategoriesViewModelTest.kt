@@ -2,11 +2,10 @@ package kt.school.starlord.ui.subcategories
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import io.mockk.coVerify
 import io.mockk.every
 import io.mockk.mockk
-import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.domain.entity.subcategory.Subcategory
+import kt.school.starlord.domain.repository.SubcategoriesRepository
 import kt.school.starlord.ui.TestCoroutineRule
 import kt.school.starlord.ui.observeForTesting
 import org.junit.Rule

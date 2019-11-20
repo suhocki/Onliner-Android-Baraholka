@@ -27,9 +27,11 @@ import kt.school.starlord.ui.observeForTesting
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.ArgumentMatchers.*
+import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.ArgumentMatchers.anyString
 import org.threeten.bp.Instant
 
+/* ktlint-disable */
 class DatabaseRepositoryTest {
     @get:Rule
     internal val testCoroutineRule = TestCoroutineRule()
@@ -228,5 +230,4 @@ class DatabaseRepositoryTest {
             )
         ) to serverProduct
     }
-
 }

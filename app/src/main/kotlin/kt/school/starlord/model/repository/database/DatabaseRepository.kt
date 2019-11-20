@@ -16,7 +16,6 @@ import kt.school.starlord.model.data.room.entity.RoomCategory
 import kt.school.starlord.model.data.room.entity.RoomProduct
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
 import org.threeten.bp.Instant
-import kotlin.math.max
 
 /**
  * Controls Room database.
@@ -64,10 +63,9 @@ class DatabaseRepository(
 
                 cachedProducts.find { cachedProduct -> cachedProduct.id == product.id }
                     ?.let { cachedProduct ->
-                        val cachedLocalizedTimePassed = mapper.map<RussianLocalizedTimePassed>(epochMilli - cachedProduct.lastUpdate)
-                        val serverLocalizedTimePassed = RussianLocalizedTimePassed(product.localizedTimePassed.value)
-
-                        if (cachedLocalizedTimePassed == serverLocalizedTimePassed) {
+                        if (mapper.map<RussianLocalizedTimePassed>(epochMilli - cachedProduct.lastUpdate) ==
+                            RussianLocalizedTimePassed(product.localizedTimePassed.value)
+                        ) {
                             product.lastUpdate = cachedProduct.lastUpdate
                         }
                     }

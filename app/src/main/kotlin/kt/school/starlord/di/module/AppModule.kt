@@ -13,10 +13,9 @@ import kt.school.starlord.model.system.coroutine.AppCoroutineContextProvider
 import kt.school.starlord.model.system.view.ErrorSnackbarFeature
 import kt.school.starlord.model.system.view.ProgressSnackbarFeature
 import org.koin.android.ext.koin.androidContext
-import org.koin.core.qualifier.named
 import org.koin.dsl.bind
 import org.koin.dsl.module
-import java.util.*
+import java.util.Locale
 
 /**
  * Provides instructions on how to maintain database dependencies.

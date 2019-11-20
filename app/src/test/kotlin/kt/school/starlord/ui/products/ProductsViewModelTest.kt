@@ -1,14 +1,11 @@
 package kt.school.starlord.ui.products
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.paging.DataSource
-import androidx.paging.PositionalDataSource
 import io.mockk.coEvery
 import io.mockk.coVerify
 import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
-import kt.school.starlord.domain.data.mapper.BaseConverter
 import kt.school.starlord.domain.data.mapper.Mapper
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.subcategory.Subcategory

@@ -7,6 +7,7 @@ import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 
+/* ktlint-disable */
 internal class ElementToPriceConverterTest {
 
     private val converter = ElementToPriceConverter()
@@ -43,5 +44,4 @@ internal class ElementToPriceConverterTest {
 
     private fun createElement(htmlPart: String) =
         Jsoup.parse(htmlPart, "", Parser.xmlParser()).select("td").first()
-
 }
