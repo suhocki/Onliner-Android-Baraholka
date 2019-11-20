@@ -17,7 +17,5 @@ class LongToRussianLocalizedTimePassedConverter(
 
     private val converter = LongToLocalizedTimePassedConverter(resourceManager)
 
-    override fun convert(value: Long): RussianLocalizedTimePassed {
-        return RussianLocalizedTimePassed(converter.convert(value).value)
-    }
+    override fun convert(value: Long) = RussianLocalizedTimePassed(converter.convert(value).value)
 }

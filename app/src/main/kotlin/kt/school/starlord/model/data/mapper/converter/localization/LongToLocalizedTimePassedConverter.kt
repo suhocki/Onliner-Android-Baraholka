@@ -2,8 +2,8 @@ package kt.school.starlord.model.data.mapper.converter.localization
 
 import kt.school.starlord.R
 import kt.school.starlord.domain.data.mapper.BaseConverter
-import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import kt.school.starlord.model.data.resources.ResourceManager
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import org.threeten.bp.Duration
 
 /**
@@ -16,7 +16,7 @@ open class LongToLocalizedTimePassedConverter(
     override fun convert(value: Long) = LocalizedTimePassed(
         when {
             value >= MILLIS_IN_MONTH -> {
-                val month = Duration.ofMillis(value).toDays() / 30
+                val month = Duration.ofMillis(value).toDays() / DAYS_IN_MONTH
                 resources.getPlural(R.plurals.month_ago, month.toInt(), month)
             }
             value >= MILLIS_IN_DAY -> {
@@ -36,6 +36,7 @@ open class LongToLocalizedTimePassedConverter(
     )
 
     companion object {
+        private const val DAYS_IN_MONTH = 30
         private const val MILLIS_IN_MINUTE = 60 * 1000L
         private const val MILLIS_IN_HOUR = 60 * MILLIS_IN_MINUTE
         private const val MILLIS_IN_DAY = 24 * MILLIS_IN_HOUR

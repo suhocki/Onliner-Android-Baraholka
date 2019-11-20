@@ -4,18 +4,17 @@ package kt.school.starlord.ui.global.entity.wrapper
  * Wrapper for human-readable time passed after some action.
  * E.g. "5 seconds ago".
  */
-class LocalizedTimePassed(val value: String) {
+data class LocalizedTimePassed(val value: String) {
 
-    override fun equals(other: Any?) = other is LocalizedTimePassed &&
-            (value == other.value || (other.value.startsWith(ServerConstant.MORE_THAN_A_MONTH_AGO) &&
-                    value.contains(ServerConstant.MONTH)))
-
-    override fun hashCode(): Int {
-        return value.hashCode()
+    override fun equals(other: Any?): Boolean {
+        return other is LocalizedTimePassed && (value == other.value ||
+                other.value.startsWith(MORE_THAN_A_MONTH_AGO) && value.contains(MONTH))
     }
-}
 
-private object ServerConstant {
-    const val MORE_THAN_A_MONTH_AGO = "более 1 месяца"
-    const val MONTH = "месяц"
+    override fun hashCode() = value.hashCode()
+
+    companion object {
+        const val MORE_THAN_A_MONTH_AGO = "более 1 месяца"
+        const val MONTH = "месяц"
+    }
 }

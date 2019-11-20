@@ -35,7 +35,7 @@ class ProductToUiEntityConverter : BaseConverter<Product, UiEntity>(Product::cla
             isPaid = value.isPaid,
             comments = value.commentsCount.toString(),
             price = mapper.map<LocalizedMoney>(value.price).value,
-            commentsCountVisibility = if (value.commentsCount > 0) View.VISIBLE else View.GONE,
+            commentsCountVisibility = if (value.commentsCount > 0) View.VISIBLE else View.INVISIBLE,
             priceVisibility = if (value.price.hasPrice) View.VISIBLE else View.GONE,
             bargainVisibility = if (value.price.isBargainAvailable) View.VISIBLE else View.GONE
         )

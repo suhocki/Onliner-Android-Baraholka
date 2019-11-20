@@ -16,8 +16,11 @@ class PriceToLocalizedMoneyConverter(
 
     override fun convert(value: Price): LocalizedMoney {
         return LocalizedMoney(
-            if (value.amount == 0.0) resources.getString(R.string.for_free)
-            else resources.getString(R.string.price, DecimalFormat(PRICE_FORMAT).format(value.amount))
+            if (value.amount == 0.0) {
+                resources.getString(R.string.for_free)
+            } else {
+                resources.getString(R.string.price, DecimalFormat(PRICE_FORMAT).format(value.amount))
+            }
         )
     }
 

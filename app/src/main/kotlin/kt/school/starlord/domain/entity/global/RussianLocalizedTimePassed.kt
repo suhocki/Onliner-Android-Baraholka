@@ -11,10 +11,8 @@ data class RussianLocalizedTimePassed(val value: String) {
      */
     override fun equals(other: Any?): Boolean {
         return other is RussianLocalizedTimePassed && (value == other.value ||
-                (other.value.startsWith("более 1 месяца") && value.contains("месяц")))
+                other.value.startsWith("более 1 месяца") && value.contains("месяц"))
     }
 
-    override fun hashCode(): Int {
-        return super.hashCode()
-    }
+    override fun hashCode() = super.hashCode()
 }

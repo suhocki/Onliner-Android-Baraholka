@@ -35,11 +35,11 @@ class LocalizedTimePassedToLongConverter : BaseConverter<LocalizedTimePassed, Lo
     }
 
     private enum class TimeType(val identifier: String, val millis: Long) {
-        SECONDS("меньше", 1000L),
-        MINUTES("м", 60 * SECONDS.millis),
-        HOURS("ч", 60 * MINUTES.millis),
-        DAYS("д", 24 * HOURS.millis),
-        MONTH("более", 30 * DAYS.millis)
+        SECONDS("меньше", MILLIS_IN_SECOND),
+        MINUTES("м", SECONDS_IN_MINUTE * SECONDS.millis),
+        HOURS("ч", MINUTES_IN_HOUR * MINUTES.millis),
+        DAYS("д", HOURS_IN_DAY * HOURS.millis),
+        MONTH("более", DAYS_IN_MONTH * DAYS.millis)
     }
 
     companion object {
@@ -49,5 +49,11 @@ class LocalizedTimePassedToLongConverter : BaseConverter<LocalizedTimePassed, Lo
         private const val MIN_PARTS_COUNT = 3
         private const val INDEX_OF_NUMBER = 1
         private const val INDEX_OF_TIME_TYPE = 2
+
+        private const val MILLIS_IN_SECOND = 1000L
+        private const val SECONDS_IN_MINUTE = 60
+        private const val MINUTES_IN_HOUR = 60
+        private const val HOURS_IN_DAY = 24
+        private const val DAYS_IN_MONTH = 30
     }
 }

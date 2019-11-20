@@ -116,7 +116,7 @@ internal class ProductToUiEntityConverterTest : KoinTest {
             price = price,
             isPaid = true,
             bargainVisibility = View.GONE,
-            commentsCountVisibility = View.GONE,
+            commentsCountVisibility = View.INVISIBLE,
             priceVisibility = View.GONE
         )
     ).map { (input, expected) ->

@@ -21,6 +21,9 @@ class AppPagedRecyclerAdapter(
 
         override fun getChangePayload(oldItem: UiEntity, newItem: UiEntity) =
             Any()
-    },
-    *adapterDelegates
-)
+    }
+) {
+    init {
+        adapterDelegates.forEach { delegatesManager.addDelegate(it) }
+    }
+}
