@@ -6,7 +6,7 @@ import kt.school.starlord.R
 import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.model.data.android.ResourceManager
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedMoney
-import org.junit.jupiter.api.Assertions
+import org.junit.Assert
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
@@ -19,7 +19,7 @@ internal class PriceToLocalizedMoneyConverterTest {
     @BeforeEach
     fun setUp() {
         every { resourceManager.getString(R.string.for_free) } returns "free"
-        every { resourceManager.getString(R.string.price, "1,1") } returns "1,1 r."
+        every { resourceManager.getString(R.string.price, "1.1") } returns "1,1 r."
     }
 
     @TestFactory
@@ -29,7 +29,7 @@ internal class PriceToLocalizedMoneyConverterTest {
     ).map { (input, expected) ->
         DynamicTest.dynamicTest("Price ${input.amount} -> ${expected.value}") {
             val actual = converter.convert(input)
-            Assertions.assertEquals(expected, actual)
+            Assert.assertEquals(expected, actual)
         }
     }
 }

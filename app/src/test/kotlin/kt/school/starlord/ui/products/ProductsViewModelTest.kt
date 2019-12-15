@@ -2,13 +2,10 @@ package kt.school.starlord.ui.products
 
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import io.mockk.coEvery
-import io.mockk.coVerify
-import io.mockk.coVerifyOrder
-import io.mockk.every
-import io.mockk.mockk
-import kt.school.starlord.domain.mapper.Mapper
+import io.mockk.*
+import kt.school.starlord.domain.HtmlParser
 import kt.school.starlord.domain.entity.product.Product
+import kt.school.starlord.domain.mapper.Mapper
 import kt.school.starlord.domain.repository.product.ProductsCacheRepository
 import kt.school.starlord.domain.repository.product.ProductsNetworkRepository
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
@@ -19,9 +16,11 @@ import kt.school.starlord.ui.createDataSource
 import kt.school.starlord.ui.global.entity.UiEntity
 import kt.school.starlord.ui.observeForTesting
 import kt.school.starlord.ui.subcategories.entity.UiSubcategory
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyLong
+import org.mockito.ArgumentMatchers.anyString
 
 /* ktlint-disable */
 class ProductsViewModelTest {
@@ -37,6 +36,16 @@ class ProductsViewModelTest {
     private val progressFeature: ProgressViewModelFeature = mockk(relaxUnitFun = true)
     private val networkRepository: ProductsNetworkRepository = mockk()
     private val databaseRepository: ProductsCacheRepository = mockk(relaxed = true)
+    private val parser = mockk<HtmlParser>(relaxed = true)
+    private val fetchedProducts: List<Product> = listOf(mockk())
+
+    @Before
+    fun setUp() {
+        val productsPage = anyString()
+
+        coEvery { networkRepository.downloadProductsPage(subcategoryId) }.coAnswers { productsPage }
+        coEvery { parser.parseProducts(productsPage) }.coAnswers { fetchedProducts }
+    }
 
     @Test
     fun loadProducts_fromCache() = testCoroutineRule.runBlockingTest {
@@ -61,17 +70,8 @@ class ProductsViewModelTest {
 
     @Test
     fun loadProducts_fromNetwork_updateCache() = testCoroutineRule.runBlockingTest {
-        // Given
-        val fetchedProducts: List<Product> = listOf(mockk())
-
-        coEvery { networkRepository.downloadProductsPage(subcategoryId) }.coAnswers { fetchedProducts }
-
         // When
-        createViewModel(
-            subcategory = subcategory,
-            databaseRepository = databaseRepository,
-            networkRepository = networkRepository
-        )
+        createViewModel()
 
         // Then
         coVerify { databaseRepository.updateProducts(subcategoryId, fetchedProducts) }
@@ -105,10 +105,19 @@ class ProductsViewModelTest {
 
     private fun createViewModel(
         mapper: Mapper = mockk(relaxed = true),
+        htmlParser: HtmlParser = parser,
         progressFeature: ProgressViewModelFeature = mockk(relaxed = true),
         errorFeature: ErrorViewModelFeature = mockk(relaxed = true),
-        networkRepository: ProductsNetworkRepository = mockk(relaxed = true),
-        databaseRepository: ProductsCacheRepository = mockk(relaxed = true),
-        subcategory: UiSubcategory = mockk(relaxed = true)
-    ) = ProductsViewModel(mapper, progressFeature, errorFeature, networkRepository, databaseRepository, subcategory)
+        networkRepository: ProductsNetworkRepository = this@ProductsViewModelTest.networkRepository,
+        databaseRepository: ProductsCacheRepository = this@ProductsViewModelTest.databaseRepository,
+        subcategory: UiSubcategory = this@ProductsViewModelTest.subcategory
+    ) = ProductsViewModel(
+        mapper,
+        htmlParser,
+        progressFeature,
+        errorFeature,
+        networkRepository,
+        databaseRepository,
+        subcategory
+    )
 }

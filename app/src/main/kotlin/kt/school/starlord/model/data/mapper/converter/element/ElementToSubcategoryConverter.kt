@@ -9,8 +9,7 @@ import org.koin.core.KoinComponent
 /**
  * Contains logic on how to convert Jsoup Element to Subcategory entity.
  */
-class ElementToSubcategoryConverter : BaseConverter<Element, Subcategory>(Element::class, Subcategory::class),
-    KoinComponent {
+class ElementToSubcategoryConverter : BaseConverter<Element, Subcategory>(Element::class, Subcategory::class) {
 
     override fun convert(value: Element): Subcategory {
         val subcategoryElements = value.getElementsByAttribute(LINK)

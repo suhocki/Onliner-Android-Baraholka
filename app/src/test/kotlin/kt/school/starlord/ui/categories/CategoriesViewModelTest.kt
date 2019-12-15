@@ -7,6 +7,7 @@ import io.mockk.coVerify
 import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
+import kt.school.starlord.domain.HtmlParser
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.domain.repository.category.CategoriesCacheRepository
@@ -16,8 +17,10 @@ import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 import kt.school.starlord.ui.TestCoroutineRule
 import kt.school.starlord.ui.observeForTesting
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyString
 
 class CategoriesViewModelTest {
 
@@ -36,6 +39,15 @@ class CategoriesViewModelTest {
         mockk<Category>() to listOf(mockk(), mockk()),
         mockk<Category>() to listOf(mockk())
     )
+    private val parser = mockk<HtmlParser>(relaxed = true)
+
+    @Before
+    fun setUp() {
+        val categoriesPage = anyString()
+
+        coEvery { networkRepository.downloadCategoriesPage() }.coAnswers { categoriesPage }
+        coEvery { parser.parseCategories(categoriesPage) }.coAnswers { categoriesWithSubcategories }
+    }
 
     @Test
     fun loadCategories_fromCache() = testCoroutineRule.runBlockingTest {
@@ -53,11 +65,11 @@ class CategoriesViewModelTest {
 
     @Test
     fun loadCategories_fromNetwork_updateCache() = testCoroutineRule.runBlockingTest {
-        // Given
-        coEvery { networkRepository.getCategoriesWithSubcategories() }.coAnswers { categoriesWithSubcategories }
-
         // When
-        createViewModel(networkRepository = networkRepository, categoriesRepository = categoriesRepository)
+        createViewModel(
+            networkRepository = networkRepository,
+            categoriesRepository = categoriesRepository
+        )
 
         // Then
         coVerify { categoriesRepository.updateCategories(categoriesWithSubcategories.keys.toList()) }
@@ -65,11 +77,11 @@ class CategoriesViewModelTest {
 
     @Test
     fun loadSubcategories_fromNetwork_updateCache() = testCoroutineRule.runBlockingTest {
-        // Given
-        coEvery { networkRepository.getCategoriesWithSubcategories() }.coAnswers { categoriesWithSubcategories }
-
         // When
-        createViewModel(networkRepository = networkRepository, subcategoriesRepository = subcategoriesRepository)
+        createViewModel(
+            networkRepository = networkRepository,
+            subcategoriesRepository = subcategoriesRepository
+        )
 
         // Then
         coVerify { subcategoriesRepository.updateSubcategories(categoriesWithSubcategories.values.flatten()) }
@@ -92,7 +104,7 @@ class CategoriesViewModelTest {
         // Given
         val error = Throwable()
 
-        coEvery { networkRepository.getCategoriesWithSubcategories() }.throws(error)
+        coEvery { networkRepository.downloadCategoriesPage() }.throws(error)
 
         // When
         createViewModel(errorFeature = errorFeature, networkRepository = networkRepository)
@@ -106,12 +118,14 @@ class CategoriesViewModelTest {
         errorFeature: ErrorViewModelFeature = mockk(relaxed = true),
         networkRepository: CategoriesNetworkRepository = mockk(relaxed = true),
         categoriesRepository: CategoriesCacheRepository = mockk(relaxed = true),
-        subcategoriesRepository: SubcategoriesCacheRepository = mockk(relaxed = true)
+        subcategoriesRepository: SubcategoriesCacheRepository = mockk(relaxed = true),
+        htmlParser: HtmlParser = parser
     ) = CategoriesViewModel(
         progressFeature,
         errorFeature,
         networkRepository,
         categoriesRepository,
-        subcategoriesRepository
+        subcategoriesRepository,
+        htmlParser
     )
 }
