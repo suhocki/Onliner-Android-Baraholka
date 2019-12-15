@@ -2,7 +2,11 @@ package kt.school.starlord.ui.products
 
 import android.view.View
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import io.mockk.*
+import io.mockk.coEvery
+import io.mockk.coVerify
+import io.mockk.coVerifyOrder
+import io.mockk.every
+import io.mockk.mockk
 import kt.school.starlord.domain.HtmlParser
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.mapper.Mapper

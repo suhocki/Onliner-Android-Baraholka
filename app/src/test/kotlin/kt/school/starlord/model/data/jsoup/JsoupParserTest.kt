@@ -68,19 +68,19 @@ internal class JsoupParserTest {
 
     @Test
     fun getCategoriesElements() = testCoroutineRule.runBlockingTest {
-        //when
+        // when
         val actual = dataSource.parseCategories(anyString())
 
-        //then
+        // then
         assert(mapOf(category to listOf(subcategory)) == actual)
     }
 
     @Test
     fun parseProducts() = testCoroutineRule.runBlockingTest {
-        //when
+        // when
         val actual = dataSource.parseProducts(anyString())
 
-        //then
+        // then
         assert(listOf(product) == actual)
     }
 }

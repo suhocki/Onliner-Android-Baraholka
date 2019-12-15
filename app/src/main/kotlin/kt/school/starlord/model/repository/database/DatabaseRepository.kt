@@ -66,7 +66,8 @@ class DatabaseRepository(
                 .toMutableList()
                 .apply {
                     if (databaseHasGap(productDao, subcategoryId, products)) {
-                        val lastUpdate = maxBy { it.lastUpdate }!!.lastUpdate - 1 // -1 ms, to put after previous lastUpdate.
+                        // -1 ms, to put after previous
+                        val lastUpdate = requireNotNull(maxBy { it.lastUpdate }).lastUpdate - 1
                         add(RoomProduct.createLoadMore(subcategoryId, lastUpdate))
                     } else {
                         productDao.deleteProductById(RoomProduct.ID_LOAD_MORE)
@@ -80,7 +81,6 @@ class DatabaseRepository(
         subcategoryId: Long,
         products: List<Product>
     ) = productDao.getMaxLastUpdate(subcategoryId)?.let { it < products.last().lastUpdate } ?: false
-
 
     private fun fixUpProductData(
         product: Product,

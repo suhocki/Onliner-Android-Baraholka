@@ -8,6 +8,7 @@ import androidx.annotation.StringRes
  *  Wrapper class for hide Android Resources dependency.
  *  Needed to clean domain layer.
  */
+@Suppress("SpreadOperator")
 class ResourceManager constructor(private val resources: Resources) {
     /**
      * @return string from provided id.

@@ -22,5 +22,7 @@ val viewModelModule = module {
 
     viewModel { (categoryName: String) -> SubcategoriesViewModel(get(), get(), categoryName) }
 
-    viewModel { (subcategory: UiSubcategory) -> ProductsViewModel(get(), get(), get(), get(), get(), get(), subcategory) }
+    viewModel { (subcategory: UiSubcategory) ->
+        ProductsViewModel(get(), get(), get(), get(), get(), get(), subcategory)
+    }
 }

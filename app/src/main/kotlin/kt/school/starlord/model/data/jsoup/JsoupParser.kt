@@ -9,6 +9,9 @@ import kt.school.starlord.domain.mapper.Mapper
 import kt.school.starlord.domain.system.coroutine.CoroutineContextProvider
 import org.jsoup.Jsoup
 
+/**
+ * HtmlParser implementation.
+ */
 class JsoupParser(contexts: CoroutineContextProvider, private val mapper: Mapper) : HtmlParser {
 
     private val context = contexts.computation

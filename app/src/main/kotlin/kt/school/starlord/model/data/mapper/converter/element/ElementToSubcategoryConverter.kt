@@ -4,7 +4,6 @@ import android.net.Uri
 import kt.school.starlord.domain.entity.subcategory.Subcategory
 import kt.school.starlord.domain.mapper.BaseConverter
 import org.jsoup.nodes.Element
-import org.koin.core.KoinComponent
 
 /**
  * Contains logic on how to convert Jsoup Element to Subcategory entity.

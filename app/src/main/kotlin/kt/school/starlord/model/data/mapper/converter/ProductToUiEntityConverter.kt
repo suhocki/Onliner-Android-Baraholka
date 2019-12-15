@@ -23,29 +23,32 @@ class ProductToUiEntityConverter : BaseConverter<Product, UiEntity>(Product::cla
     private val mapper: Mapper by inject()
 
     override fun convert(value: Product): UiEntity {
-        val epochMilliNow = Instant.now().toEpochMilli()
-
         return when (value.id) {
             RoomProduct.ID_PROGRESS -> Progress()
             RoomProduct.ID_LOAD_MORE -> LoadMore()
-
-            else -> UiProduct(
-                id = value.id,
-                title = value.title,
-                description = value.description,
-                type = value.type.stringRes,
-                typeColor = value.type.colorRes,
-                location = value.location,
-                image = value.image,
-                owner = value.owner.name,
-                lastUpdate = mapper.map<LocalizedTimePassed>(epochMilliNow - value.lastUpdate).value,
-                isPaid = value.isPaid,
-                comments = value.commentsCount.toString(),
-                price = mapper.map<LocalizedMoney>(value.price).value,
-                commentsCountVisibility = if (value.commentsCount > 0) View.VISIBLE else View.INVISIBLE,
-                priceVisibility = if (value.price.hasPrice) View.VISIBLE else View.GONE,
-                bargainVisibility = if (value.price.isBargainAvailable) View.VISIBLE else View.GONE
-            )
+            else -> createUiProduct(value)
         }
+    }
+
+    private fun createUiProduct(value: Product): UiProduct {
+        val epochMilliNow = Instant.now().toEpochMilli()
+
+        return UiProduct(
+            id = value.id,
+            title = value.title,
+            description = value.description,
+            type = value.type.stringRes,
+            typeColor = value.type.colorRes,
+            location = value.location,
+            image = value.image,
+            owner = value.owner.name,
+            lastUpdate = mapper.map<LocalizedTimePassed>(epochMilliNow - value.lastUpdate).value,
+            isPaid = value.isPaid,
+            comments = value.commentsCount.toString(),
+            price = mapper.map<LocalizedMoney>(value.price).value,
+            commentsCountVisibility = if (value.commentsCount > 0) View.VISIBLE else View.INVISIBLE,
+            priceVisibility = if (value.price.hasPrice) View.VISIBLE else View.GONE,
+            bargainVisibility = if (value.price.isBargainAvailable) View.VISIBLE else View.GONE
+        )
     }
 }

@@ -75,7 +75,7 @@ data class RoomProduct(
             id = id,
             subcategoryId = subcategoryId,
             lastUpdate = lastUpdate,
-            //fields below will never be displayed.
+            // fields below will never be displayed.
             price = Price(0.0, false, isBargainAvailable = false),
             title = EMPTY_STRING,
             image = EMPTY_STRING,
