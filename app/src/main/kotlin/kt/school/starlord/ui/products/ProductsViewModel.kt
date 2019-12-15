@@ -7,9 +7,10 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import kotlinx.coroutines.launch
 import kt.school.starlord.BuildConfig
-import kt.school.starlord.domain.data.mapper.Mapper
+import kt.school.starlord.domain.HtmlParser
+import kt.school.starlord.domain.mapper.Mapper
 import kt.school.starlord.domain.repository.product.ProductsCacheRepository
-import kt.school.starlord.domain.repository.product.ProductsRepository
+import kt.school.starlord.domain.repository.product.ProductsNetworkRepository
 import kt.school.starlord.domain.system.viewmodel.ErrorEmitter
 import kt.school.starlord.domain.system.viewmodel.ProgressEmitter
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
@@ -22,9 +23,10 @@ import kt.school.starlord.ui.subcategories.entity.UiSubcategory
  */
 class ProductsViewModel(
     private val mapper: Mapper,
+    private val parser: HtmlParser,
     private val progressFeature: ProgressViewModelFeature,
     private val errorFeature: ErrorViewModelFeature,
-    private val networkRepository: ProductsRepository,
+    private val networkRepository: ProductsNetworkRepository,
     private val databaseRepository: ProductsCacheRepository,
     private val subcategory: UiSubcategory
 ) : ViewModel(), ProgressEmitter by progressFeature, ErrorEmitter by errorFeature {
@@ -33,11 +35,12 @@ class ProductsViewModel(
 
     init {
         val factory = databaseRepository
-            .getCachedProducts(subcategory.name)
+            .getCachedProducts(subcategory.id)
             .map { mapper.map<UiEntity>(it) }
 
         val config = PagedList.Config.Builder()
             .setEnablePlaceholders(false)
+            .setInitialLoadSizeHint(BuildConfig.PAGE_SIZE)
             .setPrefetchDistance(PREFETCH_DISTANCE)
             .setPageSize(BuildConfig.PAGE_SIZE)
             .build()
@@ -57,8 +60,10 @@ class ProductsViewModel(
             progressFeature.showProgress(true)
 
             runCatching {
-                val products = networkRepository.getProducts(subcategory.link)
-                databaseRepository.updateProducts(subcategory.name, products)
+                val html = networkRepository.downloadProductsPage(subcategory.id)
+                val products = parser.parseProducts(html)
+
+                databaseRepository.updateProducts(subcategory.id, products)
             }.onFailure(errorFeature::showError)
 
             progressFeature.showProgress(false)

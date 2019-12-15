@@ -25,7 +25,7 @@ import org.junit.runner.RunWith
 import org.koin.androidx.viewmodel.dsl.viewModel
 import org.koin.test.AutoCloseKoinTest
 import org.koin.test.mock.declare
-import org.mockito.ArgumentMatchers.anyString
+import org.mockito.ArgumentMatchers.anyLong
 
 @RunWith(AndroidJUnit4::class)
 class SubcategoriesFragmentTest : AutoCloseKoinTest() {
@@ -46,7 +46,7 @@ class SubcategoriesFragmentTest : AutoCloseKoinTest() {
     fun `navigate to products`() {
         // Given
         val subcategoryName = "subcategoryName"
-        val subcategory = UiSubcategory(subcategoryName, "123", anyString(), View.VISIBLE)
+        val subcategory = UiSubcategory(subcategoryName, "123", anyLong(), View.VISIBLE)
         val navController: NavController = mockk(relaxUnitFun = true)
         mockkStatic(NavHostFragment::class)
 

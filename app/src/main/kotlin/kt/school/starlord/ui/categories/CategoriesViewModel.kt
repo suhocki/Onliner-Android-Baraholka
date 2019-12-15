@@ -5,10 +5,11 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.launch
+import kt.school.starlord.domain.HtmlParser
 import kt.school.starlord.domain.entity.category.Category
-import kt.school.starlord.domain.repository.CategoriesCacheRepository
-import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
-import kt.school.starlord.domain.repository.SubcategoriesRepository
+import kt.school.starlord.domain.repository.category.CategoriesCacheRepository
+import kt.school.starlord.domain.repository.category.CategoriesNetworkRepository
+import kt.school.starlord.domain.repository.category.SubcategoriesCacheRepository
 import kt.school.starlord.domain.system.viewmodel.ErrorEmitter
 import kt.school.starlord.domain.system.viewmodel.ProgressEmitter
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
@@ -20,17 +21,17 @@ import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 class CategoriesViewModel(
     private val progressFeature: ProgressViewModelFeature,
     private val errorFeature: ErrorViewModelFeature,
-    private val networkRepository: CategoriesWithSubcategoriesRepository,
-    private val categoriesRepository: CategoriesCacheRepository,
-    private val subcategoriesRepository: SubcategoriesRepository
+    private val categoriesNetworkRepository: CategoriesNetworkRepository,
+    private val categoriesCacheRepository: CategoriesCacheRepository,
+    private val subcategoriesCacheRepository: SubcategoriesCacheRepository,
+    private val htmlParser: HtmlParser
 ) : ViewModel(), ProgressEmitter by progressFeature, ErrorEmitter by errorFeature {
 
     private val categories = MutableLiveData<List<Category>>()
 
     init {
-        categoriesRepository.getCategories().observeForever(categories::setValue)
-
-        refreshData()
+        categoriesCacheRepository.getCategories().observeForever(categories::setValue)
+        refreshCategories()
     }
 
     /**
@@ -38,18 +39,17 @@ class CategoriesViewModel(
      */
     fun getCategories(): LiveData<List<Category>> = categories
 
-    private fun refreshData() {
-        viewModelScope.launch {
-            progressFeature.showProgress(true)
+    private fun refreshCategories() = viewModelScope.launch {
+        progressFeature.showProgress(true)
 
-            runCatching {
-                val data = networkRepository.getCategoriesWithSubcategories()
+        runCatching {
+            val html = categoriesNetworkRepository.downloadCategoriesPage()
+            val categories = htmlParser.parseCategories(html)
 
-                categoriesRepository.updateCategories(data.keys.toList())
-                subcategoriesRepository.updateSubcategories(data.values.flatten())
-            }.onFailure(errorFeature::showError)
+            categoriesCacheRepository.updateCategories(categories.keys.toList())
+            subcategoriesCacheRepository.updateSubcategories(categories.values.flatten())
+        }.onFailure(errorFeature::showError)
 
-            progressFeature.showProgress(false)
-        }
+        progressFeature.showProgress(false)
     }
 }

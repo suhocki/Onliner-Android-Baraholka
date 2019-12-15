@@ -10,7 +10,7 @@ import io.mockk.mockk
 import io.mockk.mockkStatic
 import io.mockk.slot
 import io.mockk.verify
-import kt.school.starlord.domain.data.mapper.Mapper
+import kt.school.starlord.domain.mapper.Mapper
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.entity.global.RussianLocalizedTimePassed
 import kt.school.starlord.domain.entity.product.Product
@@ -28,7 +28,6 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.ArgumentMatchers.anyLong
-import org.mockito.ArgumentMatchers.anyString
 import org.threeten.bp.Instant
 
 /* ktlint-disable */
@@ -120,15 +119,15 @@ class DatabaseRepositoryTest {
     @Test
     fun getCachedProducts() {
         // Given
-        val subcategoryName = anyString()
+        val subcategoryId = anyLong()
         val roomProducts: List<RoomProduct> = listOf(mockk(), mockk(), mockk())
         val expected: Array<Product> = arrayOf(mockk(), mockk(), mockk())
         val mapper = Mapper(setOf(createConverter(roomProducts.zip(expected).toMap())))
 
-        every { daoManager.productDao.getProducts(subcategoryName) } returns createDataSource(roomProducts)
+        every { daoManager.productDao.getProductsSortedByUpdate(subcategoryId) } returns createDataSource(roomProducts)
 
         // When
-        val dataSourceFactory = createRepository(mapper = mapper).getCachedProducts(subcategoryName)
+        val dataSourceFactory = createRepository(mapper = mapper).getCachedProducts(subcategoryId)
 
         // Then
         LivePagedListBuilder(dataSourceFactory, roomProducts.size).build().observeForTesting {
@@ -139,48 +138,54 @@ class DatabaseRepositoryTest {
     @Test
     fun updateProducts_noCached() = testCoroutineRule.runBlockingTest {
         // Given
-        val subcategoryName = anyString()
+        val subcategoryId = anyLong()
         val serverProducts: List<Product> = listOf(createProduct(1, 1, LocalizedTimePassed("1 hour ago")))
         val expected: Array<RoomProduct> = arrayOf(mockk())
         val actual = slot<List<RoomProduct>>()
         val mapper = Mapper(setOf(createConverter(serverProducts.zip(expected).toMap())))
 
-        coEvery { daoManager.productDao.getProductsByIds(listOf(1), subcategoryName) } coAnswers { emptyList() }
+        coEvery { daoManager.productDao.getProductsByIds(listOf(1), subcategoryId) } coAnswers { emptyList() }
         coEvery { daoManager.productDao.insertProducts(capture(actual)) } coAnswers { Unit }
+        coEvery { daoManager.productDao.getMaxLastUpdate(subcategoryId) } coAnswers { null }
 
         // When
-        createRepository(mapper = mapper).updateProducts(subcategoryName, serverProducts)
+        createRepository(mapper = mapper).updateProducts(subcategoryId, serverProducts)
 
         // Then
         assert(actual.captured.toTypedArray().contentEquals(expected))
     }
 
     @Test
-    fun updateProducts_keepServerLastUpdate() =
-        testCoroutineRule.runBlockingTest {
-            // Given
-            val (mapper, serverProduct) = createUpdateProductsMocks(
-                100L to "5 минут назад",
-                50L to "50 минут назад"
-            )
+    fun updateProducts_keepServerLastUpdate() = testCoroutineRule.runBlockingTest {
+        // Given
+        val subcategoryId = anyLong()
+        val (mapper, serverProduct) = createUpdateProductsMocks(
+            100L to "5 минут назад",
+            50L to "50 минут назад"
+        )
 
-            // When
-            createRepository(mapper = mapper).updateProducts(anyString(), listOf(serverProduct))
+        coEvery { daoManager.productDao.getMaxLastUpdate(subcategoryId) } coAnswers { null }
 
-            // Then
-            verify(exactly = 0) { serverProduct.lastUpdate = 50L }
-        }
+        // When
+        createRepository(mapper = mapper).updateProducts(subcategoryId, listOf(serverProduct))
+
+        // Then
+        verify(exactly = 0) { serverProduct.lastUpdate = 50L }
+    }
 
     @Test
     fun updateProducts_applyCachedLastUpdate() = testCoroutineRule.runBlockingTest {
         // Given
+        val subcategoryId = anyLong()
         val (mapper, serverProduct) = createUpdateProductsMocks(
             50L to "10 минут назад",
             100L to "10 минут назад"
         )
 
+        coEvery { daoManager.productDao.getMaxLastUpdate(subcategoryId) } coAnswers { null }
+
         // When
-        createRepository(mapper = mapper).updateProducts(anyString(), listOf(serverProduct))
+        createRepository(mapper = mapper).updateProducts(subcategoryId, listOf(serverProduct))
 
         // Then
         verify(exactly = 1) { serverProduct.lastUpdate = 100L }
@@ -219,14 +224,20 @@ class DatabaseRepositoryTest {
 
         val serverProduct = createProduct(productId, serverLastUpdate, LocalizedTimePassed(serverLocalized))
 
-        coEvery { daoManager.productDao.getProductsByIds(listOf(productId), anyString()) } coAnswers {
+        coEvery { daoManager.productDao.getProductsByIds(listOf(productId), anyLong()) } coAnswers {
             listOf(createRoomProduct(productId, cachedLastUpdate))
         }
 
         return Mapper(
             setOf(
                 createConverter(mapOf(serverProduct to createRoomProduct(productId, serverLastUpdate))),
-                createConverter(mapOf(now.toEpochMilli() - cachedLastUpdate to RussianLocalizedTimePassed(cachedLocalized)))
+                createConverter(
+                    mapOf(
+                        now.toEpochMilli() - cachedLastUpdate to RussianLocalizedTimePassed(
+                            cachedLocalized
+                        )
+                    )
+                )
             )
         ) to serverProduct
     }

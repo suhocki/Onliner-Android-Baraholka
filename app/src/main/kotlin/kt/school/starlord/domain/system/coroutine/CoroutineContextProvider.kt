@@ -7,6 +7,6 @@ import kotlin.coroutines.CoroutineContext
  */
 interface CoroutineContextProvider {
     val main: CoroutineContext
-    val default: CoroutineContext
+    val computation: CoroutineContext
     val io: CoroutineContext
 }

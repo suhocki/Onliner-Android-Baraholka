@@ -4,9 +4,9 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import io.mockk.every
 import io.mockk.mockk
-import kt.school.starlord.domain.data.mapper.Mapper
+import kt.school.starlord.domain.mapper.Mapper
 import kt.school.starlord.domain.entity.subcategory.Subcategory
-import kt.school.starlord.domain.repository.SubcategoriesRepository
+import kt.school.starlord.domain.repository.category.SubcategoriesCacheRepository
 import kt.school.starlord.ui.TestCoroutineRule
 import kt.school.starlord.ui.createConverter
 import kt.school.starlord.ui.observeForTesting
@@ -23,7 +23,7 @@ class SubcategoriesViewModelTest {
     @get:Rule
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val subcategoriesRepository: SubcategoriesRepository = mockk()
+    private val subcategoriesRepository: SubcategoriesCacheRepository = mockk()
 
     @Test
     fun loadSubcategories_fromCache() = testCoroutineRule.runBlockingTest {

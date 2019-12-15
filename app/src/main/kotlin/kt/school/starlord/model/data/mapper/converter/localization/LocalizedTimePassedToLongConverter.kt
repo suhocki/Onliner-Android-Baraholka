@@ -1,6 +1,6 @@
 package kt.school.starlord.model.data.mapper.converter.localization
 
-import kt.school.starlord.domain.data.mapper.BaseConverter
+import kt.school.starlord.domain.mapper.BaseConverter
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import org.threeten.bp.Instant
 

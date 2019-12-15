@@ -10,7 +10,7 @@ import androidx.navigation.fragment.findNavController
 import kt.school.starlord.R
 
 /**
- * First fragment that is appear on screen after default app launch.
+ * First fragment that is appear on screen after computation app launch.
  * Such navigation is configured by R.navigation.app_graph.
  *
  * Layout R.layout.fragment_appbar contains BottomAppBar, FloatingActionButton and fragment container with

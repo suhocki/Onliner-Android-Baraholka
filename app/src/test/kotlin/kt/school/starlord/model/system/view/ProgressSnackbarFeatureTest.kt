@@ -5,7 +5,7 @@ import androidx.test.espresso.Espresso
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import kt.school.starlord.AppActivity
+import kt.school.starlord.StarlordActivity
 import kt.school.starlord.R
 import org.junit.Test
 import org.junit.runner.RunWith
@@ -17,7 +17,7 @@ class ProgressSnackbarFeatureTest : AutoCloseKoinTest() {
 
     @Test
     fun show() {
-        ActivityScenario.launch(AppActivity::class.java).onActivity {
+        ActivityScenario.launch(StarlordActivity::class.java).onActivity {
             // Given
             val snackbarFeature = ProgressSnackbarFeature(it)
 
@@ -32,7 +32,7 @@ class ProgressSnackbarFeatureTest : AutoCloseKoinTest() {
 
     @Test(expected = Throwable::class)
     fun dismiss() {
-        ActivityScenario.launch(AppActivity::class.java).onActivity {
+        ActivityScenario.launch(StarlordActivity::class.java).onActivity {
             // Given
             val error = Throwable(ArgumentMatchers.anyString())
             val snackbarFeature = ErrorSnackbarFeature(it)

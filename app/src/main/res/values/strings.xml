@@ -7,6 +7,7 @@
     <string name="updating">Updating…</string>
     <string name="ok">OK</string>
     <string name="less_than_minute_ago">Less than a minute ago</string>
+    <string name="load_more">Load more</string>
 
     <!--Product Types-->
     <string name="sell">Sell</string>

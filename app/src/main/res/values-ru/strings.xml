@@ -5,6 +5,7 @@
     <string name="ok">Хорошо</string>
     <string name="less_than_minute_ago">меньше минуты назад</string>
     <string name="price">%1$s р.</string>
+    <string name="load_more">Загрузить ещё</string>
 
     <!--Product Types-->
     <string name="sell">Продам</string>

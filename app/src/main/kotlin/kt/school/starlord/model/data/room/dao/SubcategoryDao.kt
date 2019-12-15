@@ -3,7 +3,6 @@ package kt.school.starlord.model.data.room.dao
 import androidx.lifecycle.LiveData
 import androidx.room.Dao
 import androidx.room.Insert
-import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import androidx.room.Transaction
 import kt.school.starlord.model.data.room.entity.RoomSubcategory
@@ -30,7 +29,7 @@ abstract class SubcategoryDao {
         putSubcategories(subcategories)
     }
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    @Insert
     protected abstract suspend fun putSubcategories(subcategories: List<RoomSubcategory>)
 
     @Query("DELETE FROM Subcategories")

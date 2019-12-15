@@ -12,6 +12,9 @@ import kt.school.starlord.R
 import kt.school.starlord.domain.system.view.ErrorSnackbar
 import kt.school.starlord.domain.system.view.ProgressSnackbar
 import kt.school.starlord.ui.global.AppPagedRecyclerAdapter
+import kt.school.starlord.ui.products.delegate.LoadMoreAdapterDelegate
+import kt.school.starlord.ui.products.delegate.ProductAdapterDelegate
+import kt.school.starlord.ui.products.delegate.ProgressAdapterDelegate
 import org.koin.android.ext.android.inject
 import org.koin.androidx.viewmodel.ext.android.viewModel
 import org.koin.core.parameter.parametersOf
@@ -30,7 +33,9 @@ class ProductsFragment : Fragment() {
     private val errorSnackbar: ErrorSnackbar by inject(parameters = { parametersOf(requireActivity()) })
 
     private val adapter = AppPagedRecyclerAdapter(
-        ProductAdapterDelegate {}
+        ProductAdapterDelegate {},
+        ProgressAdapterDelegate(),
+        LoadMoreAdapterDelegate {}
     )
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =

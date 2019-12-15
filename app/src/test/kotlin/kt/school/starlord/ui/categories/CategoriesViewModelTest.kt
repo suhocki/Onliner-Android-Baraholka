@@ -9,9 +9,9 @@ import io.mockk.every
 import io.mockk.mockk
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.entity.subcategory.Subcategory
-import kt.school.starlord.domain.repository.CategoriesCacheRepository
-import kt.school.starlord.domain.repository.CategoriesWithSubcategoriesRepository
-import kt.school.starlord.domain.repository.SubcategoriesRepository
+import kt.school.starlord.domain.repository.category.CategoriesCacheRepository
+import kt.school.starlord.domain.repository.category.CategoriesNetworkRepository
+import kt.school.starlord.domain.repository.category.SubcategoriesCacheRepository
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 import kt.school.starlord.ui.TestCoroutineRule
@@ -29,9 +29,9 @@ class CategoriesViewModelTest {
 
     private val errorFeature: ErrorViewModelFeature = mockk(relaxUnitFun = true)
     private val progressFeature: ProgressViewModelFeature = mockk(relaxUnitFun = true)
-    private val networkRepository: CategoriesWithSubcategoriesRepository = mockk()
+    private val networkRepository: CategoriesNetworkRepository = mockk()
     private val categoriesRepository: CategoriesCacheRepository = mockk(relaxed = true)
-    private val subcategoriesRepository: SubcategoriesRepository = mockk(relaxed = true)
+    private val subcategoriesRepository: SubcategoriesCacheRepository = mockk(relaxed = true)
     private val categoriesWithSubcategories = mapOf<Category, List<Subcategory>>(
         mockk<Category>() to listOf(mockk(), mockk()),
         mockk<Category>() to listOf(mockk())
@@ -104,9 +104,9 @@ class CategoriesViewModelTest {
     private fun createViewModel(
         progressFeature: ProgressViewModelFeature = mockk(relaxed = true),
         errorFeature: ErrorViewModelFeature = mockk(relaxed = true),
-        networkRepository: CategoriesWithSubcategoriesRepository = mockk(relaxed = true),
+        networkRepository: CategoriesNetworkRepository = mockk(relaxed = true),
         categoriesRepository: CategoriesCacheRepository = mockk(relaxed = true),
-        subcategoriesRepository: SubcategoriesRepository = mockk(relaxed = true)
+        subcategoriesRepository: SubcategoriesCacheRepository = mockk(relaxed = true)
     ) = CategoriesViewModel(
         progressFeature,
         errorFeature,

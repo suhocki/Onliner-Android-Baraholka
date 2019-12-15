@@ -11,6 +11,6 @@ import kt.school.starlord.ui.global.annotation.Visibility
 data class UiSubcategory(
     val name: String,
     val count: String,
-    val link: String,
+    val id: Long,
     @Visibility val countVisibility: Int
 ) : Parcelable

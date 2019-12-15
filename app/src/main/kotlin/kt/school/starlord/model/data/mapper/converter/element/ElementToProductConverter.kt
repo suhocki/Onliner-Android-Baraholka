@@ -1,12 +1,13 @@
 package kt.school.starlord.model.data.mapper.converter.element
 
-import kt.school.starlord.domain.data.mapper.BaseConverter
-import kt.school.starlord.domain.data.mapper.Mapper
-import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
-import kt.school.starlord.model.data.mapper.converter.localization.LocalizedTimePassedToLongConverter
+import kt.school.starlord.domain.mapper.BaseConverter
+import kt.school.starlord.domain.mapper.Mapper
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.ProductType
+import kt.school.starlord.model.data.mapper.converter.localization.LocalizedTimePassedToLongConverter
+import kt.school.starlord.model.data.room.entity.RoomProduct
+import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import org.koin.core.KoinComponent
@@ -65,7 +66,11 @@ class ElementToProductConverter : BaseConverter<Element, Product>(Element::class
             isPaid = value.hasClass(M_IMP),
             lastUpdate = mapper.map(localizedTimePassed),
             localizedTimePassed = localizedTimePassed
-        )
+        ).apply {
+            if (id == RoomProduct.ID_PROGRESS || id == RoomProduct.ID_LOAD_MORE) {
+                error("Unexpected error. Product id \"$id\" is reserved for internal usage.")
+            }
+        }
     }
 
     private fun extractDocumentData(element: Element) =

@@ -1,29 +1,27 @@
 package kt.school.starlord.model.data.mapper.converter.element
 
 import io.mockk.mockk
-import kt.school.starlord.domain.data.mapper.BaseConverter
-import kt.school.starlord.domain.data.mapper.Mapper
+import kt.school.starlord.domain.mapper.BaseConverter
+import kt.school.starlord.domain.mapper.Mapper
 import kt.school.starlord.domain.entity.product.Price
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.product.ProductOwner
 import kt.school.starlord.domain.entity.product.ProductType
+import kt.school.starlord.ui.AfterEachCloseKoinTest
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Element
 import org.jsoup.parser.Parser
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DynamicTest
 import org.junit.jupiter.api.TestFactory
 import org.koin.core.context.startKoin
-import org.koin.core.context.stopKoin
 import org.koin.dsl.module
-import org.koin.test.KoinTest
 import org.mockito.ArgumentMatchers
 
 /* ktlint-disable */
-internal class ElementToProductConverterTest : KoinTest {
+internal class ElementToProductConverterTest : AfterEachCloseKoinTest() {
 
     private val converter by lazy { ElementToProductConverter() }
 
@@ -43,11 +41,6 @@ internal class ElementToProductConverterTest : KoinTest {
         startKoin {
             modules(module { single { Mapper(converters) } })
         }
-    }
-
-    @AfterEach
-    fun afterEach() {
-        stopKoin()
     }
 
     @TestFactory

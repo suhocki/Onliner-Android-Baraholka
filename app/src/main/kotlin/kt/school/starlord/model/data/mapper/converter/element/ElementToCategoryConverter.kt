@@ -1,6 +1,6 @@
 package kt.school.starlord.model.data.mapper.converter.element
 
-import kt.school.starlord.domain.data.mapper.BaseConverter
+import kt.school.starlord.domain.mapper.BaseConverter
 import kt.school.starlord.domain.entity.category.Category
 import org.jsoup.nodes.Element
 

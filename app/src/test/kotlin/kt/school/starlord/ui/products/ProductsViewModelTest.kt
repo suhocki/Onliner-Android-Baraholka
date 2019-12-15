@@ -7,10 +7,10 @@ import io.mockk.coVerify
 import io.mockk.coVerifyOrder
 import io.mockk.every
 import io.mockk.mockk
-import kt.school.starlord.domain.data.mapper.Mapper
+import kt.school.starlord.domain.mapper.Mapper
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.repository.product.ProductsCacheRepository
-import kt.school.starlord.domain.repository.product.ProductsRepository
+import kt.school.starlord.domain.repository.product.ProductsNetworkRepository
 import kt.school.starlord.model.system.viewmodel.ErrorViewModelFeature
 import kt.school.starlord.model.system.viewmodel.ProgressViewModelFeature
 import kt.school.starlord.ui.TestCoroutineRule
@@ -21,6 +21,7 @@ import kt.school.starlord.ui.observeForTesting
 import kt.school.starlord.ui.subcategories.entity.UiSubcategory
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.ArgumentMatchers.anyLong
 
 /* ktlint-disable */
 class ProductsViewModelTest {
@@ -30,11 +31,11 @@ class ProductsViewModelTest {
     @get:Rule
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val link = "https://baraholka.onliner.by/viewforum.php?f=2"
-    private val subcategory = UiSubcategory("subcategoryName", "123", link, View.VISIBLE)
+    private val subcategoryId = anyLong()
+    private val subcategory = UiSubcategory("subcategoryName", "123", subcategoryId, View.VISIBLE)
     private val errorFeature: ErrorViewModelFeature = mockk(relaxUnitFun = true)
     private val progressFeature: ProgressViewModelFeature = mockk(relaxUnitFun = true)
-    private val networkRepository: ProductsRepository = mockk()
+    private val networkRepository: ProductsNetworkRepository = mockk()
     private val databaseRepository: ProductsCacheRepository = mockk(relaxed = true)
 
     @Test
@@ -43,7 +44,7 @@ class ProductsViewModelTest {
         val products: List<Product> = listOf(mockk(), mockk(), mockk())
         val expected: Array<UiEntity> = arrayOf(mockk(), mockk(), mockk())
 
-        every { databaseRepository.getCachedProducts(subcategory.name) }.answers { createDataSource(products) }
+        every { databaseRepository.getCachedProducts(subcategoryId) }.answers { createDataSource(products) }
 
         val viewModel = createViewModel(
             mapper = Mapper(setOf(createConverter(products.zip(expected).toMap()))),
@@ -63,7 +64,7 @@ class ProductsViewModelTest {
         // Given
         val fetchedProducts: List<Product> = listOf(mockk())
 
-        coEvery { networkRepository.getProducts(link) }.coAnswers { fetchedProducts }
+        coEvery { networkRepository.downloadProductsPage(subcategoryId) }.coAnswers { fetchedProducts }
 
         // When
         createViewModel(
@@ -73,7 +74,7 @@ class ProductsViewModelTest {
         )
 
         // Then
-        coVerify { databaseRepository.updateProducts(subcategory.name, fetchedProducts) }
+        coVerify { databaseRepository.updateProducts(subcategoryId, fetchedProducts) }
     }
 
     @Test
@@ -81,7 +82,7 @@ class ProductsViewModelTest {
         // Given
         val error = Throwable()
 
-        coEvery { networkRepository.getProducts(any()) }.throws(error)
+        coEvery { networkRepository.downloadProductsPage(any()) }.throws(error)
 
         // When
         createViewModel(errorFeature = errorFeature, networkRepository = networkRepository)
@@ -106,7 +107,7 @@ class ProductsViewModelTest {
         mapper: Mapper = mockk(relaxed = true),
         progressFeature: ProgressViewModelFeature = mockk(relaxed = true),
         errorFeature: ErrorViewModelFeature = mockk(relaxed = true),
-        networkRepository: ProductsRepository = mockk(relaxed = true),
+        networkRepository: ProductsNetworkRepository = mockk(relaxed = true),
         databaseRepository: ProductsCacheRepository = mockk(relaxed = true),
         subcategory: UiSubcategory = mockk(relaxed = true)
     ) = ProductsViewModel(mapper, progressFeature, errorFeature, networkRepository, databaseRepository, subcategory)

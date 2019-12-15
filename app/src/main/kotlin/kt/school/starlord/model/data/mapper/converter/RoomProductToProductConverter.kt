@@ -1,7 +1,7 @@
 package kt.school.starlord.model.data.mapper.converter
 
-import kt.school.starlord.domain.data.mapper.BaseConverter
-import kt.school.starlord.domain.data.mapper.Mapper
+import kt.school.starlord.domain.mapper.BaseConverter
+import kt.school.starlord.domain.mapper.Mapper
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.model.data.room.entity.RoomProduct
 import org.koin.core.KoinComponent
@@ -28,7 +28,7 @@ class RoomProductToProductConverter : BaseConverter<RoomProduct, Product>(
         price = value.price,
         commentsCount = value.commentsCount,
         isPaid = value.isPaid,
-        subcategoryName = value.subcategoryName,
+        subcategoryId = value.subcategoryId,
         lastUpdate = value.lastUpdate,
         localizedTimePassed = mapper.map(value.lastUpdate)
     )

@@ -3,7 +3,7 @@ package kt.school.starlord.model.data.mapper.converter.localization
 import io.mockk.every
 import io.mockk.mockk
 import kt.school.starlord.R
-import kt.school.starlord.model.data.resources.ResourceManager
+import kt.school.starlord.model.data.android.ResourceManager
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.DynamicTest

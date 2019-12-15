@@ -4,7 +4,7 @@ import kt.school.starlord.ui.global.entity.wrapper.LocalizedTimePassed
 
 /**
  * Domain product entity.
- * Can represents not only products but services.
+ * Can represents not only products but LoadMore and Progress.
  *
  * @param lastUpdate time when the product was updated.
  * @param localizedTimePassed localized human-readable time elapsed after the product was updated.
@@ -22,6 +22,6 @@ data class Product(
     var lastUpdate: Long,
     val localizedTimePassed: LocalizedTimePassed,
     val commentsCount: Long,
-    var subcategoryName: String? = null,
+    var subcategoryId: Long? = null,
     val isPaid: Boolean = false
 )

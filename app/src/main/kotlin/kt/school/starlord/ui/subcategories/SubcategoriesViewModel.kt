@@ -4,15 +4,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.map
-import kt.school.starlord.domain.data.mapper.Mapper
-import kt.school.starlord.domain.repository.SubcategoriesRepository
+import kt.school.starlord.domain.mapper.Mapper
+import kt.school.starlord.domain.repository.category.SubcategoriesCacheRepository
 import kt.school.starlord.ui.subcategories.entity.UiSubcategory
 
 /**
  * Contains logic with fetching subcategories asynchronously.
  */
 class SubcategoriesViewModel(
-    databaseRepository: SubcategoriesRepository,
+    databaseRepository: SubcategoriesCacheRepository,
     mapper: Mapper,
     categoryName: String
 ) : ViewModel() {

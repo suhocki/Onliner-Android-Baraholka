@@ -4,18 +4,18 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import io.mockk.coEvery
 import io.mockk.mockk
 import io.mockk.verify
-import kt.school.starlord.domain.data.mapper.Mapper
+import kt.school.starlord.domain.mapper.Mapper
 import kt.school.starlord.domain.entity.category.Category
 import kt.school.starlord.domain.entity.product.Product
 import kt.school.starlord.domain.entity.subcategory.Subcategory
-import kt.school.starlord.model.data.jsoup.JsoupDataSource
+import kt.school.starlord.model.data.jsoup.JsoupParser
 import kt.school.starlord.ui.TestCoroutineRule
 import kt.school.starlord.ui.createConverter
 import org.jsoup.nodes.Element
 import org.jsoup.select.Elements
 import org.junit.Rule
 import org.junit.Test
-import java.net.URL
+import org.mockito.ArgumentMatchers
 
 class NetworkRepositoryTest {
     @get:Rule
@@ -24,7 +24,7 @@ class NetworkRepositoryTest {
     @get:Rule
     internal val instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val jsoupDataSource: JsoupDataSource = mockk()
+    private val jsoupParser: JsoupParser = mockk()
 
     @Test
     fun getCategoriesWithSubcategories() = testCoroutineRule.runBlockingTest {
@@ -39,9 +39,9 @@ class NetworkRepositoryTest {
         val elementToCategoryConverter = createConverter(categoryElement to category)
         val elementToSubcategoryConverter = createConverter(subcategoryElement to subcategory)
         val mapper = Mapper(setOf(elementToCategoryConverter, elementToSubcategoryConverter))
-        val networkRepository = NetworkRepository(jsoupDataSource, mapper)
+        val networkRepository = NetworkRepository(jsoupParser, mapper)
 
-        coEvery { jsoupDataSource.getCategoriesElements() } coAnswers { mapOfElements }
+        coEvery { jsoupParser.parseCategories() } coAnswers { mapOfElements }
 
         // When
         val actual = networkRepository.getCategoriesWithSubcategories()
@@ -63,9 +63,9 @@ class NetworkRepositoryTest {
         val elementToCategoryConverter = createConverter(categoryElement to category)
         val elementToSubcategoryConverter = createConverter(subcategoryElement to subcategory)
         val mapper = Mapper(setOf(elementToCategoryConverter, elementToSubcategoryConverter))
-        val networkRepository = NetworkRepository(jsoupDataSource, mapper)
+        val networkRepository = NetworkRepository(jsoupParser, mapper)
 
-        coEvery { jsoupDataSource.getCategoriesElements() } coAnswers { mapOfElements }
+        coEvery { jsoupParser.parseCategories() } coAnswers { mapOfElements }
 
         // When
         networkRepository.getCategoriesWithSubcategories()
@@ -79,15 +79,14 @@ class NetworkRepositoryTest {
         // Given
         val element: Element = mockk()
         val expected: Product = mockk()
-        val url: URL = mockk()
-        val link = "link"
-        val mapper = Mapper(setOf(createConverter(element to expected), createConverter(link to url)))
-        val networkRepository = NetworkRepository(jsoupDataSource, mapper)
+        val forumId = ArgumentMatchers.anyLong()
+        val mapper = Mapper(setOf(createConverter(element to expected)))
+        val networkRepository = NetworkRepository(jsoupParser, mapper)
 
-        coEvery { jsoupDataSource.getProductElements(url) } coAnswers { Elements(element) }
+        coEvery { jsoupParser.getProductElements(forumId) } coAnswers { Elements(element) }
 
         // When
-        val actual = networkRepository.getProducts(link).first()
+        val actual = networkRepository.downloadProductsPage(forumId).first()
 
         // Then
         assert(actual == expected)

@@ -4,7 +4,7 @@ import io.mockk.every
 import io.mockk.mockk
 import kt.school.starlord.R
 import kt.school.starlord.domain.entity.product.Price
-import kt.school.starlord.model.data.resources.ResourceManager
+import kt.school.starlord.model.data.android.ResourceManager
 import kt.school.starlord.ui.global.entity.wrapper.LocalizedMoney
 import org.junit.jupiter.api.Assertions
 import org.junit.jupiter.api.BeforeEach

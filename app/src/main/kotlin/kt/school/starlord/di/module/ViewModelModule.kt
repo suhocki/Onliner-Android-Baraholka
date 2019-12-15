@@ -18,9 +18,9 @@ val viewModelModule = module {
 
     factory { ErrorViewModelFeature() }
 
-    viewModel { CategoriesViewModel(get(), get(), get(), get(), get()) }
+    viewModel { CategoriesViewModel(get(), get(), get(), get(), get(), get()) }
 
     viewModel { (categoryName: String) -> SubcategoriesViewModel(get(), get(), categoryName) }
 
-    viewModel { (subcategory: UiSubcategory) -> ProductsViewModel(get(), get(), get(), get(), get(), subcategory) }
+    viewModel { (subcategory: UiSubcategory) -> ProductsViewModel(get(), get(), get(), get(), get(), get(), subcategory) }
 }

@@ -3,6 +3,7 @@ import com.android.build.gradle.internal.cxx.configure.gradleLocalProperties
 import com.android.build.gradle.internal.dsl.TestOptions
 import io.gitlab.arturbosch.detekt.detekt
 import org.jetbrains.kotlin.config.KotlinCompilerVersion
+import org.jetbrains.kotlin.gradle.dsl.KotlinJvmOptions
 import org.jlleitschuh.gradle.ktlint.reporter.ReporterType
 
 plugins {
@@ -58,6 +59,11 @@ android {
         compileOptions {
             sourceCompatibility = JavaVersion.VERSION_1_8
             targetCompatibility = JavaVersion.VERSION_1_8
+        }
+
+        kotlinOptions {
+            val options = this as KotlinJvmOptions
+            options.jvmTarget = JavaVersion.VERSION_1_8.toString()
         }
 
         signingConfigs {

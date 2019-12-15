@@ -1,8 +1,8 @@
 package kt.school.starlord.model.data.mapper.converter.localization
 
-import kt.school.starlord.domain.data.mapper.BaseConverter
+import kt.school.starlord.domain.mapper.BaseConverter
 import kt.school.starlord.domain.entity.global.RussianLocalizedTimePassed
-import kt.school.starlord.model.data.resources.ResourceManager
+import kt.school.starlord.model.data.android.ResourceManager
 import org.koin.core.KoinComponent
 
 /**

@@ -11,10 +11,10 @@ interface ProductsCacheRepository {
     /**
      * Loads products live data from cache.
      */
-    fun getCachedProducts(subcategoryName: String): DataSource.Factory<Int, Product>
+    fun getCachedProducts(subcategoryId: Long): DataSource.Factory<Int, Product>
 
     /**
-     * Deletes existing products of selected subcategoryName and puts a new ones.
+     * Deletes existing products of selected subcategoryId and puts a new ones.
      */
-    suspend fun updateProducts(subcategoryName: String, products: List<Product>)
+    suspend fun updateProducts(subcategoryId: Long, products: List<Product>)
 }

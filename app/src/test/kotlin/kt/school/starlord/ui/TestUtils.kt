@@ -4,14 +4,17 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.paging.DataSource
 import androidx.paging.PositionalDataSource
-import kt.school.starlord.domain.data.mapper.BaseConverter
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
+import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.espresso.matcher.ViewMatchers.withEffectiveVisibility
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.espresso.matcher.ViewMatchers.withText
+import kt.school.starlord.domain.mapper.BaseConverter
 import org.hamcrest.core.AllOf
+import org.junit.jupiter.api.AfterEach
+import org.koin.core.context.stopKoin
+import org.koin.test.KoinTest
 
 inline fun <reified T> LiveData<T>.observeForTesting(
     block: (T) -> Unit
@@ -48,4 +51,17 @@ fun <T> createDataSource(items: List<T>) = object : DataSource.Factory<Int, T>()
 fun checkSnackBarDisplayedByMessage(message: String) {
     onView(AllOf.allOf(withId(com.google.android.material.R.id.snackbar_text), withText(message)))
         .check(matches(withEffectiveVisibility(ViewMatchers.Visibility.VISIBLE)))
+}
+
+/**
+ * Extended Koin Test - embed autoclose @after method to close Koin after every test
+ *
+ * @author Arnaud Giuliani
+ */
+abstract class AfterEachCloseKoinTest : KoinTest {
+
+    @AfterEach
+    fun autoClose() {
+        stopKoin()
+    }
 }
