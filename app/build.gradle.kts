@@ -191,6 +191,7 @@ dependencies {
     val moshiVersion = "1.8.0"
     val pagingVersion = "2.1.0"
     val adapterDelegatesVersion = "4.2.0"
+    val asyncInflaterVersion = "1.0.0"
 
     // Core
     implementation(kotlin("stdlib-jdk7", KotlinCompilerVersion.VERSION))
@@ -199,8 +200,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect:${KotlinCompilerVersion.VERSION}")
     implementation("androidx.core:core-ktx:1.2.0-rc01")
     implementation("androidx.appcompat:appcompat:$appcompatVersion")
-    implementation("com.google.android.material:material:1.2.0-alpha02")
-    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta3")
+    implementation("com.google.android.material:material:1.2.0-alpha04")
+    implementation("androidx.constraintlayout:constraintlayout:2.0.0-beta4")
     implementation("androidx.room:room-runtime:$roomVersion")
     implementation("androidx.room:room-ktx:$roomVersion")
     // Lifecycle
@@ -214,6 +215,8 @@ dependencies {
     implementation("androidx.navigation:navigation-ui-ktx:$navigationVersion")
     // Paging
     implementation("androidx.paging:paging-runtime:$pagingVersion")
+    // Async
+    implementation("androidx.asynclayoutinflater:asynclayoutinflater:$asyncInflaterVersion")
 
     // Koin
     implementation("org.koin:koin-core:$koinVersion")
@@ -237,7 +240,7 @@ dependencies {
     debugImplementation("com.squareup.leakcanary:leakcanary-android:$leakCanaryVersion")
 
     // Testing
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.3.1")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.5.2")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.3.1")
     testImplementation("io.mockk:mockk:$mockkVersion")
     testImplementation("io.mockk:mockk-android:$mockkVersion")

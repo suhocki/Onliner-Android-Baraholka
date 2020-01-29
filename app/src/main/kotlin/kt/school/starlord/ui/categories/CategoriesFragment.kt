@@ -28,15 +28,18 @@ class CategoriesFragment : Fragment() {
     private val errorSnackbar: ErrorSnackbar by inject(parameters = { parametersOf(requireActivity()) })
     private val adapter by lazy {
         AppRecyclerAdapter(
-            CategoryAdapterDelegate {
-                val direction = CategoriesFragmentDirections.toSubcategories(it.name)
+            CategoryAdapterDelegate(this.requireContext()) { (name) ->
+                val direction = CategoriesFragmentDirections.toSubcategories(name)
                 findNavController().navigate(direction)
             }
         )
     }
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View =
-        inflater.inflate(R.layout.fragment_categories, container, false)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View = inflater.inflate(R.layout.fragment_categories, container, false)
 
     override fun onActivityCreated(savedInstanceState: Bundle?) {
         super.onActivityCreated(savedInstanceState)
