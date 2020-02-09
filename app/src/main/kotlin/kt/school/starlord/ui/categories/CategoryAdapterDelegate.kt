@@ -1,16 +1,16 @@
 package kt.school.starlord.ui.categories
 
+import android.annotation.SuppressLint
 import android.content.Context
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.asynclayoutinflater.view.AsyncLayoutInflater
-import androidx.constraintlayout.solver.widgets.analyzer.BasicMeasure.MATCH_PARENT
 import androidx.recyclerview.widget.RecyclerView
 import com.hannesdorfmann.adapterdelegates4.AbsListItemAdapterDelegate
 import kotlinx.android.synthetic.main.item_category.view.*
 import kt.school.starlord.R
 import kt.school.starlord.domain.entity.category.Category
+import kt.school.starlord.ui.global.extension.inflate
 import java.util.Stack
 import kotlin.properties.Delegates
 
@@ -30,11 +30,16 @@ class CategoryAdapterDelegate(
         const val NUM_CACHED_VIEWS = 5
     }
 
+    init {
+        cacheViewsAsync(NUM_CACHED_VIEWS)
+    }
+
     /**
      * Create some views asynchronously and add them to our stack.
      */
-    init {
-        for (i in 0..NUM_CACHED_VIEWS) {
+    @SuppressLint("InflateParams")
+    fun cacheViewsAsync(num: Int) {
+        repeat(num) {
             asyncLayoutInflater.inflate(
                 R.layout.item_category,
                 null
@@ -49,10 +54,10 @@ class CategoryAdapterDelegate(
      */
     override fun onCreateViewHolder(parent: ViewGroup): ViewHolder {
         val view = if (cachedViews.isEmpty()) {
-            LayoutInflater.from(context).inflate(R.layout.item_category, parent, false)
+            parent.inflate(R.layout.item_category)
         } else {
             cachedViews.pop()
-                .also { it.layoutParams = ViewGroup.LayoutParams(MATCH_PARENT, it.height) }
+                .also { it.layoutParams = ViewGroup.LayoutParams(it.width, it.height) }
         }
         return ViewHolder(view)
     }
